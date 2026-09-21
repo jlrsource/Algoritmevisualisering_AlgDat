@@ -1,0 +1,2181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <rect width="120" height="120" fill="#201e1d"></rect>
+    <circle cx="36" cy="40" r="9" fill="none" stroke="#6fb18d" stroke-width="3"></circle>
+    <circle cx="84" cy="40" r="9" fill="none" stroke="#f3f2f2" stroke-width="3"></circle>
+    <circle cx="60" cy="80" r="9" fill="none" stroke="#f3f2f2" stroke-width="3"></circle>
+    <path d="M36 49 L60 71 M84 49 L60 71 M45 40 L75 40" stroke="#6fb18d" stroke-width="3" fill="none"></path>
+  </svg>
+</template>
+<link rel="stylesheet" href="_ds/modernist-d14f9056-2f81-4629-a2d2-2292550ba68d/styles.css">
+<script src="_ds/modernist-d14f9056-2f81-4629-a2d2-2292550ba68d/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap">
+<style>
+  :root {
+    --color-accent: #217346;
+    --color-accent-100: #eaf5ee;
+    --color-accent-200: #cfe8d9;
+    --color-accent-300: #a6d3b8;
+    --color-accent-400: #6fb18d;
+    --color-accent-500: #2e9159;
+    --color-accent-600: #1b6039;
+    --color-accent-700: #14532d;
+    --color-accent-800: #0e3b21;
+    --color-accent-900: #0a2817;
+    --color-accent-2: #2e9159;
+    --color-accent-2-100: #eaf5ee;
+    --color-accent-2-200: #cfe8d9;
+    --color-accent-2-300: #a6d3b8;
+    --color-accent-2-400: #6fb18d;
+    --color-accent-2-500: #2e9159;
+    --color-accent-2-600: #1b6039;
+    --color-accent-2-700: #14532d;
+    --color-accent-2-800: #0e3b21;
+    --color-accent-2-900: #0a2817;
+  }
+  html, body { margin: 0; padding: 0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: var(--color-accent-700); text-decoration: none; }
+  a:hover { color: var(--color-accent); }
+  button:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+  ::selection { background: var(--color-accent-300); }
+</style>
+</helmet>
+
+<div style="min-height: 100vh; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body);">
+
+  <div style="display: flex; align-items: stretch; justify-content: space-between; gap: 16px; border-bottom: 2px solid var(--color-text); padding: 14px 24px; background: var(--color-bg); position: sticky; top: 0; z-index: 10;">
+    <div style="display: flex; align-items: baseline; gap: 16px; min-width: 0;">
+      <button onClick="{{ goHome }}" class="nav-brand" style="appearance: none; border: 0; background: transparent; padding: 0; cursor: pointer; font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text); text-align: left; margin-right: 0;">Algoritmer &amp; datastrukturer</button>
+      <span style="font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-neutral-600); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ crumb }}</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <sc-if value="{{ notHome }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ goBack }}" class="btn btn-secondary">{{ backLabel }}</button>
+      </sc-if>
+    </div>
+  </div>
+
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+    <div>
+      <div style="border-bottom: 2px solid var(--color-text);">
+        <div style="padding: 56px 24px 48px;">
+          <div style="font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-accent-700); margin-bottom: 20px;">Pensum · steg for steg</div>
+          <h1 style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: clamp(38px, 6vw, 76px); line-height: 0.96; letter-spacing: -0.02em; margin: 0; max-width: 18ch; text-wrap: balance;">Se algoritmen kjøre, linje for linje.</h1>
+        </div>
+      </div>
+
+      <div style="border-bottom: 2px solid var(--color-text); background: var(--color-text); position: relative;">
+        <canvas data-hero="net" style="display: block; width: 100%; height: 440px;"></canvas>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); border-bottom: 2px solid var(--color-text);">
+        <sc-for list="{{ categories }}" as="c" hint-placeholder-count="4">
+          <div style="border-right: 2px solid var(--color-text); padding: 28px 24px 24px; display: flex; flex-direction: column; gap: 14px; background: {{ c.bg }}; min-height: 230px;">
+            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px;">
+              <span class="tag {{ c.tagClass }}">{{ c.tag }}</span>
+              <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-neutral-600);">{{ c.count }}</span>
+            </div>
+            <h2 style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: clamp(20px, 2.2vw, 26px); line-height: 1.1; letter-spacing: -0.01em; margin: 0; overflow-wrap: anywhere; hyphens: auto;">{{ c.name }}</h2>
+            <p style="font-size: 14px; line-height: 1.5; margin: 0; color: var(--color-neutral-700); flex: 1 1 auto;">{{ c.blurb }}</p>
+            <sc-if value="{{ c.ready }}" hint-placeholder-val="{{ true }}">
+              <button onClick="{{ c.open }}" class="btn btn-primary btn-block">Åpne kategori →</button>
+            </sc-if>
+            <sc-if value="{{ c.soon }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-neutral-500); border-top: 2px solid var(--color-neutral-300); padding-top: 12px;">Kommer senere</div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isList }}" hint-placeholder-val="{{ false }}">
+    <div>
+      <div style="padding: 40px 24px 28px; border-bottom: 2px solid var(--color-text);">
+        <div style="font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-accent-700); margin-bottom: 14px;">Kategori</div>
+        <h1 style="font-weight: 800; font-size: clamp(32px, 5vw, 56px); line-height: 1; letter-spacing: -0.02em; margin: 0 0 16px;">{{ catTitle }}</h1>
+        <p style="font-size: 16px; line-height: 1.5; max-width: 66ch; margin: 0; color: var(--color-neutral-800);">{{ catIntro }}</p>
+      </div>
+      <div style="border-bottom: 2px solid var(--color-text); padding: 0 24px 16px;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Algoritme</th>
+              <th>Norsk navn</th>
+              <th>Best</th>
+              <th>Average</th>
+              <th>Worst</th>
+              <th>Forelesning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ algos }}" as="a" hint-placeholder-count="8">
+              <tr onClick="{{ a.open }}" style="cursor: pointer;">
+                <td style="font-size: 17px; font-weight: 800; letter-spacing: -0.01em;">{{ a.name }}</td>
+                <td style="color: var(--color-neutral-700);">{{ a.no }}</td>
+                <td style="font-weight: 600;">{{ a.best }}</td>
+                <td style="font-weight: 600;">{{ a.avg }}</td>
+                <td style="font-weight: 600; color: var(--color-accent-700);">{{ a.worst }}</td>
+                <td><span class="tag tag-neutral">{{ a.tag }}</span></td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+    <div>
+      <div style="padding: 36px 24px 24px; border-bottom: 2px solid var(--color-text);">
+        <div style="display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 12px;">
+          <span class="tag tag-accent">{{ d.tag }}</span>
+          <span class="tag tag-neutral">{{ d.family }}</span>
+        </div>
+        <h1 style="font-weight: 800; font-size: clamp(30px, 4.6vw, 54px); line-height: 1; letter-spacing: -0.02em; margin: 0 0 8px;">{{ d.name }}</h1>
+        <div style="font-size: 17px; color: var(--color-neutral-700); margin-bottom: 20px;">{{ d.no }}</div>
+        <p style="font-size: 17px; line-height: 1.55; max-width: 72ch; margin: 0;">{{ d.idea }}</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-bottom: 2px solid var(--color-text);">
+        <sc-for list="{{ facts }}" as="f" hint-placeholder-count="6">
+          <div style="border-right: 2px solid var(--color-text); padding: 18px 20px 20px;">
+            <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-600); margin-bottom: 10px;">{{ f.k }}</div>
+            <div style="font-size: 21px; font-weight: 800; letter-spacing: -0.01em; color: {{ f.fg }};">{{ f.v }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ hasSteps }}" hint-placeholder-val="{{ true }}">
+        <div style="display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); border-bottom: 2px solid var(--color-text);">
+
+          <div style="border-right: 2px solid var(--color-text); padding: 22px 20px 24px; order: {{ codeOrder }};">
+            <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-600); margin-bottom: 14px;">Pseudokode (CLRS)</div>
+            <div style="border-top: 2px solid var(--color-text); border-bottom: 2px solid var(--color-text); padding: 10px 0; overflow-x: auto;">
+              <sc-for list="{{ lines }}" as="l" hint-placeholder-count="12">
+                <div style="display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; padding: 3px 8px; background: {{ l.bg }}; height: 27px; align-items: center;">
+                  <span style="font-size: 11px; font-weight: 600; text-align: right; color: {{ l.numFg }};">{{ l.n }}</span>
+                  <span style="font-size: 14px; line-height: 1.5; letter-spacing: 0.01em; color: {{ l.fg }}; font-weight: {{ l.fw }}; padding-left: {{ l.pad }}px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ l.t }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="margin-top: 18px; border-top: 2px solid var(--color-neutral-300); padding-top: 14px;">
+              <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-600); margin-bottom: 10px;">Variabler</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; height: 76px; align-content: flex-start; overflow: hidden;">
+                <sc-for list="{{ vars }}" as="v" hint-placeholder-count="3">
+                  <div style="border: 2px solid var(--color-text); padding: 5px 9px; display: flex; gap: 8px; align-items: baseline; height: 32px;">
+                    <span style="font-size: 12px; font-weight: 700; color: var(--color-neutral-700);">{{ v.k }}</span>
+                    <span style="font-size: 14px; font-weight: 800;">{{ v.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <sc-if value="{{ showStack }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top: 18px; border-top: 2px solid var(--color-neutral-300); padding-top: 14px;">
+                <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-600); margin-bottom: 10px;">Kall-stack</div>
+                <div style="display: flex; flex-direction: column; height: {{ stackH }}px; overflow: hidden;">
+                  <sc-for list="{{ stack }}" as="s" hint-placeholder-count="2">
+                    <div style="font-size: 13px; padding: 5px 10px; border-left: 2px solid var(--color-text); margin-left: {{ s.pad }}px; color: {{ s.fg }}; background: {{ s.bg }}; height: 28px; white-space: nowrap; overflow: hidden;">{{ s.t }}</div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+
+          <div style="padding: 22px 20px 24px; display: flex; flex-direction: column; gap: 18px;">
+            <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+              <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-600);">{{ mainLabel }}</div>
+              <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text);">Steg {{ stepNo }} / {{ stepTotal }}</div>
+            </div>
+
+            <sc-if value="{{ isArray }}" hint-placeholder-val="{{ true }}">
+              <div style="display: flex; align-items: flex-start; gap: var(--space-3); overflow-x: auto; overflow-y: hidden; padding-bottom: var(--space-1);">
+                <div style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 20px; padding-top: 24px; flex: 0 0 auto;">A</div>
+                <div style="display: flex; flex: 0 0 auto;">
+                  <sc-for list="{{ cells }}" as="c" hint-placeholder-count="8">
+                    <div style="display: flex; flex-direction: column; min-width: 48px; margin-left: -2px;">
+                      <div style="font-size: 11px; font-weight: 600; color: var(--color-neutral-600); text-align: center; padding-bottom: 3px;">{{ c.idx }}</div>
+                      <div style="height: 48px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; background: {{ c.bg }}; color: {{ c.fg }}; border: {{ c.bd }};">{{ c.v }}</div>
+                      <div style="height: 22px; font-size: 14px; font-weight: 800; font-style: italic; color: var(--color-accent-700); text-align: center; padding-top: 2px;">{{ c.ptr }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isGraph }}" hint-placeholder-val="{{ false }}">
+              <div style="position: relative; width: 100%; aspect-ratio: {{ gAspect }}; background: var(--color-neutral-100); border: 2px solid var(--color-neutral-300);">
+                <svg viewBox="{{ gvb }}" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block;">
+                  <defs>
+                    <marker id="arw-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="var(--color-neutral-500)"></path>
+                    </marker>
+                    <marker id="arw-tree" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="var(--color-accent)"></path>
+                    </marker>
+                    <marker id="arw-active" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="var(--color-accent-700)"></path>
+                    </marker>
+                    <marker id="arw-reject" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="var(--color-neutral-300)"></path>
+                    </marker>
+                  </defs>
+                  <sc-for list="{{ gedges }}" as="e" hint-placeholder-count="0">
+                    <path d="{{ e.d }}" fill="none" stroke="{{ e.stroke }}" stroke-width="{{ e.w }}" stroke-linecap="round" marker-end="{{ e.marker }}"></path>
+                  </sc-for>
+                </svg>
+                <sc-for list="{{ gedges }}" as="e" hint-placeholder-count="0">
+                  <div style="position: absolute; left: {{ e.lxp }}%; top: {{ e.lyp }}%; transform: translate(-50%, -50%); font-size: 14px; font-weight: 700; color: {{ e.lfg }}; background: var(--color-neutral-100); padding: 0 3px; line-height: 1.2; white-space: nowrap;">{{ e.label }}</div>
+                </sc-for>
+                <sc-for list="{{ gnodes }}" as="n" hint-placeholder-count="0">
+                  <div style="position: absolute; left: {{ n.lp }}%; top: {{ n.tp }}%; transform: translate(-50%, -50%); width: 42px; height: 42px; border-radius: 50%; background: {{ n.fill }}; border: {{ n.sw }}px solid {{ n.stroke }}; color: {{ n.txt }}; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800;">{{ n.label }}</div>
+                </sc-for>
+                <sc-for list="{{ gnodes }}" as="n" hint-placeholder-count="0">
+                  <div style="position: absolute; left: {{ n.lp }}%; top: {{ n.np }}%; transform: translate(-50%, -50%); font-size: 15px; font-style: italic; font-weight: 600; color: var(--color-text); line-height: 1;">{{ n.name }}</div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <div style="height: {{ auxH }}px; overflow: hidden; display: flex; flex-direction: column; gap: 14px;">
+              <sc-for list="{{ aux }}" as="p" hint-placeholder-count="0">
+              <div style="border-top: 2px solid var(--color-neutral-300); padding-top: 12px;">
+                <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-600); margin-bottom: 8px;">{{ p.label }}</div>
+                <sc-if value="{{ p.isCells }}" hint-placeholder-val="{{ true }}">
+                  <div style="display: flex; overflow-x: auto; overflow-y: hidden; padding-bottom: 2px;">
+                    <sc-for list="{{ p.cells }}" as="c" hint-placeholder-count="4">
+                      <div style="display: flex; flex-direction: column; min-width: 42px; margin-left: -2px; flex: 0 0 auto;">
+                        <div style="font-size: 10px; font-weight: 600; color: var(--color-neutral-500); text-align: center; padding-bottom: 3px;">{{ c.sub }}</div>
+                        <div style="background: {{ c.bg }}; border: {{ c.bd }}; color: {{ c.fg }}; height: 38px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700;">{{ c.v }}</div>
+                        <div style="height: 20px; font-size: 13px; font-weight: 800; font-style: italic; color: var(--color-accent-700); text-align: center; padding-top: 2px;">{{ c.ptr }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ p.isMatrix }}" hint-placeholder-val="{{ false }}">
+                  <div style="display: inline-flex; flex-direction: column;">
+                    <div style="display: flex;">
+                      <div style="width: 36px; flex: 0 0 auto;"></div>
+                      <sc-for list="{{ p.head }}" as="h" hint-placeholder-count="4">
+                        <div style="width: 52px; flex: 0 0 auto; font-size: 11px; font-weight: 700; color: var(--color-neutral-600); text-align: center; padding-bottom: 3px;">{{ h }}</div>
+                      </sc-for>
+                    </div>
+                    <sc-for list="{{ p.rows }}" as="r" hint-placeholder-count="4">
+                      <div style="display: flex; align-items: center;">
+                        <div style="width: 36px; flex: 0 0 auto; font-size: 13px; font-weight: 800; color: var(--color-neutral-700);">{{ r.head }}</div>
+                        <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="4">
+                          <div style="width: 52px; height: 34px; flex: 0 0 auto; margin-left: -2px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; background: {{ c.bg }}; color: {{ c.fg }}; border: {{ c.bd }};">{{ c.v }}</div>
+                        </sc-for>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ p.isBuckets }}" hint-placeholder-val="{{ false }}">
+                  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); gap: 4px;">
+                    <sc-for list="{{ p.buckets }}" as="b" hint-placeholder-count="4">
+                      <div style="border: 2px solid {{ b.edge }}; background: {{ b.bg }}; padding: 7px 8px; display: flex; flex-direction: column; gap: 6px; height: {{ p.cardH }}px; overflow: hidden;">
+                        <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: {{ b.labelFg }}; flex: 0 0 auto;">{{ b.label }}</div>
+                        <div style="display: flex; flex-direction: column; gap: 3px; flex: 1 1 auto; min-height: 0;">
+                          <sc-for list="{{ b.items }}" as="it" hint-placeholder-count="0">
+                            <span style="font-size: 13px; font-weight: 700; background: {{ it.bg }}; color: {{ it.fg }}; border: {{ it.bd }}; padding: 2px 6px; height: 24px; display: flex; align-items: center; flex: 0 0 auto;">{{ it.v }}</span>
+                          </sc-for>
+                        </div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+              </sc-for>
+            </div>
+
+            <div style="border-top: 2px solid var(--color-text); padding-top: 14px; height: 118px; overflow-y: auto;">
+              <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent-700); margin-bottom: 8px;">Hva skjer nå</div>
+              <p style="font-size: 16px; line-height: 1.5; margin: 0; max-width: 70ch;">{{ note }}</p>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-top: 2px solid var(--color-neutral-300); padding-top: 14px;">
+              <button onClick="{{ prev }}" class="btn btn-secondary">← Forrige</button>
+              <button onClick="{{ next }}" class="btn btn-primary">Neste steg →</button>
+              <button onClick="{{ reset }}" class="btn btn-ghost">Start på nytt</button>
+              <div style="flex: 1 1 140px; min-width: 120px; height: 8px; background: var(--color-neutral-300);">
+                <div style="height: 100%; width: {{ pct }}%; background: var(--color-text);"></div>
+              </div>
+            </div>
+            <div style="font-size: 12px; color: var(--color-neutral-500);">{{ hintText }}</div>
+
+            <sc-if value="{{ showLegend }}" hint-placeholder-val="{{ true }}">
+              <div style="border-top: 2px solid var(--color-neutral-300); padding-top: 12px; display: flex; flex-wrap: wrap; gap: 8px 18px;">
+                <sc-for list="{{ legend }}" as="g" hint-placeholder-count="5">
+                  <div style="display: flex; align-items: center; gap: 7px;">
+                    <span style="width: 15px; height: 15px; display: inline-block; background: {{ g.bg }}; border: {{ g.bd }};"></span>
+                    <span style="font-size: 12px; color: var(--color-neutral-700);">{{ g.label }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ noSteps }}" hint-placeholder-val="{{ false }}">
+        <div style="padding: 26px 24px; border-bottom: 2px solid var(--color-text); background: var(--color-surface);">
+          <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent-700); margin-bottom: 10px;">Ingen steg-for-steg her</div>
+          <p style="font-size: 16px; line-height: 1.55; margin: 0; max-width: 72ch;">{{ d.whyNoSteps }}</p>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showTheory }}" hint-placeholder-val="{{ true }}">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+          <div style="border-right: 2px solid var(--color-text); border-bottom: 2px solid var(--color-text); padding: 26px 22px 28px;">
+            <h3 style="font-weight: 800; font-size: 20px; letter-spacing: -0.01em; margin: 0 0 14px;">Invariant og bevisskisse</h3>
+            <p style="font-size: 15px; line-height: 1.6; margin: 0 0 14px; color: var(--color-text);">{{ d.invariant }}</p>
+            <p style="font-size: 15px; line-height: 1.6; margin: 0; color: var(--color-neutral-800);">{{ d.proof }}</p>
+          </div>
+          <div style="border-right: 2px solid var(--color-text); border-bottom: 2px solid var(--color-text); padding: 26px 22px 28px;">
+            <h3 style="font-weight: 800; font-size: 20px; letter-spacing: -0.01em; margin: 0 0 14px;">Eksamensfeller</h3>
+            <div style="display: flex; flex-direction: column;">
+              <sc-for list="{{ pitfalls }}" as="p" hint-placeholder-count="3">
+                <div style="display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 10px; padding: 11px 0; border-bottom: 2px solid var(--color-neutral-300);">
+                  <span style="font-size: 13px; font-weight: 800; color: var(--color-accent);">{{ p.n }}</span>
+                  <span style="font-size: 15px; line-height: 1.55;">{{ p.t }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="border-bottom: 2px solid var(--color-text); padding: 26px 22px 28px;">
+            <h3 style="font-weight: 800; font-size: 20px; letter-spacing: -0.01em; margin: 0 0 14px;">Når brukes den</h3>
+            <p style="font-size: 15px; line-height: 1.6; margin: 0 0 18px;">{{ d.when }}</p>
+            <div style="border-top: 2px solid var(--color-text); padding-top: 14px; display: flex; flex-direction: column; gap: 10px;">
+              <sc-for list="{{ props }}" as="p" hint-placeholder-count="3">
+                <div style="display: flex; justify-content: space-between; gap: 12px; align-items: baseline;">
+                  <span style="font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 600; color: var(--color-neutral-700);">{{ p.k }}</span>
+                  <span style="font-size: 15px; font-weight: 800;">{{ p.v }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 24px; flex-wrap: wrap;">
+        <button onClick="{{ goList }}" class="btn btn-secondary">{{ backToListLabel }}</button>
+        <button onClick="{{ nextAlgo }}" class="btn" style="background: var(--color-text); color: var(--color-bg); border-color: var(--color-text);">{{ nextAlgoLabel }}</button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showLegend&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Visning&quot;},&quot;showTheory&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Visning&quot;},&quot;codeRight&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Visning&quot;}}">
+class Component extends DCLogic {
+  state = { view: 'home', algo: 'insertion', step: 0 };
+
+  C = {
+    plain:   { bg: 'var(--color-neutral-100)', fg: 'var(--color-text)', bd: '2px solid var(--color-neutral-400)' },
+    range:   { bg: 'var(--color-neutral-300)', fg: 'var(--color-text)', bd: '2px solid var(--color-neutral-700)' },
+    compare: { bg: 'var(--color-accent-200)', fg: 'var(--color-accent-800)', bd: '2px solid var(--color-accent-700)' },
+    key:     { bg: 'var(--color-accent)', fg: 'var(--color-bg)', bd: '2px solid var(--color-accent-700)' },
+    pivot:   { bg: 'var(--color-text)', fg: 'var(--color-bg)', bd: '2px solid var(--color-text)' },
+    done:    { bg: 'var(--color-accent-100)', fg: 'var(--color-accent-800)', bd: '2px solid var(--color-accent-700)' },
+    out:     { bg: 'var(--color-bg)', fg: 'var(--color-neutral-500)', bd: '2px solid var(--color-neutral-300)' }
+  };
+
+  SIZES = {
+    insertion: { aux: 0, stack: 0, card: 0 },
+    merge: { aux: 256, stack: 124, card: 0 },
+    quick: { aux: 0, stack: 152, card: 0 },
+    counting: { aux: 256, stack: 0, card: 0 },
+    radix: { aux: 300, stack: 0, card: 112 },
+    bucket: { aux: 300, stack: 0, card: 112 },
+    rselect: { aux: 0, stack: 124, card: 0 },
+    select: { aux: 0, stack: 0, card: 0 },
+    bfs: { aux: 265, stack: 0, card: 0 },
+    dfs: { aux: 140, stack: 160, card: 0 },
+    topo: { aux: 265, stack: 200, card: 0 },
+    scc: { aux: 265, stack: 200, card: 0 },
+    kruskal: { aux: 265, stack: 0, card: 0 },
+    prim: { aux: 265, stack: 0, card: 0 },
+    bellman: { aux: 265, stack: 0, card: 0 },
+    dagsp: { aux: 265, stack: 0, card: 0 },
+    dijkstra: { aux: 390, stack: 0, card: 0 },
+    floyd: { aux: 235, stack: 0, card: 0 },
+    maxflow: { aux: 140, stack: 0, card: 0 }
+  };
+
+  PTRS = { insertion: ['i', 'j'], merge: ['k'], quick: ['i', 'j'], counting: ['j'], bucket: ['i'], rselect: ['q'], radix: [] };
+
+  LEGEND = [
+    ['plain', 'uberørt'], ['range', 'aktivt delproblem'], ['compare', 'sammenlignes'],
+    ['key', 'key / element som flyttes'], ['pivot', 'pivot / delepunkt'], ['done', 'ferdig plassert']
+  ];
+
+  componentDidMount() {
+    this._key = (e) => {
+      if (this.state.view !== 'detail') return;
+      if (e.key === 'ArrowRight') { e.preventDefault(); this.step(1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); this.step(-1); }
+    };
+    window.addEventListener('keydown', this._key);
+    this.heroRef = this.heroRef || React.createRef();
+    this.hero = this.buildHero();
+    setTimeout(() => this.mountHero(), 0);
+  }
+
+  componentDidUpdate() { this.mountHero(); }
+
+  buildHero() {
+    let seed = 20260921;
+    const rnd = () => { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; };
+    const gauss = () => (rnd() + rnd() + rnd() - 1.5) / 1.5;
+    const clusters = [
+      { x: 0.10, y: 0.26, n: 30, s: 0.032 }, { x: 0.22, y: 0.62, n: 34, s: 0.036 },
+      { x: 0.33, y: 0.24, n: 26, s: 0.030 }, { x: 0.42, y: 0.72, n: 30, s: 0.034 },
+      { x: 0.50, y: 0.42, n: 22, s: 0.026 }, { x: 0.60, y: 0.18, n: 28, s: 0.030 },
+      { x: 0.68, y: 0.66, n: 32, s: 0.036 }, { x: 0.78, y: 0.34, n: 26, s: 0.030 },
+      { x: 0.88, y: 0.70, n: 28, s: 0.032 }, { x: 0.94, y: 0.24, n: 20, s: 0.026 },
+      { x: 0.07, y: 0.82, n: 18, s: 0.024 }, { x: 0.55, y: 0.88, n: 16, s: 0.022 }
+    ];
+    const nodes = [];
+    clusters.forEach((c, ci) => {
+      for (let i = 0; i < c.n; i++) {
+        nodes.push({
+          x: Math.min(0.97, Math.max(0.03, c.x + gauss() * c.s * 1.15)),
+          y: Math.min(0.94, Math.max(0.06, c.y + gauss() * c.s * 2.55)),
+          c: ci, ph: rnd() * 6.28, lit: 0, hop: 99
+        });
+      }
+    });
+    const edges = [], adj = nodes.map(() => []);
+    const link = (a, b) => {
+      if (a === b) return;
+      if (edges.some((e) => (e[0] === a && e[1] === b) || (e[0] === b && e[1] === a))) return;
+      edges.push([a, b]); adj[a].push(b); adj[b].push(a);
+    };
+    nodes.forEach((n, i) => {
+      const near = nodes.map((m, j) => ({ j: j, d: (m.x - n.x) * (m.x - n.x) + (m.y - n.y) * (m.y - n.y), c: m.c }))
+        .filter((o) => o.j !== i && o.c === n.c).sort((a, b) => a.d - b.d);
+      if (near[0]) link(i, near[0].j);
+      if (near[1]) link(i, near[1].j);
+      if (near[2] && rnd() < 0.55) link(i, near[2].j);
+      if (near[3] && rnd() < 0.25) link(i, near[3].j);
+    });
+    for (let ci = 0; ci < clusters.length; ci++) {
+      const others = clusters.map((c2, j) => ({ j: j, d: (c2.x - clusters[ci].x) * (c2.x - clusters[ci].x) + (c2.y - clusters[ci].y) * (c2.y - clusters[ci].y) }))
+        .filter((o) => o.j !== ci).sort((a, b) => a.d - b.d).slice(0, 2);
+      others.forEach((o) => {
+        let best = null;
+        nodes.forEach((n, i) => {
+          if (n.c !== ci) return;
+          nodes.forEach((m, j) => {
+            if (m.c !== o.j) return;
+            const d = (m.x - n.x) * (m.x - n.x) + (m.y - n.y) * (m.y - n.y);
+            if (!best || d < best.d) best = { i: i, j: j, d: d };
+          });
+        });
+        if (best) { link(best.i, best.j); nodes[best.i].hub = true; nodes[best.j].hub = true; }
+      });
+    }
+    nodes.forEach((n, i) => { n.deg = adj[i].length; });
+    return { nodes: nodes, edges: edges, adj: adj, src: 0, t0: -9999, mx: -1, my: -1 };
+  }
+
+  bfsFrom(src) {
+    const h = this.hero;
+    h.nodes.forEach((n) => { n.hop = 99; n.par = -1; });
+    h.nodes[src].hop = 0;
+    const q = [src];
+    while (q.length) {
+      const u = q.shift();
+      h.adj[u].forEach((v) => {
+        if (h.nodes[v].hop === 99) { h.nodes[v].hop = h.nodes[u].hop + 1; h.nodes[v].par = u; q.push(v); }
+      });
+    }
+    h.src = src; h.t0 = performance.now();
+  }
+
+  mountHero() {
+    const el = document.querySelector('canvas[data-hero="net"]');
+    if (!el || el === this._heroEl) return;
+    this._heroEl = el;
+    const h = this.hero;
+    const cs = getComputedStyle(document.documentElement);
+    const tok = (n, f) => (cs.getPropertyValue(n) || '').trim() || f;
+    const ink = tok('--color-bg', '#f3f2f2');
+    const accent = tok('--color-accent-400', '#6fb18d');
+    const accent2 = tok('--color-accent-200', '#cfe8d9');
+    const hexRgb = (x) => {
+      const s2 = x.replace('#', '');
+      const v = s2.length === 3 ? s2.split('').map((c) => c + c).join('') : s2;
+      return [parseInt(v.slice(0, 2), 16), parseInt(v.slice(2, 4), 16), parseInt(v.slice(4, 6), 16)];
+    };
+    const inkRgb = hexRgb(ink), acRgb = hexRgb(accent), ac2Rgb = hexRgb(accent2);
+    const mix = (a, b, t) => 'rgb(' + Math.round(a[0] + (b[0] - a[0]) * t) + ',' + Math.round(a[1] + (b[1] - a[1]) * t) + ',' + Math.round(a[2] + (b[2] - a[2]) * t) + ')';
+    const ctx = el.getContext('2d');
+    let W = 0, H = 0, dpr = 1;
+    const resize = () => {
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      W = el.clientWidth; H = el.clientHeight;
+      el.width = Math.round(W * dpr); el.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    resize();
+    if (this._heroRO) this._heroRO.disconnect();
+    this._heroRO = new ResizeObserver(resize);
+    this._heroRO.observe(el);
+    const move = (ev) => {
+      const r = el.getBoundingClientRect();
+      h.mx = ev.clientX - r.left; h.my = ev.clientY - r.top;
+      let best = -1, bd = 1e9;
+      h.nodes.forEach((n, i) => {
+        const d = (n.px - h.mx) * (n.px - h.mx) + (n.py - h.my) * (n.py - h.my);
+        if (d < bd) { bd = d; best = i; }
+      });
+      if (best >= 0 && best !== h.src) this.bfsFrom(best);
+    };
+    el.addEventListener('mousemove', move);
+    el.addEventListener('mouseleave', () => { h.mx = -1; h.my = -1; });
+    let nextAuto = 0;
+    const frame = (t) => {
+      if (this._heroEl !== el || !el.isConnected) return;
+      if (h.mx < 0 && t > nextAuto) {
+        this.bfsFrom(Math.floor(Math.random() * h.nodes.length));
+        nextAuto = t + 4200;
+      }
+      const front = (t - h.t0) / 165;
+      h.nodes.forEach((n) => {
+        n.px = 26 + n.x * (W - 52) + Math.sin(t / 2600 + n.ph) * 5;
+        n.py = 22 + n.y * (H - 44) + Math.cos(t / 3100 + n.ph) * 5;
+        if (h.mx >= 0) {
+          const dx = n.px - h.mx, dy = n.py - h.my, d = Math.sqrt(dx * dx + dy * dy) || 1;
+          if (d < 110) { const f = (1 - d / 110) * 16; n.px += (dx / d) * f; n.py += (dy / d) * f; }
+        }
+        const wave = Math.max(0, 1 - Math.abs(n.hop - front) / 2.2);
+        const trail = n.hop <= front ? 0.24 : 0;
+        const target = Math.max(wave, trail);
+        n.lit += (target - n.lit) * 0.18;
+      });
+      ctx.clearRect(0, 0, W, H);
+      h.edges.forEach((e) => {
+        const a = h.nodes[e[0]], b = h.nodes[e[1]];
+        const treeEdge = a.par === e[1] || b.par === e[0];
+        const lit = treeEdge ? Math.min(a.lit, b.lit) : Math.min(a.lit, b.lit) * 0.35;
+        ctx.beginPath();
+        ctx.moveTo(a.px, a.py); ctx.lineTo(b.px, b.py);
+        ctx.strokeStyle = 'rgba(' + inkRgb[0] + ',' + inkRgb[1] + ',' + inkRgb[2] + ',' + (0.2 + lit * 0.72).toFixed(3) + ')';
+        ctx.lineWidth = treeEdge ? 1 + lit * 2.8 : 1;
+        ctx.stroke();
+      });
+      h.nodes.forEach((n, i) => {
+        const r = 2.8 + Math.min(2.6, (n.deg || 1) * 0.42) + n.lit * 4.6 + (i === h.src ? 2.2 : 0);
+        ctx.beginPath();
+        ctx.arc(n.px, n.py, r, 0, 6.2832);
+        ctx.lineWidth = n.hub ? 2 + n.lit * 1.2 : 1.5 + n.lit * 1.2;
+        ctx.strokeStyle = n.lit > 0.02 ? mix(inkRgb, acRgb, Math.min(1, n.lit * 1.4)) : 'rgba(' + inkRgb[0] + ',' + inkRgb[1] + ',' + inkRgb[2] + ',' + (n.hub ? 0.72 : 0.5) + ')';
+        ctx.stroke();
+        if (n.lit > 0.35) {
+          ctx.beginPath(); ctx.arc(n.px, n.py, Math.max(1, r - 1.8), 0, 6.2832);
+          ctx.fillStyle = mix(acRgb, ac2Rgb, n.lit);
+          ctx.globalAlpha = (n.lit - 0.35) * 1.5; ctx.fill(); ctx.globalAlpha = 1;
+        }
+        if (i === h.src) {
+          ctx.beginPath(); ctx.arc(n.px, n.py, r + 5, 0, 6.2832);
+          ctx.strokeStyle = 'rgba(' + inkRgb[0] + ',' + inkRgb[1] + ',' + inkRgb[2] + ',0.9)';
+          ctx.lineWidth = 1.4; ctx.stroke();
+        }
+      });
+      this._heroRaf = requestAnimationFrame(frame);
+    };
+    h.nodes.forEach((n) => { n.px = 26 + n.x * (W - 52); n.py = 22 + n.y * (H - 44); });
+    this.bfsFrom(0);
+    cancelAnimationFrame(this._heroRaf);
+    frame(performance.now());
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this._key);
+    cancelAnimationFrame(this._heroRaf);
+    if (this._heroRO) this._heroRO.disconnect();
+  }
+
+  step(d) {
+    const t = this.trace(this.state.algo);
+    this.setState((s) => ({ step: Math.max(0, Math.min(t.length - 1, s.step + d)) }));
+  }
+
+  // ---------- pseudocode ----------
+  pc(id) {
+    const H = (t) => ({ t: t, h: true });
+    const L = (i, t) => ({ t: t, i: i });
+    const B = () => ({ t: '', b: true });
+    const P = {
+      insertion: [
+        H('INSERTION-SORT(A)'),
+        L(1, 'for j = 2 to A.length'),
+        L(2, 'key = A[j]'),
+        L(2, '// sett A[j] inn i den sorterte A[1..j−1]'),
+        L(2, 'i = j − 1'),
+        L(2, 'while i > 0 and A[i] > key'),
+        L(3, 'A[i+1] = A[i]'),
+        L(3, 'i = i − 1'),
+        L(2, 'A[i+1] = key')
+      ],
+      merge: [
+        H('MERGE-SORT(A, p, r)'),
+        L(1, 'if p < r'),
+        L(2, 'q = ⌊(p + r)/2⌋'),
+        L(2, 'MERGE-SORT(A, p, q)'),
+        L(2, 'MERGE-SORT(A, q+1, r)'),
+        L(2, 'MERGE(A, p, q, r)'),
+        B(),
+        H('MERGE(A, p, q, r)'),
+        L(1, 'n₁ = q − p + 1   n₂ = r − q'),
+        L(1, 'kopier A[p..q] til L[1..n₁], A[q+1..r] til R[1..n₂]'),
+        L(1, 'L[n₁+1] = ∞   R[n₂+1] = ∞      // vaktposter'),
+        L(1, 'i = 1   j = 1'),
+        L(1, 'for k = p to r'),
+        L(2, 'if L[i] ≤ R[j]'),
+        L(3, 'A[k] = L[i]   i = i + 1'),
+        L(2, 'else A[k] = R[j]   j = j + 1')
+      ],
+      quick: [
+        H('QUICKSORT(A, p, r)'),
+        L(1, 'if p < r'),
+        L(2, 'q = PARTITION(A, p, r)'),
+        L(2, 'QUICKSORT(A, p, q−1)'),
+        L(2, 'QUICKSORT(A, q+1, r)'),
+        B(),
+        H('PARTITION(A, p, r)'),
+        L(1, 'x = A[r]'),
+        L(1, 'i = p − 1'),
+        L(1, 'for j = p to r − 1'),
+        L(2, 'if A[j] ≤ x'),
+        L(3, 'i = i + 1'),
+        L(3, 'exchange A[i] with A[j]'),
+        L(1, 'exchange A[i+1] with A[r]'),
+        L(1, 'return i + 1')
+      ],
+      counting: [
+        H('COUNTING-SORT(A, B, k)'),
+        L(1, 'la C[0..k] være et nytt array'),
+        L(1, 'for i = 0 to k'),
+        L(2, 'C[i] = 0'),
+        L(1, 'for j = 1 to A.length'),
+        L(2, 'C[A[j]] = C[A[j]] + 1'),
+        L(1, '// C[i] = antall elementer lik i'),
+        L(1, 'for i = 1 to k'),
+        L(2, 'C[i] = C[i] + C[i−1]'),
+        L(1, '// C[i] = antall elementer ≤ i'),
+        L(1, 'for j = A.length downto 1'),
+        L(2, 'B[C[A[j]]] = A[j]'),
+        L(2, 'C[A[j]] = C[A[j]] − 1')
+      ],
+      radix: [
+        H('RADIX-SORT(A, d)'),
+        L(1, 'for i = 1 to d'),
+        L(2, 'bruk en stabil sortering på A, på siffer i'),
+        B(),
+        L(0, '// i = 1 er minst signifikante siffer (LSD)'),
+        L(0, '// her: COUNTING-SORT på hvert siffer'),
+        L(0, '// stabiliteten er hele poenget')
+      ],
+      bucket: [
+        H('BUCKET-SORT(A)'),
+        L(1, 'n = A.length'),
+        L(1, 'la B[0..n−1] være et nytt array'),
+        L(1, 'for i = 0 to n − 1'),
+        L(2, 'B[i] = tom liste'),
+        L(1, 'for i = 1 to n'),
+        L(2, 'sett A[i] inn i listen B[⌊n · A[i]⌋]'),
+        L(1, 'for i = 0 to n − 1'),
+        L(2, 'sorter listen B[i] med INSERTION-SORT'),
+        L(1, 'konkatener B[0], B[1], …, B[n−1] i rekkefølge')
+      ],
+      rselect: [
+        H('RANDOMIZED-SELECT(A, p, r, i)'),
+        L(1, 'if p == r'),
+        L(2, 'return A[p]'),
+        L(1, 'q = RANDOMIZED-PARTITION(A, p, r)'),
+        L(1, 'k = q − p + 1                 // pivotens rang i A[p..r]'),
+        L(1, 'if i == k'),
+        L(2, 'return A[q]'),
+        L(1, 'elseif i < k'),
+        L(2, 'return RANDOMIZED-SELECT(A, p, q−1, i)'),
+        L(1, 'else return RANDOMIZED-SELECT(A, q+1, r, i−k)'),
+        B(),
+        H('RANDOMIZED-PARTITION(A, p, r)'),
+        L(1, 'j = RANDOM(p, r)'),
+        L(1, 'exchange A[r] with A[j]'),
+        L(1, 'return PARTITION(A, p, r)   // samme som i quicksort')
+      ],
+      select: [
+        H('SELECT(A, p, r, i)  —  median-of-medians'),
+        L(1, 'del A[p..r] i ⌈n/5⌉ grupper på 5 elementer'),
+        L(1, 'finn medianen i hver gruppe (insertion sort)'),
+        L(1, 'x = SELECT(medianene, ⌈n/10⌉)   // median av medianene'),
+        L(1, 'partisjoner rundt x, la k = rangen til x'),
+        L(1, 'if i == k return x'),
+        L(1, 'elseif i < k SELECT på venstre del'),
+        L(1, 'else SELECT på høyre del med i − k')
+      ],
+      bfs: [
+        H('BFS(G, s)'),
+        L(1, 'for each u ∈ G.V − {s}'),
+        L(2, 'u.color = WHITE   u.d = ∞   u.π = NIL'),
+        L(1, 's.color = GRAY   s.d = 0   s.π = NIL'),
+        L(1, 'Q = ∅'),
+        L(1, 'ENQUEUE(Q, s)'),
+        L(1, 'while Q ≠ ∅'),
+        L(2, 'u = DEQUEUE(Q)'),
+        L(2, 'for each v ∈ G.Adj[u]'),
+        L(3, 'if v.color == WHITE'),
+        L(4, 'v.color = GRAY   v.d = u.d + 1   v.π = u'),
+        L(4, 'ENQUEUE(Q, v)'),
+        L(2, 'u.color = BLACK')
+      ],
+      dfs: [
+        H('DFS(G)'),
+        L(1, 'for each u ∈ G.V: u.color = WHITE'),
+        L(1, 'time = 0'),
+        L(1, 'for each hvit u ∈ G.V: DFS-VISIT(G, u)'),
+        B(),
+        H('DFS-VISIT(G, u)'),
+        L(1, 'time = time + 1   u.d = time   u.color = GRAY'),
+        L(1, 'for each v ∈ G.Adj[u]'),
+        L(2, '// klassifiser kanten (u,v)'),
+        L(2, 'if v.color == WHITE'),
+        L(3, 'v.π = u'),
+        L(3, 'DFS-VISIT(G, v)'),
+        L(1, 'u.color = BLACK   time++   u.f = time')
+      ],
+      topo: [
+        H('TOPOLOGICAL-SORT(G)'),
+        L(1, 'kall DFS(G) for å beregne u.f'),
+        L(1, 'når en node blir svart: sett den FORAN i lista'),
+        L(1, 'return lista')
+      ],
+      scc: [
+        H('STRONGLY-CONNECTED-COMPONENTS(G)'),
+        L(1, 'kall DFS(G) for å beregne u.f'),
+        L(1, 'beregn Gᵀ (snu alle kanter)'),
+        L(1, 'kall DFS(Gᵀ), hovedløkka i synkende u.f'),
+        L(1, 'hvert DFS-tre er én sterk komponent')
+      ],
+      kruskal: [
+        H('MST-KRUSKAL(G, w)'),
+        L(1, 'A = ∅'),
+        L(1, 'for each v ∈ G.V: MAKE-SET(v)'),
+        L(1, 'sorter kantene i G.E etter økende vekt w'),
+        L(1, 'for each (u,v) ∈ G.E i sortert rekkefølge'),
+        L(2, 'if FIND-SET(u) ≠ FIND-SET(v)'),
+        L(3, 'A = A ∪ {(u,v)}'),
+        L(3, 'UNION(u, v)'),
+        L(1, 'return A')
+      ],
+      prim: [
+        H('MST-PRIM(G, w, r)'),
+        L(1, 'for each u ∈ G.V: u.key = ∞   u.π = NIL'),
+        L(1, 'r.key = 0'),
+        L(1, 'Q = G.V        // min-prioritetskø på key'),
+        L(1, 'while Q ≠ ∅'),
+        L(2, 'u = EXTRACT-MIN(Q)'),
+        L(2, 'for each v ∈ G.Adj[u]'),
+        L(3, 'if v ∈ Q and w(u,v) < v.key'),
+        L(4, 'v.π = u'),
+        L(4, 'v.key = w(u,v)      // DECREASE-KEY')
+      ],
+      dijkstra: [
+        H('DIJKSTRA(G, w, s)'),
+        L(1, 'INITIALIZE-SINGLE-SOURCE(G, s)'),
+        L(1, 'S = ∅'),
+        L(1, 'Q = G.V        // min-prioritetskø på d'),
+        L(1, 'while Q ≠ ∅'),
+        L(2, 'u = EXTRACT-MIN(Q)'),
+        L(2, 'S = S ∪ {u}'),
+        L(2, 'for each v ∈ G.Adj[u]'),
+        L(3, 'RELAX(u, v, w)'),
+        B(),
+        L(0, '// RELAX: if v.d > u.d + w → v.d = u.d + w, v.π = u')
+      ],
+      bellman: [
+        H('BELLMAN-FORD(G, w, s)'),
+        L(1, 'INITIALIZE-SINGLE-SOURCE(G, s)'),
+        L(1, 'for i = 1 to |G.V| − 1'),
+        L(2, 'for each edge (u,v) ∈ G.E'),
+        L(3, 'RELAX(u, v, w)'),
+        L(1, 'for each edge (u,v) ∈ G.E'),
+        L(2, 'if v.d > u.d + w(u,v)'),
+        L(3, 'return FALSE      // negativ sykel'),
+        L(1, 'return TRUE')
+      ],
+      dagsp: [
+        H('DAG-SHORTEST-PATHS(G, w, s)'),
+        L(1, 'topologisk sorter nodene i G'),
+        L(1, 'INITIALIZE-SINGLE-SOURCE(G, s)'),
+        L(1, 'for each u i topologisk rekkefølge'),
+        L(2, 'for each v ∈ G.Adj[u]'),
+        L(3, 'RELAX(u, v, w)')
+      ],
+      floyd: [
+        H('FLOYD-WARSHALL(W)'),
+        L(1, 'n = W.rows   D⁽⁰⁾ = W'),
+        L(1, 'for k = 1 to n'),
+        L(2, 'la D⁽ᵏ⁾ være en ny n×n matrise'),
+        L(2, 'for i = 1 to n'),
+        L(3, 'for j = 1 to n'),
+        L(4, 'd⁽ᵏ⁾ᵢⱼ = min(d⁽ᵏ⁻¹⁾ᵢⱼ , d⁽ᵏ⁻¹⁾ᵢₖ + d⁽ᵏ⁻¹⁾ₖⱼ)'),
+        L(1, 'return D⁽ⁿ⁾')
+      ],
+      maxflow: [
+        H('FORD-FULKERSON(G, s, t)'),
+        L(1, 'for each edge (u,v) ∈ G.E: (u,v).f = 0'),
+        L(1, 'while det finnes en sti p: s ↝ t i G_f'),
+        L(2, 'cf(p) = min{ cf(u,v) : (u,v) ∈ p }'),
+        L(2, 'for each edge (u,v) ∈ p'),
+        L(3, 'øk flyten langs (u,v) med cf(p)'),
+        B(),
+        L(0, '// EDMONDS-KARP: velg p som korteste sti (BFS)')
+      ]
+    };
+    return P[id] || [];
+  }
+
+  // ---------- traces ----------
+  trace(id) {
+    this._c = this._c || {};
+    if (!this._c[id]) {
+      const f = { insertion: 'tInsertion', merge: 'tMerge', quick: 'tQuick', counting: 'tCounting', radix: 'tRadix', bucket: 'tBucket', rselect: 'tSelect' }[id];
+      this._c[id] = f ? this[f]() : this.gtrace(id);
+    }
+    return this._c[id];
+  }
+
+  tInsertion() {
+    const A = [5, 2, 4, 6, 1, 3], S = [];
+    const done = (u) => { const m = {}; for (let t = 0; t <= u; t++) m[t] = 'done'; return m; };
+    const P = (line, marks, note, vars) => S.push({ line: line, arr: A.slice(), marks: marks, note: note, vars: vars || [] });
+    P(0, {}, 'Start. Vi bygger et sortert prefiks fra venstre. A[1] alene er trivielt sortert.', [{ k: 'n', v: A.length }]);
+    for (let j = 1; j < A.length; j++) {
+      const key = A[j];
+      P(1, Object.assign(done(j - 1), { [j]: 'key' }), 'Ytre løkke: j = ' + (j + 1) + '. Prefikset A[1..' + j + '] er sortert (hvit med ramme).', [{ k: 'j', v: j + 1 }]);
+      P(2, Object.assign(done(j - 1), { [j]: 'key' }), 'key = A[' + (j + 1) + '] = ' + key + ' plukkes ut og holdes utenfor arrayet.', [{ k: 'j', v: j + 1 }, { k: 'key', v: key }]);
+      let i = j - 1;
+      P(4, Object.assign(done(j - 1), { [j]: 'key' }), 'i = j − 1 = ' + (i + 1) + '. Vi ser bakover gjennom det sorterte prefikset.', [{ k: 'j', v: j + 1 }, { k: 'i', v: i + 1 }, { k: 'key', v: key }]);
+      let hole = j;
+      for (;;) {
+        const m = done(j - 1); m[hole] = 'key'; if (i >= 0) m[i] = 'compare';
+        const ok = i >= 0 && A[i] > key;
+        const txt = i < 0
+          ? 'i = 0: vi er forbi starten av arrayet → while-løkka stopper. Merk at i > 0 må testes FØR A[i], ellers leser vi utenfor arrayet.'
+          : 'Test: A[' + (i + 1) + '] = ' + A[i] + ' > key = ' + key + '? ' + (ok ? 'Ja → skyv A[' + (i + 1) + '] én plass til høyre.' : 'Nei → key skal stå rett til høyre for A[' + (i + 1) + '].');
+        P(5, m, txt, [{ k: 'i', v: i + 1 }, { k: 'key', v: key }]);
+        if (!ok) break;
+        A[i + 1] = A[i];
+        hole = i;
+        P(6, Object.assign(done(j - 1), { [i + 1]: 'compare', [i]: 'key' }), 'A[' + (i + 2) + '] = A[' + (i + 1) + '] = ' + A[i] + '. Ingen bytte — bare en forskyvning; key ligger fortsatt utenfor.', [{ k: 'i', v: i + 1 }, { k: 'key', v: key }]);
+        i = i - 1;
+        P(7, Object.assign(done(j - 1), { [hole]: 'key' }), 'i = ' + (i + 1) + '. Ett skritt videre bakover.', [{ k: 'i', v: i + 1 }, { k: 'key', v: key }]);
+      }
+      A[i + 1] = key;
+      P(8, done(j), 'A[' + (i + 2) + '] = key = ' + key + '. Prefikset A[1..' + (j + 1) + '] er nå sortert — invarianten holder.', [{ k: 'j', v: j + 1 }, { k: 'key', v: key }]);
+    }
+    P(1, done(A.length - 1), 'j = n + 1 → løkka terminerer. Invarianten sier at A[1..n] er sortert. Ferdig.', [{ k: 'n', v: A.length }]);
+    return S;
+  }
+
+  cells(label, vals, opts) {
+    const o = opts || {};
+    return {
+      label: label, isCells: true,
+      cells: vals.map((v, k) => ({ v: v, sub: o.sub ? o.sub(k) : String(k + (o.base === undefined ? 1 : o.base)), mark: o.mark ? o.mark(k, v) : 'plain', ptr: o.ptr ? o.ptr(k) : '' }))
+    };
+  }
+
+  tMerge() {
+    const A = [5, 2, 4, 7, 1, 3, 2, 6], S = [], stack = [];
+    const P = (line, marks, note, vars, aux) => S.push({ line: line, arr: A.slice(), marks: marks, note: note, vars: vars || [], aux: aux || [], stack: stack.slice() });
+    const rng = (p, r, extra) => { const m = {}; for (let t = 0; t < A.length; t++) m[t] = 'out'; for (let t = p; t <= r; t++) m[t] = 'range'; return Object.assign(m, extra || {}); };
+    const merge = (p, q, r) => {
+      const L = A.slice(p, q + 1).concat(['∞']), R = A.slice(q + 1, r + 1).concat(['∞']);
+      let i = 0, j = 0;
+      const aux = (k) => [
+        this.cells('L (venstre halvdel)', L, { mark: (x) => x < i ? 'out' : (x === i ? 'compare' : 'plain'), ptr: (x) => x === i ? 'i' : '' }),
+        this.cells('R (høyre halvdel)', R, { mark: (x) => x < j ? 'out' : (x === j ? 'compare' : 'plain'), ptr: (x) => x === j ? 'j' : '' })
+      ];
+      P(8, rng(p, r), 'MERGE: A[' + (p + 1) + '..' + (q + 1) + '] og A[' + (q + 2) + '..' + (r + 1) + '] er hver for seg sortert. n₁ = ' + (q - p + 1) + ', n₂ = ' + (r - q) + '.', [{ k: 'p', v: p + 1 }, { k: 'q', v: q + 1 }, { k: 'r', v: r + 1 }], aux());
+      P(9, rng(p, r), 'Halvdelene kopieres ut i L og R — dette er grunnen til at merge sort IKKE er in-place: Θ(n) ekstra minne.', [], aux());
+      P(10, rng(p, r), 'Vaktposten ∞ legges bakerst i begge. Da slipper vi å sjekke «er L tom?» inne i løkka.', [], aux());
+      for (let k = p; k <= r; k++) {
+        const takeL = L[i] === '∞' ? false : (R[j] === '∞' ? true : L[i] <= R[j]);
+        P(13, rng(p, r, { [k]: 'key' }), 'k = ' + (k + 1) + ': L[' + (i + 1) + '] = ' + L[i] + ' ≤ R[' + (j + 1) + '] = ' + R[j] + '? ' + (takeL ? 'Ja → ta fra L. (≤ og ikke < er det som gjør merge sort stabil.)' : 'Nei → ta fra R.'), [{ k: 'k', v: k + 1 }, { k: 'i', v: i + 1 }, { k: 'j', v: j + 1 }], aux());
+        if (takeL) { A[k] = L[i]; i++; P(14, rng(p, r, { [k]: 'done' }), 'A[' + (k + 1) + '] = ' + A[k] + ' fra L. Invariant: A[p..k] holder de minste elementene av L ∪ R i sortert rekkefølge.', [{ k: 'k', v: k + 1 }, { k: 'i', v: i + 1 }], aux()); }
+        else { A[k] = R[j]; j++; P(15, rng(p, r, { [k]: 'done' }), 'A[' + (k + 1) + '] = ' + A[k] + ' fra R.', [{ k: 'k', v: k + 1 }, { k: 'j', v: j + 1 }], aux()); }
+      }
+      const m = rng(p, r); for (let t = p; t <= r; t++) m[t] = 'done';
+      P(12, m, 'Flettingen er ferdig: A[' + (p + 1) + '..' + (r + 1) + '] er sortert. Θ(r − p + 1) arbeid — lineært i antall elementer.', [], []);
+    };
+    const ms = (p, r) => {
+      stack.push('MERGE-SORT(A, ' + (p + 1) + ', ' + (r + 1) + ')');
+      P(1, rng(p, r), 'Kall MERGE-SORT(A, ' + (p + 1) + ', ' + (r + 1) + '). p < r? ' + (p < r ? 'Ja → del videre.' : 'Nei → basistilfelle: ett element er alltid sortert.'), [{ k: 'p', v: p + 1 }, { k: 'r', v: r + 1 }]);
+      if (p < r) {
+        const q = Math.floor((p + r) / 2);
+        P(2, rng(p, r, { [q]: 'pivot' }), 'q = ⌊(' + (p + 1) + ' + ' + (r + 1) + ')/2⌋ = ' + (q + 1) + '. Deler midt på — uavhengig av verdiene. Det er derfor kjøretiden alltid er Θ(n log n).', [{ k: 'p', v: p + 1 }, { k: 'q', v: q + 1 }, { k: 'r', v: r + 1 }]);
+        P(3, rng(p, q), 'Sorterer venstre halvdel A[' + (p + 1) + '..' + (q + 1) + '] rekursivt.', []);
+        ms(p, q);
+        P(4, rng(q + 1, r), 'Sorterer høyre halvdel A[' + (q + 2) + '..' + (r + 1) + '] rekursivt.', []);
+        ms(q + 1, r);
+        merge(p, q, r);
+      }
+      stack.pop();
+    };
+    ms(0, A.length - 1);
+    const all = {}; for (let t = 0; t < A.length; t++) all[t] = 'done';
+    P(0, all, 'Hele arrayet er sortert. Rekursjonstreet hadde lg n nivåer med Θ(n) fletting på hvert nivå.', []);
+    return S;
+  }
+
+  tQuick() {
+    const A = [2, 8, 7, 1, 3, 5, 6, 4], S = [], stack = [];
+    const P = (line, marks, note, vars) => S.push({ line: line, arr: A.slice(), marks: marks, note: note, vars: vars || [], stack: stack.slice() });
+    const rng = (p, r, extra) => { const m = {}; for (let t = 0; t < A.length; t++) m[t] = A[t] === null ? 'out' : 'out'; for (let t = p; t <= r; t++) m[t] = 'range'; return Object.assign(m, extra || {}); };
+    const fixed = {};
+    const partition = (p, r) => {
+      const x = A[r];
+      P(7, rng(p, r, { [r]: 'pivot' }), 'PARTITION: pivot x = A[' + (r + 1) + '] = ' + x + ' — siste element. Nettopp dette valget gir worst case på ferdig sortert input.', [{ k: 'p', v: p + 1 }, { k: 'r', v: r + 1 }, { k: 'x', v: x }]);
+      let i = p - 1;
+      P(8, rng(p, r, { [r]: 'pivot' }), 'i = p − 1 = ' + i + '. i er slutten av «≤ x»-området, som er tomt nå.', [{ k: 'i', v: i + 1 }, { k: 'x', v: x }]);
+      for (let j = p; j < r; j++) {
+        const m = rng(p, r, { [r]: 'pivot', [j]: 'compare' }); for (let t = p; t <= i; t++) m[t] = 'done';
+        P(9, m, 'j = ' + (j + 1) + '. Invariant: A[' + (p + 1) + '..' + (i + 1) + '] ≤ x, A[' + (i + 2) + '..' + j + '] > x.', [{ k: 'i', v: i + 1 }, { k: 'j', v: j + 1 }, { k: 'x', v: x }]);
+        const ok = A[j] <= x;
+        P(10, m, 'A[' + (j + 1) + '] = ' + A[j] + ' ≤ x = ' + x + '? ' + (ok ? 'Ja → elementet hører til venstre side.' : 'Nei → la det ligge; «> x»-området vokser med én.'), [{ k: 'i', v: i + 1 }, { k: 'j', v: j + 1 }]);
+        if (ok) {
+          i++;
+          const t0 = A[i]; A[i] = A[j]; A[j] = t0;
+          const m2 = rng(p, r, { [r]: 'pivot', [i]: 'key' }); for (let t = p; t < i; t++) m2[t] = 'done';
+          P(12, m2, 'i = ' + (i + 1) + ', så A[' + (i + 1) + '] ↔ A[' + (j + 1) + ']' + (i === j ? ' (samme indeks — byttet er en no-op)' : '') + '. Byttene er grunnen til at quicksort ikke er stabil.', [{ k: 'i', v: i + 1 }, { k: 'j', v: j + 1 }]);
+        }
+      }
+      const t1 = A[i + 1]; A[i + 1] = A[r]; A[r] = t1;
+      const m3 = rng(p, r, { [i + 1]: 'pivot' }); for (let t = p; t <= i; t++) m3[t] = 'done';
+      P(13, m3, 'Til slutt A[' + (i + 2) + '] ↔ A[' + (r + 1) + '): pivoten flyttes på sin endelige plass. Glemmer du dette steget blir hele partisjoneringen feil.', [{ k: 'i', v: i + 1 }]);
+      P(14, m3, 'return q = ' + (i + 2) + '. Merk: q er en INDEKS, ikke pivotverdien.', [{ k: 'q', v: i + 2 }]);
+      return i + 1;
+    };
+    const qs = (p, r) => {
+      stack.push('QUICKSORT(A, ' + (p + 1) + ', ' + (r + 1) + ')');
+      P(1, rng(p, r), 'QUICKSORT(A, ' + (p + 1) + ', ' + (r + 1) + '). p < r? ' + (p < r ? 'Ja.' : 'Nei → 0 eller 1 element, ingenting å gjøre.'), [{ k: 'p', v: p + 1 }, { k: 'r', v: r + 1 }]);
+      if (p < r) {
+        P(2, rng(p, r, { [r]: 'pivot' }), 'Kaller PARTITION — alt arbeidet i quicksort skjer her. Rekursjonen gjør bare bokføring.', []);
+        const q = partition(p, r);
+        P(3, rng(p, q - 1 < p ? p : q - 1), 'QUICKSORT på venstre del A[' + (p + 1) + '..' + q + ']. Pivoten er ferdig og røres aldri igjen.', [{ k: 'q', v: q + 1 }]);
+        qs(p, q - 1);
+        P(4, rng(q + 1 > r ? r : q + 1, r), 'QUICKSORT på høyre del A[' + (q + 2) + '..' + (r + 1) + '].', [{ k: 'q', v: q + 1 }]);
+        qs(q + 1, r);
+      }
+      stack.pop();
+    };
+    qs(0, A.length - 1);
+    const all = {}; for (let t = 0; t < A.length; t++) all[t] = 'done';
+    P(0, all, 'Sortert — in-place, uten ekstra array. Forventet Θ(n log n), men worst case Θ(n²) hvis partisjonene er maksimalt ubalanserte.', []);
+    return S;
+  }
+
+  tCounting() {
+    const A = [2, 5, 3, 0, 2, 3, 0, 3], k = 5, S = [];
+    const B = new Array(A.length).fill('·');
+    const Cc = new Array(k + 1).fill(0);
+    const P = (line, marks, note, vars, auxMark) => {
+      const am = auxMark || {};
+      S.push({
+        line: line, arr: A.slice(), marks: marks, note: note, vars: vars || [],
+        aux: [
+          this.cells('C — teller / prefikssum (indeks = verdi)', Cc.slice(), { base: 0, mark: (x) => x === am.c ? 'key' : 'plain', ptr: (x) => x === am.c ? 'A[j]' : '' }),
+          this.cells('B — utdata-array', B.slice(), { mark: (x) => x === am.b ? 'key' : (B[x] === '·' ? 'out' : 'done'), ptr: (x) => x === am.b ? 'C[A[j]]' : '' })
+        ]
+      });
+    };
+    P(0, {}, 'COUNTING-SORT sammenligner aldri to elementer. Den teller hvor mange det er av hver verdi. Krav: verdiene er heltall i 0..k, her k = ' + k + '.', [{ k: 'n', v: A.length }, { k: 'k', v: k }]);
+    P(3, {}, 'C[0..k] nullstilles. Dette koster Θ(k) — derfor må k være O(n) for at totalen skal bli lineær.', [{ k: 'k', v: k }]);
+    for (let j = 0; j < A.length; j++) {
+      Cc[A[j]]++;
+      P(5, { [j]: 'key' }, 'A[' + (j + 1) + '] = ' + A[j] + ' → C[' + A[j] + '] = ' + Cc[A[j]] + '. Vi teller forekomster.', [{ k: 'j', v: j + 1 }], { c: A[j] });
+    }
+    P(6, {}, 'Nå er C[i] = antall elementer lik i. Summen av C er n = ' + A.length + '.', []);
+    for (let i = 1; i <= k; i++) {
+      Cc[i] += Cc[i - 1];
+      P(8, {}, 'C[' + i + '] = C[' + i + '] + C[' + (i - 1) + '] = ' + Cc[i] + '. Prefikssum.', [{ k: 'i', v: i }], { c: i });
+    }
+    P(9, {}, 'Nå er C[i] = antall elementer ≤ i. Det betyr: siste forekomst av verdien i skal ligge på plass C[i] i B.', []);
+    for (let j = A.length - 1; j >= 0; j--) {
+      const v = A[j], pos = Cc[v];
+      B[pos - 1] = v;
+      P(11, { [j]: 'key' }, 'Baklengs! A[' + (j + 1) + '] = ' + v + ' plasseres i B[' + pos + '] fordi C[' + v + '] = ' + pos + '.', [{ k: 'j', v: j + 1 }], { c: v, b: pos - 1 });
+      Cc[v]--;
+      P(12, { [j]: 'done' }, 'C[' + v + '] = ' + Cc[v] + '. Neste ' + v + ' (lenger til venstre i A) havner én plass tidligere — DERFOR er baklengs iterasjon det som gjør algoritmen stabil.', [{ k: 'j', v: j + 1 }], { c: v });
+    }
+    const all = {}; for (let t = 0; t < A.length; t++) all[t] = 'done';
+    P(0, all, 'B er sortert i Θ(n + k). Stabil, men ikke in-place: vi bruker Θ(n + k) ekstra minne.', []);
+    return S;
+  }
+
+  tRadix() {
+    const A = [329, 457, 657, 839, 436, 720, 355], S = [], d = 3;
+    const P = (line, marks, note, vars, aux) => S.push({ line: line, arr: A.slice(), marks: marks, note: note, vars: vars || [], aux: aux || [] });
+    const dig = (v, i) => Math.floor(v / Math.pow(10, i)) % 10;
+    const bucketPanel = (label, buckets, hot) => ({
+      label: label, isBuckets: true,
+      buckets: buckets.map((b, i) => ({ label: 'siffer ' + i, items: b.map((v) => ({ v: v, mark: 'plain' })), hot: i === hot }))
+    });
+    P(0, {}, 'RADIX-SORT sorterer tall siffer for siffer, fra MINST signifikante siffer og oppover (LSD). Her d = 3 siffer, base 10.', [{ k: 'd', v: d }, { k: 'n', v: A.length }]);
+    for (let i = 0; i < d; i++) {
+      const buckets = []; for (let t = 0; t < 10; t++) buckets.push([]);
+      P(1, {}, 'Pass ' + (i + 1) + ' av ' + d + ': vi sorterer på siffer nr. ' + (i + 1) + ' fra høyre (' + ['enere', 'tiere', 'hundrere'][i] + ').', [{ k: 'i', v: i + 1 }], [bucketPanel('Bøtter for siffer ' + (i + 1), buckets, -1)]);
+      for (let j = 0; j < A.length; j++) {
+        const dd = dig(A[j], i);
+        buckets[dd].push(A[j]);
+        P(2, { [j]: 'key' }, A[j] + ' har siffer ' + dd + ' på plass ' + (i + 1) + ' → legges BAKERST i bøtte ' + dd + '. At den legges bakerst er stabiliteten.', [{ k: 'i', v: i + 1 }, { k: 'siffer', v: dd }], [bucketPanel('Bøtter for siffer ' + (i + 1), buckets, dd)]);
+      }
+      const flat = [];
+      for (let t = 0; t < 10; t++) for (const v of buckets[t]) flat.push(v);
+      for (let t = 0; t < A.length; t++) A[t] = flat[t];
+      const all = {}; for (let t = 0; t < A.length; t++) all[t] = 'done';
+      P(2, all, 'Bøttene leses ut i rekkefølge 0..9. Etter pass ' + (i + 1) + ' er A sortert på de ' + (i + 1) + ' minst signifikante sifrene — og den rekkefølgen bevares videre fordi sorteringen er stabil.', [{ k: 'i', v: i + 1 }], [bucketPanel('Bøtter for siffer ' + (i + 1), buckets, -1)]);
+    }
+    const all = {}; for (let t = 0; t < A.length; t++) all[t] = 'done';
+    P(0, all, 'Ferdig etter d = 3 pass: Θ(d(n + k)) med k = 10. Ingen sammenligninger mellom hele tall.', []);
+    return S;
+  }
+
+  tBucket() {
+    const A = [0.78, 0.17, 0.39, 0.26, 0.72, 0.94, 0.21, 0.12, 0.23], S = [];
+    const n = A.length;
+    const buckets = []; for (let t = 0; t < n; t++) buckets.push([]);
+    const panel = (hot) => ({
+      label: 'B[0..n−1] — bøtter, B[i] dekker intervallet [i/n, (i+1)/n)',
+      isBuckets: true,
+      buckets: buckets.map((b, i) => ({ label: 'B[' + i + ']', items: b.map((v) => ({ v: v.toFixed(2), mark: 'plain' })), hot: i === hot }))
+    });
+    const P = (line, marks, note, vars, hot) => S.push({ line: line, arr: A.map((v) => v), marks: marks, note: note, vars: vars || [], aux: [panel(hot === undefined ? -1 : hot)] });
+    P(0, {}, 'BUCKET-SORT antar at tallene er uniformt fordelt over [0, 1). Da havner det i snitt ETT element i hver bøtte.', [{ k: 'n', v: n }]);
+    P(4, {}, 'n = ' + n + ' tomme bøtter opprettes. Bøtte i dekker [' + (0).toFixed(2) + ' + i/n, …).', [{ k: 'n', v: n }]);
+    for (let i = 0; i < n; i++) {
+      const b = Math.floor(n * A[i]);
+      buckets[b].push(A[i]);
+      P(6, { [i]: 'key' }, 'A[' + (i + 1) + '] = ' + A[i].toFixed(2) + ' → ⌊n · A[i]⌋ = ⌊' + n + ' · ' + A[i].toFixed(2) + '⌋ = ' + b + '. Inn i B[' + b + '].', [{ k: 'i', v: i + 1 }, { k: 'bøtte', v: b }], b);
+    }
+    for (let i = 0; i < n; i++) {
+      if (buckets[i].length > 1) {
+        buckets[i].sort((a, b) => a - b);
+        P(8, {}, 'B[' + i + '] har ' + buckets[i].length + ' elementer og sorteres med insertion sort. Forventet kostnad er lav fordi E[nᵢ²] = 2 − 1/n.', [{ k: 'i', v: i }], i);
+      } else {
+        P(8, {}, 'B[' + i + '] har ' + buckets[i].length + ' element' + (buckets[i].length === 1 ? '' : 'er') + ' — ingenting å sortere.', [{ k: 'i', v: i }], i);
+      }
+    }
+    const flat = [];
+    for (let t = 0; t < n; t++) for (const v of buckets[t]) flat.push(v);
+    for (let t = 0; t < n; t++) A[t] = flat[t];
+    const all = {}; for (let t = 0; t < n; t++) all[t] = 'done';
+    P(9, all, 'Bøttene konkateneres i rekkefølge. Forventet Θ(n) — men hvis alle tallene havnet i én bøtte blir det Θ(n²).', []);
+    return S;
+  }
+
+  tSelect() {
+    const A = [3, 2, 9, 0, 7, 5, 4], S = [], stack = [];
+    const target = 4;
+    const P = (line, marks, note, vars) => S.push({ line: line, arr: A.slice(), marks: marks, note: note, vars: vars || [], stack: stack.slice() });
+    const rng = (p, r, extra) => { const m = {}; for (let t = 0; t < A.length; t++) m[t] = 'out'; for (let t = p; t <= r; t++) m[t] = 'range'; return Object.assign(m, extra || {}); };
+    const partition = (p, r) => {
+      const x = A[r];
+      let i = p - 1;
+      for (let j = p; j < r; j++) {
+        const m = rng(p, r, { [r]: 'pivot', [j]: 'compare' }); for (let t = p; t <= i; t++) m[t] = 'done';
+        const ok = A[j] <= x;
+        P(16, m, 'PARTITION: A[' + (j + 1) + '] = ' + A[j] + ' ≤ x = ' + x + '? ' + (ok ? 'Ja → bytt inn i venstre side.' : 'Nei → la det ligge.'), [{ k: 'j', v: j + 1 }, { k: 'x', v: x }]);
+        if (ok) { i++; const t0 = A[i]; A[i] = A[j]; A[j] = t0; }
+      }
+      const t1 = A[i + 1]; A[i + 1] = A[r]; A[r] = t1;
+      const m3 = rng(p, r, { [i + 1]: 'pivot' }); for (let t = p; t <= i; t++) m3[t] = 'done';
+      P(16, m3, 'Pivoten ' + x + ' står nå på sin endelige plass, indeks q = ' + (i + 2) + '.', [{ k: 'q', v: i + 2 }]);
+      return i + 1;
+    };
+    const rs = (p, r, i) => {
+      stack.push('R-SELECT(A, ' + (p + 1) + ', ' + (r + 1) + ', i=' + i + ')');
+      P(1, rng(p, r), 'RANDOMIZED-SELECT på A[' + (p + 1) + '..' + (r + 1) + '], vi vil ha det ' + i + '. minste elementet AV DENNE delen. p == r? ' + (p === r ? 'Ja.' : 'Nei.'), [{ k: 'p', v: p + 1 }, { k: 'r', v: r + 1 }, { k: 'i', v: i }]);
+      if (p === r) { P(2, rng(p, r, { [p]: 'key' }), 'Ett element igjen → svaret er A[' + (p + 1) + '] = ' + A[p] + '.', [{ k: 'svar', v: A[p] }]); stack.pop(); return A[p]; }
+      const jr = p + ((r - p) >> 1);
+      P(13, rng(p, r, { [jr]: 'compare' }), 'RANDOM(p, r) velger indeks ' + (jr + 1) + ' som pivot (her fast for at eksempelet skal være reproduserbart — i praksis tilfeldig).', [{ k: 'j', v: jr + 1 }]);
+      const t0 = A[jr]; A[jr] = A[r]; A[r] = t0;
+      P(14, rng(p, r, { [r]: 'pivot' }), 'Pivoten byttes til slutten, så vanlig PARTITION kan brukes uendret. Det tilfeldige valget er det som gjør forventet kjøretid O(n).', []);
+      const q = partition(p, r);
+      const k = q - p + 1;
+      P(4, rng(p, r, { [q]: 'pivot' }), 'k = q − p + 1 = ' + k + ': pivoten er det ' + k + '. minste i A[' + (p + 1) + '..' + (r + 1) + '].', [{ k: 'q', v: q + 1 }, { k: 'k', v: k }, { k: 'i', v: i }]);
+      if (i === k) { P(6, rng(p, r, { [q]: 'key' }), 'i == k → ferdig. Svaret er A[' + (q + 1) + '] = ' + A[q] + '. Vi sorterte aldri hele arrayet.', [{ k: 'svar', v: A[q] }]); stack.pop(); return A[q]; }
+      if (i < k) {
+        P(8, rng(p, q - 1), 'i = ' + i + ' < k = ' + k + ' → elementet vi leter etter ligger til VENSTRE. Vi forkaster hele høyre side, pivoten inkludert.', []);
+        const res = rs(p, q - 1, i); stack.pop(); return res;
+      }
+      P(9, rng(q + 1, r), 'i = ' + i + ' > k = ' + k + ' → søk til HØYRE, men med ny rang i − k = ' + (i - k) + '. Å glemme dette er den klassiske feilen.', []);
+      const res = rs(q + 1, r, i - k); stack.pop(); return res;
+    };
+    P(0, {}, 'Vi vil finne det ' + target + '. minste elementet (rang ' + target + ') uten å sortere hele arrayet.', [{ k: 'n', v: A.length }, { k: 'i', v: target }]);
+    rs(0, A.length - 1, target);
+    return S;
+  }
+
+  // ---------- graphs ----------
+  NC = {
+    white: { fill: 'var(--color-bg)', stroke: 'var(--color-neutral-500)', text: 'var(--color-neutral-600)', w: 2 },
+    gray: { fill: 'var(--color-neutral-300)', stroke: 'var(--color-text)', text: 'var(--color-text)', w: 2 },
+    black: { fill: 'var(--color-text)', stroke: 'var(--color-text)', text: 'var(--color-bg)', w: 2 },
+    cur: { fill: 'var(--color-accent)', stroke: 'var(--color-accent-800)', text: '#ffffff', w: 5 },
+    done: { fill: 'var(--color-accent-200)', stroke: 'var(--color-accent-700)', text: 'var(--color-accent-800)', w: 2 }
+  };
+  EC = {
+    plain: { stroke: 'var(--color-neutral-500)', w: 2 },
+    tree: { stroke: 'var(--color-accent)', w: 6 },
+    active: { stroke: 'var(--color-accent-700)', w: 5 },
+    reject: { stroke: 'var(--color-neutral-300)', w: 2 }
+  };
+  GLEGEND = [
+    ['white', 'uoppdaget (hvit)'], ['gray', 'oppdaget / i kø (grå)'], ['black', 'ferdig (svart)'],
+    ['cur', 'noden vi jobber med'], ['done', 'i løsningen (tre/S)']
+  ];
+
+  GRAPHS = {
+    GU: {
+      w: 560, h: 260, dir: false,
+      nodes: [
+        { id: 'r', x: 80, y: 60 }, { id: 's', x: 213, y: 60 }, { id: 't', x: 346, y: 60 }, { id: 'u', x: 479, y: 60 },
+        { id: 'v', x: 80, y: 200, lb: 1 }, { id: 'w', x: 213, y: 200, lb: 1 }, { id: 'x', x: 346, y: 200, lb: 1 }, { id: 'y', x: 479, y: 200, lb: 1 }
+      ],
+      edges: [['r', 's'], ['r', 'v'], ['s', 'w'], ['t', 'u'], ['t', 'w'], ['t', 'x'], ['u', 'x'], ['u', 'y'], ['v', 'w'], ['w', 'x'], ['x', 'y']]
+    },
+    GD: {
+      w: 560, h: 260, dir: true,
+      nodes: [
+        { id: 'u', x: 90, y: 60 }, { id: 'v', x: 280, y: 60 }, { id: 'w', x: 470, y: 60 },
+        { id: 'x', x: 90, y: 200, lb: 1 }, { id: 'y', x: 280, y: 200, lb: 1 }, { id: 'z', x: 470, y: 200, lb: 1 }
+      ],
+      edges: [['u', 'v'], ['u', 'x'], ['v', 'y'], ['y', 'x'], ['x', 'v'], ['w', 'y'], ['w', 'z']]
+    },
+    GSCC: {
+      w: 560, h: 260, dir: true,
+      nodes: [
+        { id: 'a', x: 70, y: 60 }, { id: 'b', x: 210, y: 60 }, { id: 'c', x: 350, y: 60 }, { id: 'd', x: 490, y: 60 },
+        { id: 'e', x: 70, y: 200, lb: 1 }, { id: 'f', x: 210, y: 200, lb: 1 }, { id: 'g', x: 350, y: 200, lb: 1 }, { id: 'h', x: 490, y: 200, lb: 1 }
+      ],
+      edges: [['a', 'b'], ['b', 'c'], ['c', 'd'], ['d', 'c'], ['b', 'f'], ['e', 'a'], ['b', 'e'], ['f', 'g'], ['g', 'f'], ['c', 'g'], ['d', 'h'], ['h', 'h']]
+    },
+    GDAG: {
+      w: 600, h: 260, dir: true,
+      nodes: [
+        { id: 'r', x: 55, y: 80 }, { id: 's', x: 160, y: 80 }, { id: 't', x: 265, y: 80 },
+        { id: 'x', x: 370, y: 80 }, { id: 'y', x: 475, y: 80 }, { id: 'z', x: 560, y: 80 }
+      ],
+      edges: [['r', 's', 5], ['r', 't', 3, 70], ['s', 't', 2], ['s', 'x', 6, 70], ['t', 'x', 7], ['t', 'y', 4, 90], ['t', 'z', 2, 130], ['x', 'y', -1], ['x', 'z', 1, 70], ['y', 'z', -2]]
+    },
+    GW: {
+      w: 560, h: 270, dir: false,
+      nodes: [
+        { id: 'a', x: 70, y: 60 }, { id: 'b', x: 250, y: 50 }, { id: 'c', x: 460, y: 70 },
+        { id: 'd', x: 470, y: 210, lb: 1 }, { id: 'e', x: 270, y: 215, lb: 1 }, { id: 'f', x: 80, y: 205, lb: 1 }
+      ],
+      edges: [['a', 'b', 4], ['a', 'f', 8], ['b', 'c', 8], ['b', 'f', 11], ['b', 'e', 2], ['c', 'd', 7], ['c', 'e', 4], ['d', 'e', 9], ['e', 'f', 7]]
+    },
+    GDW: {
+      w: 520, h: 270, dir: true,
+      nodes: [
+        { id: 's', x: 60, y: 135 }, { id: 't', x: 240, y: 55 }, { id: 'x', x: 430, y: 55 },
+        { id: 'y', x: 240, y: 215, lb: 1 }, { id: 'z', x: 430, y: 215, lb: 1 }
+      ],
+      edges: [['s', 't', 10], ['s', 'y', 5], ['t', 'x', 1], ['t', 'y', 2, -26], ['y', 't', 3, -26], ['y', 'x', 9], ['y', 'z', 2], ['x', 'z', 4, -26], ['z', 'x', 6, -26], ['z', 's', 7, 90]]
+    },
+    GNEG: {
+      w: 520, h: 270, dir: true,
+      nodes: [
+        { id: 's', x: 60, y: 135 }, { id: 't', x: 240, y: 55 }, { id: 'x', x: 430, y: 55 },
+        { id: 'y', x: 240, y: 215, lb: 1 }, { id: 'z', x: 430, y: 215, lb: 1 }
+      ],
+      edges: [['s', 't', 6], ['s', 'y', 7], ['t', 'x', 5], ['t', 'y', 8, -26], ['t', 'z', -4, 90], ['x', 't', -2, -26], ['y', 'x', -3], ['y', 'z', 9], ['z', 's', 2, 90], ['z', 'x', 7, -26]]
+    },
+    GFW: {
+      w: 460, h: 250, dir: true,
+      nodes: [
+        { id: '1', x: 100, y: 60 }, { id: '2', x: 350, y: 60 }, { id: '3', x: 350, y: 190, lb: 1 }, { id: '4', x: 100, y: 190, lb: 1 }
+      ],
+      edges: [['1', '2', 3], ['1', '4', 7], ['2', '1', 8, -22], ['2', '3', 2], ['3', '1', 5], ['3', '4', 1], ['4', '1', 2, -22]]
+    },
+    GFLOW: {
+      w: 580, h: 270, dir: true,
+      nodes: [
+        { id: 's', x: 55, y: 135 }, { id: 'v1', x: 215, y: 55 }, { id: 'v2', x: 215, y: 215, lb: 1 },
+        { id: 'v3', x: 400, y: 55 }, { id: 'v4', x: 400, y: 215, lb: 1 }, { id: 't', x: 545, y: 135 }
+      ],
+      edges: [['s', 'v1', 16], ['s', 'v2', 13], ['v1', 'v2', 10, -24], ['v2', 'v1', 4, -24], ['v1', 'v3', 12], ['v3', 'v2', 9], ['v2', 'v4', 14], ['v4', 'v3', 7], ['v3', 't', 20], ['v4', 't', 4]]
+    }
+  };
+
+  INF = '∞';
+
+  gcells(label, order, lab, mark) {
+    if (!order.length) return { label: label, isCells: true, cells: [{ v: '∅', sub: '', mark: 'out', ptr: '' }] };
+    return { label: label, isCells: true, cells: order.map((id) => ({ v: lab(id), sub: id, mark: mark ? mark(id) : 'plain', ptr: '' })) };
+  }
+
+  gtable(label, order, vals, mark) {
+    return { label: label, isCells: true, cells: order.map((id) => ({ v: String(vals[id]), sub: id, mark: mark ? mark(id) : 'plain', ptr: '' })) };
+  }
+
+  gtrace(id) {
+    const f = {
+      bfs: 'tBfs', dfs: 'tDfs', topo: 'tTopo', scc: 'tScc', kruskal: 'tKruskal', prim: 'tPrim',
+      bellman: 'tBellman', dagsp: 'tDagsp', dijkstra: 'tDijkstra', floyd: 'tFloyd', maxflow: 'tMaxflow'
+    }[id];
+    return f ? this[f]() : [];
+  }
+
+  adj(G, u) {
+    const r = [];
+    G.edges.forEach((e) => {
+      if (e[0] === u) r.push({ v: e[1], w: e[2], key: e[0] + '>' + e[1] });
+      else if (!G.dir && e[1] === u) r.push({ v: e[0], w: e[2], key: e[0] + '>' + e[1] });
+    });
+    return r;
+  }
+
+  tBfs() {
+    const G = this.GRAPHS.GU, S = [];
+    const ids = G.nodes.map((n) => n.id);
+    const col = {}, d = {}, pi = {};
+    ids.forEach((i) => { col[i] = 'white'; d[i] = this.INF; pi[i] = '–'; });
+    let Q = [];
+    const P = (line, note, vars, cur, es) => S.push({
+      g: 'GU', line: line, note: note, vars: vars || [],
+      ns: (function (c) { const m = {}; ids.forEach((i) => { m[i] = cur === i ? 'cur' : c[i]; }); return m; })(col),
+      es: es || {}, labels: Object.assign({}, d),
+      aux: [this.gcells('Q — FIFO-kø (node : d)', Q, (n) => String(d[n]), () => 'compare'), this.gtable('π — forgjenger', ids, pi)]
+    });
+    const tree = {};
+    P(2, 'Initialisering: alle noder er hvite med d = ∞ og π = NIL. Hvit betyr «ikke oppdaget».', [{ k: 'n', v: ids.length }]);
+    col.s = 'gray'; d.s = 0;
+    P(3, 'Kilden s blir grå med d[s] = 0. Grå = oppdaget, men naboene er ikke utforsket ennå.', [{ k: 's', v: 's' }]);
+    Q = ['s'];
+    P(5, 'ENQUEUE(Q, s). Køen inneholder nå bare s.', [{ k: '|Q|', v: 1 }]);
+    while (Q.length) {
+      P(6, 'Q ≠ ∅ → fortsett. Forreste element i køen er ' + Q[0] + '.', [{ k: '|Q|', v: Q.length }], null, Object.assign({}, tree));
+      const u = Q.shift();
+      P(7, 'u = DEQUEUE(Q) = ' + u + '. FIFO er hele poenget: noder behandles i økende d-verdi, derfor finner BFS korteste sti i kanter.', [{ k: 'u', v: u }, { k: 'd[u]', v: d[u] }], u, Object.assign({}, tree));
+      const nb = this.adj(G, u);
+      for (const e of nb) {
+        const es = Object.assign({}, tree); es[e.key] = 'active';
+        if (col[e.v] === 'white') {
+          col[e.v] = 'gray'; d[e.v] = d[u] + 1; pi[e.v] = u; Q.push(e.v);
+          tree[e.key] = 'tree';
+          P(10, 'Naboen ' + e.v + ' er hvit → oppdaget. d[' + e.v + '] = d[' + u + '] + 1 = ' + d[e.v] + ', π[' + e.v + '] = ' + u + '. Kanten blir en trekant.', [{ k: 'u', v: u }, { k: 'v', v: e.v }, { k: 'd[v]', v: d[e.v] }], u, Object.assign({}, tree));
+          P(11, 'ENQUEUE(Q, ' + e.v + '). Køen er nå: ' + Q.join(', ') + '. Hver node legges i køen NØYAKTIG én gang — derfor Θ(V + E).', [{ k: '|Q|', v: Q.length }], u, Object.assign({}, tree));
+        } else {
+          P(9, 'Naboen ' + e.v + ' er ikke hvit (d = ' + d[e.v] + ') → den er allerede oppdaget, og vi gjør ingenting. Kanten blir ikke en trekant.', [{ k: 'u', v: u }, { k: 'v', v: e.v }], u, es);
+        }
+      }
+      col[u] = 'black';
+      P(12, u + ' er ferdig utforsket og blir svart. d[' + u + '] = ' + d[u] + ' er endelig — korteste avstand fra s målt i antall kanter.', [{ k: 'u', v: u }, { k: 'd[u]', v: d[u] }], null, Object.assign({}, tree));
+    }
+    P(6, 'Q = ∅ → løkka terminerer. Alle d-verdier er korteste avstander fra s, og trekantene utgjør bredde-først-treet.', [{ k: '|Q|', v: 0 }], null, Object.assign({}, tree));
+    return S;
+  }
+
+  tDfs() {
+    const G = this.GRAPHS.GD, S = [];
+    const ids = G.nodes.map((n) => n.id);
+    const col = {}, dd = {}, ff = {}, pi = {};
+    ids.forEach((i) => { col[i] = 'white'; dd[i] = '–'; ff[i] = '–'; pi[i] = '–'; });
+    let time = 0;
+    const stack = [], tree = {};
+    const lab = () => { const m = {}; ids.forEach((i) => { m[i] = dd[i] === '–' ? '' : dd[i] + '/' + ff[i]; }); return m; };
+    const P = (line, note, vars, cur, es) => S.push({
+      g: 'GD', line: line, note: note, vars: vars || [], stack: stack.slice(),
+      ns: (function (c) { const m = {}; ids.forEach((i) => { m[i] = cur === i ? 'cur' : c[i]; }); return m; })(col),
+      es: es || Object.assign({}, tree), labels: lab(),
+      aux: [this.gtable('d/f — oppdaget / ferdig (tidsstempler)', ids, (function () { const m = {}; ids.forEach((i) => { m[i] = (dd[i] === '–' ? '–' : dd[i] + '/' + ff[i]); }); return m; })())]
+    });
+    P(2, 'Alle noder hvite, time = 0. DFS går i dybden først og setter to tidsstempler per node: d (oppdaget) og f (ferdig).', [{ k: 'time', v: 0 }]);
+    const visit = (u) => {
+      stack.push('DFS-VISIT(' + u + ')');
+      time++; dd[u] = time; col[u] = 'gray';
+      P(6, 'DFS-VISIT(' + u + '): time = ' + time + ', d[' + u + '] = ' + time + ', noden blir grå. Grå på stacken = «vi er inne i denne noden».', [{ k: 'time', v: time }, { k: 'u', v: u }], u);
+      for (const e of this.adj(G, u)) {
+        const es = Object.assign({}, tree); es[e.key] = 'active';
+        if (col[e.v] === 'white') {
+          P(9, 'Kanten (' + u + ',' + e.v + '): ' + e.v + ' er hvit → TREKANT, vi går rekursivt ned i ' + e.v + '.', [{ k: 'u', v: u }, { k: 'v', v: e.v }], u, es);
+          pi[e.v] = u; tree[e.key] = 'tree';
+          visit(e.v);
+          P(11, 'Tilbake i ' + u + ' etter at ' + e.v + ' er ferdig. Vi fortsetter med resten av nabolista til ' + u + '.', [{ k: 'u', v: u }], u);
+        } else {
+          const kind = col[e.v] === 'gray' ? 'TILBAKEKANT (back edge) — ' + e.v + ' er grå, altså en forfar på stacken. Grå mål betyr SYKEL.' : (dd[e.v] > dd[u] ? 'FOROVERKANT (forward edge) — ' + e.v + ' er svart og oppdaget etter ' + u + '.' : 'KRYSSKANT (cross edge) — ' + e.v + ' er svart og ligger i et annet deltre.');
+          P(9, 'Kanten (' + u + ',' + e.v + '): ' + e.v + ' er ikke hvit → ingen rekursjon. Klassifisering: ' + kind, [{ k: 'u', v: u }, { k: 'v', v: e.v }], u, es);
+        }
+      }
+      col[u] = 'black'; time++; ff[u] = time;
+      P(12, u + ' har ingen hvite naboer igjen → svart, f[' + u + '] = ' + time + '. Parentesteoremet: intervallet [d,f] til ' + u + ' inneholder alle etterkommerne.', [{ k: 'time', v: time }, { k: 'f[u]', v: time }], u);
+      stack.pop();
+    };
+    for (const u of ids) {
+      P(3, 'Hovedløkka: u = ' + u + '. Er den hvit? ' + (col[u] === 'white' ? 'Ja → nytt DFS-tre starter her.' : 'Nei → alt besøkt, hopp over.'), [{ k: 'u', v: u }], col[u] === 'white' ? u : null);
+      if (col[u] === 'white') visit(u);
+    }
+    P(0, 'Ferdig: Θ(V + E). Hovedløkka sikrer at ALLE noder besøkes, også i en graf som ikke er sammenhengende — DFS gir derfor en skog, ikke ett tre.', [{ k: 'time', v: time }]);
+    return S;
+  }
+
+  tTopo() {
+    const G = this.GRAPHS.GDAG, S = [];
+    const ids = G.nodes.map((n) => n.id);
+    const col = {}, ff = {};
+    ids.forEach((i) => { col[i] = 'white'; ff[i] = '–'; });
+    let time = 0;
+    const list = [], stack = [], tree = {};
+    const P = (line, note, vars, cur, es) => S.push({
+      g: 'GDAG', line: line, note: note, vars: vars || [], stack: stack.slice(),
+      ns: (function (c) { const m = {}; ids.forEach((i) => { m[i] = cur === i ? 'cur' : c[i]; }); return m; })(col),
+      es: es || Object.assign({}, tree), labels: (function () { const m = {}; ids.forEach((i) => { m[i] = ff[i] === '–' ? '' : String(ff[i]); }); return m; })(),
+      aux: [this.gcells('Lenket liste — ferdige noder settes FORAN', list, (n) => n, () => 'done'), this.gtable('f — ferdigtid', ids, ff)]
+    });
+    P(1, 'TOPOLOGICAL-SORT er bare DFS med én ekstra linje. Tallet i noden er f-verdien (ferdigtid).', [{ k: 'n', v: ids.length }]);
+    const visit = (u) => {
+      stack.push('DFS-VISIT(' + u + ')');
+      col[u] = 'gray';
+      P(1, 'DFS-VISIT(' + u + '): noden blir grå.', [{ k: 'u', v: u }], u);
+      for (const e of this.adj(G, u)) {
+        const es = Object.assign({}, tree); es[e.key] = 'active';
+        if (col[e.v] === 'white') {
+          P(1, 'Kanten ' + u + ' → ' + e.v + ': hvit nabo, gå i dybden.', [{ k: 'u', v: u }, { k: 'v', v: e.v }], u, es);
+          tree[e.key] = 'tree'; visit(e.v);
+        } else {
+          P(1, 'Kanten ' + u + ' → ' + e.v + ': ' + e.v + ' er ' + (col[e.v] === 'gray' ? 'grå — en tilbakekant, altså en SYKEL. I en DAG skjer ikke dette, og en topologisk sortering finnes ikke hvis det skjer.' : 'allerede ferdig (svart) → hopp over.'), [{ k: 'v', v: e.v }], u, es);
+        }
+      }
+      col[u] = 'black'; time++; ff[u] = time;
+      list.unshift(u);
+      P(2, u + ' er ferdig: f[' + u + '] = ' + time + ', og noden settes FORAN i lista. Lista er nå: ' + list.join(' → ') + '. Synkende f-verdi = topologisk rekkefølge.', [{ k: 'f[u]', v: time }], u);
+      stack.pop();
+    };
+    for (const u of ids) if (col[u] === 'white') visit(u);
+    P(3, 'Resultat: ' + list.join(' → '). trim() + '. Hver kant går fra venstre mot høyre i denne rekkefølgen. Θ(V + E).', [{ k: 'time', v: time }]);
+    return S;
+  }
+
+  tScc() {
+    const G = this.GRAPHS.GSCC, S = [];
+    const ids = G.nodes.map((n) => n.id);
+    const col = {}, ff = {}, comp = {};
+    ids.forEach((i) => { col[i] = 'white'; ff[i] = '–'; comp[i] = '–'; });
+    let time = 0;
+    const order = [], stack = [], tree = {};
+    const P = (line, note, vars, cur, es, transposed) => S.push({
+      g: 'GSCC', line: line, note: note, vars: vars || [], stack: stack.slice(), transpose: !!transposed,
+      ns: (function (c) { const m = {}; ids.forEach((i) => { m[i] = cur === i ? 'cur' : c[i]; }); return m; })(col),
+      es: es || Object.assign({}, tree), labels: (function () { const m = {}; ids.forEach((i) => { m[i] = ff[i] === '–' ? '' : String(ff[i]); }); return m; })(),
+      aux: [this.gcells('Synkende f — rekkefølgen for andre DFS', order, (n) => n, () => 'compare'), this.gtable('komponent-nr.', ids, comp)]
+    });
+    P(1, 'Steg 1: kjør DFS på G for å regne ut f-verdier. Tallet i noden er f.', [{ k: 'n', v: ids.length }]);
+    const visit1 = (u) => {
+      stack.push('DFS-VISIT(' + u + ')');
+      col[u] = 'gray';
+      P(1, 'DFS-VISIT(' + u + ') i G.', [{ k: 'u', v: u }], u);
+      for (const e of this.adj(G, u)) {
+        if (e.v === u) continue;
+        if (col[e.v] === 'white') { tree[e.key] = 'tree'; visit1(e.v); }
+      }
+      col[u] = 'black'; time++; ff[u] = time; order.unshift(u);
+      P(1, u + ' ferdig: f[' + u + '] = ' + time + '. Rekkefølgen med synkende f er nå: ' + order.join(', '), [{ k: 'f[u]', v: time }], u);
+      stack.pop();
+    };
+    for (const u of ids) if (col[u] === 'white') visit1(u);
+    P(2, 'Steg 2: beregn Gᵀ ved å snu ALLE kanter. Pilene peker nå motsatt vei (vist stiplet i notatet — komponentene er de samme, for Gᵀ har nøyaktig de samme sterke komponentene som G).', [{ k: 'f-rekkefølge', v: order.length }], null, {}, true);
+    ids.forEach((i) => { col[i] = 'white'; });
+    let cn = 0;
+    const visit2 = (u, c) => {
+      stack.push('DFS-VISIT(' + u + ') i Gᵀ');
+      col[u] = 'gray'; comp[u] = c;
+      P(3, 'I Gᵀ: ' + u + ' tilordnes komponent ' + c + '.', [{ k: 'u', v: u }, { k: 'komp', v: c }], u, {}, true);
+      G.edges.forEach((e) => {
+        if (e[1] === u && e[0] !== u && col[e[0]] === 'white') { visit2(e[0], c); }
+      });
+      col[u] = 'black';
+      stack.pop();
+    };
+    for (const u of order) {
+      P(3, 'Hovedløkka i synkende f: u = ' + u + '. ' + (col[u] === 'white' ? 'Hvit → dette DFS-treet blir én hel sterk komponent.' : 'Allerede i en komponent → hopp over.'), [{ k: 'u', v: u }], col[u] === 'white' ? u : null, {}, true);
+      if (col[u] === 'white') { cn++; visit2(u, cn); }
+    }
+    P(4, 'Ferdig: ' + cn + ' sterke komponenter, hver farget med sitt komponentnummer. To DFS-kjøringer gir Θ(V + E).', [{ k: 'komponenter', v: cn }], null, {}, true);
+    return S;
+  }
+
+  tKruskal() {
+    const G = this.GRAPHS.GW, S = [];
+    const ids = G.nodes.map((n) => n.id);
+    const set = {}; ids.forEach((i) => { set[i] = i; });
+    const find = (x) => set[x] === x ? x : (set[x] = find(set[x]));
+    const sorted = G.edges.slice().sort((a, b) => a[2] - b[2]);
+    const es = {}, A = [];
+    const P = (line, note, vars, cur, hot) => S.push({
+      g: 'GW', line: line, note: note, vars: vars || [],
+      ns: (function () { const m = {}; ids.forEach((i) => { m[i] = A.some((k) => k.split('>').indexOf(i) >= 0) ? 'done' : 'white'; }); return m; })(),
+      es: Object.assign({}, es, hot ? { [hot]: 'active' } : {}), labels: (function () { const m = {}; ids.forEach((i) => { m[i] = i; }); return m; })(),
+      aux: [
+        this.gcells('Kanter sortert etter vekt', sorted.map((e) => e[0] + e[1]), (n) => { const e = sorted.find((x) => x[0] + x[1] === n); return String(e[2]); }, (n) => { const k = sorted.find((x) => x[0] + x[1] === n); const key = k[0] + '>' + k[1]; return es[key] === 'tree' ? 'done' : (es[key] === 'reject' ? 'out' : 'plain'); }),
+        this.gtable('FIND-SET — hvilken komponent noden ligger i', ids, (function () { const m = {}; ids.forEach((i) => { m[i] = find(i); }); return m; })())
+      ]
+    });
+    P(2, 'MAKE-SET for hver node: alle ligger i sin egen komponent. Tallet i noden er komponent-representanten (FIND-SET).', [{ k: '|V|', v: ids.length }], 'init');
+    P(3, 'Kantene sorteres etter vekt: ' + sorted.map((e) => e[0] + e[1] + '=' + e[2]).join(', ') + '. Denne sorteringen dominerer kjøretiden: O(E lg E).', [{ k: '|E|', v: sorted.length }], 'init');
+    for (const e of sorted) {
+      const key = e[0] + '>' + e[1];
+      P(4, 'Neste kant i sortert rekkefølge: (' + e[0] + ',' + e[1] + ') med vekt ' + e[2] + '.', [{ k: 'w', v: e[2] }], null, key);
+      const ru = find(e[0]), rv = find(e[1]);
+      if (ru !== rv) {
+        P(5, 'FIND-SET(' + e[0] + ') = ' + ru + ' ≠ FIND-SET(' + e[1] + ') = ' + rv + ' → kanten forbinder to ULIKE komponenter, så den lager ingen sykel.', [{ k: 'FIND(u)', v: ru }, { k: 'FIND(v)', v: rv }], null, key);
+        es[key] = 'tree'; A.push(key); set[ru] = rv;
+        P(7, 'Kanten legges i A og UNION slår komponentene sammen. |A| = ' + A.length + ' av |V| − 1 = ' + (ids.length - 1) + '.', [{ k: '|A|', v: A.length }]);
+      } else {
+        es[key] = 'reject';
+        P(5, 'FIND-SET(' + e[0] + ') = FIND-SET(' + e[1] + ') = ' + ru + ' → begge endene ligger ALLEREDE i samme komponent. Kanten ville lagd en sykel og forkastes.', [{ k: 'FIND', v: ru }], null, key);
+      }
+    }
+    P(8, 'Ferdig: |V| − 1 = ' + (ids.length - 1) + ' kanter, totalvekt ' + sorted.filter((e) => es[e[0] + '>' + e[1]] === 'tree').reduce((s2, e) => s2 + e[2], 0) + '. Kruskal er grådig og vokser en SKOG som til slutt blir ett tre.', [{ k: '|A|', v: A.length }]);
+    return S;
+  }
+
+  tPrim() {
+    const G = this.GRAPHS.GW, S = [];
+    const ids = G.nodes.map((n) => n.id);
+    const key = {}, pi = {}, inQ = {};
+    ids.forEach((i) => { key[i] = this.INF; pi[i] = '–'; inQ[i] = true; });
+    const es = {};
+    const P = (line, note, vars, cur, hot) => S.push({
+      g: 'GW', line: line, note: note, vars: vars || [],
+      ns: (function () { const m = {}; ids.forEach((i) => { m[i] = cur === i ? 'cur' : (inQ[i] ? (key[i] === '∞' ? 'white' : 'gray') : 'done'); }); return m; })(),
+      es: Object.assign({}, es, hot ? { [hot]: 'active' } : {}), labels: Object.assign({}, key),
+      aux: [
+        this.gcells('Q — min-prioritetskø på key', ids.filter((i) => inQ[i]).sort((a, b) => (key[a] === '∞' ? 1e9 : key[a]) - (key[b] === '∞' ? 1e9 : key[b])), (n) => String(key[n]), () => 'compare'),
+        this.gtable('π — forgjenger i treet', ids, pi)
+      ]
+    });
+    P(1, 'Alle key = ∞, π = NIL, og alle noder ligger i min-prioritetskøen Q. Tallet i noden er key.', [{ k: '|V|', v: ids.length }]);
+    key.a = 0;
+    P(2, 'Rot r = a får key[a] = 0, så den blir hentet ut først.', [{ k: 'r', v: 'a' }]);
+    while (ids.some((i) => inQ[i])) {
+      let u = null;
+      ids.forEach((i) => { if (inQ[i] && (u === null || (key[i] === '∞' ? 1e9 : key[i]) < (key[u] === '∞' ? 1e9 : key[u]))) u = i; });
+      inQ[u] = false;
+      if (pi[u] !== '–') { const k1 = pi[u] + '>' + u, k2 = u + '>' + pi[u]; es[G.edges.some((e) => e[0] + '>' + e[1] === k1) ? k1 : k2] = 'tree'; }
+      P(5, 'u = EXTRACT-MIN(Q) = ' + u + ' med key = ' + key[u] + '. ' + (pi[u] === '–' ? 'Dette er roten.' : 'Kanten (' + pi[u] + ',' + u + ') blir med i treet — den er den letteste kanten som krysser snittet.'), [{ k: 'u', v: u }, { k: 'key[u]', v: key[u] }], u);
+      for (const e of this.adj(G, u)) {
+        const hot = e.key;
+        if (!inQ[e.v]) {
+          P(7, 'Naboen ' + e.v + ' er ikke i Q lenger (allerede i treet) → hopp over. Uten denne sjekken kan du lage en sykel.', [{ k: 'v', v: e.v }], u, hot);
+          continue;
+        }
+        const better = e.w < (key[e.v] === '∞' ? 1e9 : key[e.v]);
+        P(7, 'Kanten (' + u + ',' + e.v + ') har vekt ' + e.w + '. Er w < key[' + e.v + '] = ' + key[e.v] + '? ' + (better ? 'Ja → bedre måte å knytte ' + e.v + ' til treet.' : 'Nei → ' + e.v + ' har allerede en lettere kant inn.'), [{ k: 'v', v: e.v }, { k: 'w', v: e.w }, { k: 'key[v]', v: key[e.v] }], u, hot);
+        if (better) {
+          pi[e.v] = u; key[e.v] = e.w;
+          P(9, 'key[' + e.v + '] = ' + e.w + ', π[' + e.v + '] = ' + u + '. Merk: key er vekten til ÉN kant — ikke en avstand fra roten som i Dijkstra.', [{ k: 'key[v]', v: e.w }], u, hot);
+        }
+      }
+    }
+    P(4, 'Q = ∅ → treet er komplett med totalvekt ' + G.edges.filter((e) => es[e[0] + '>' + e[1]] === 'tree').reduce((s2, e) => s2 + e[2], 0) + '. Prim vokser ETT tre, Kruskal en skog.', [{ k: '|Q|', v: 0 }]);
+    return S;
+  }
+
+  tDijkstra() {
+    const G = this.GRAPHS.GDW, S = [];
+    const ids = G.nodes.map((n) => n.id);
+    const d = {}, pi = {}, inQ = {};
+    ids.forEach((i) => { d[i] = this.INF; pi[i] = '–'; inQ[i] = true; });
+    const es = {};
+    const num = (x) => x === this.INF ? 1e9 : x;
+    const P = (line, note, vars, cur, hot) => S.push({
+      g: 'GDW', line: line, note: note, vars: vars || [],
+      ns: (function () { const m = {}; ids.forEach((i) => { m[i] = cur === i ? 'cur' : (inQ[i] ? (d[i] === '∞' ? 'white' : 'gray') : 'done'); }); return m; })(),
+      es: Object.assign({}, es, hot ? { [hot]: 'active' } : {}), labels: Object.assign({}, d),
+      aux: [
+        this.gcells('Q — min-kø på d', ids.filter((i) => inQ[i]).sort((a, b) => num(d[a]) - num(d[b])), (n) => String(d[n]), () => 'compare'),
+        this.gtable('d — korteste kjente avstand', ids, d),
+        this.gtable('π — forgjenger', ids, pi)
+      ]
+    });
+    P(1, 'INITIALIZE-SINGLE-SOURCE: d[s] = 0, alle andre d = ∞, π = NIL. Tallet i noden er d.', [{ k: 's', v: 's' }]);
+    d.s = 0;
+    P(3, 'S = ∅ og Q inneholder alle nodene. Dijkstra krever IKKE-NEGATIVE vekter.', [{ k: '|Q|', v: ids.length }]);
+    while (ids.some((i) => inQ[i])) {
+      let u = null;
+      ids.forEach((i) => { if (inQ[i] && (u === null || num(d[i]) < num(d[u]))) u = i; });
+      P(5, 'u = EXTRACT-MIN(Q) = ' + u + ' med d = ' + d[u] + '. Nå er d[' + u + '] ENDELIG — det er kjernen i beviset: ingen kortere vei kan finnes senere når vektene er ikke-negative.', [{ k: 'u', v: u }, { k: 'd[u]', v: d[u] }], u);
+      inQ[u] = false;
+      P(6, 'S = S ∪ {' + u + '}: noden flyttes ut av køen og røres aldri igjen.', [{ k: 'u', v: u }], u);
+      for (const e of this.adj(G, u)) {
+        const alt = num(d[u]) + e.w;
+        const better = alt < num(d[e.v]);
+        P(8, 'RELAX(' + u + ',' + e.v + '): d[' + u + '] + w = ' + d[u] + ' + ' + e.w + ' = ' + alt + ' vs d[' + e.v + '] = ' + d[e.v] + '. ' + (better ? '→ kortere vei funnet.' : '→ ingen forbedring, la d stå.'), [{ k: 'v', v: e.v }, { k: 'w', v: e.w }], u, e.key);
+        if (better) {
+          d[e.v] = alt; pi[e.v] = u;
+          Object.keys(es).forEach((k) => { if (k.split('>')[1] === e.v) delete es[k]; });
+          es[e.key] = 'tree';
+          P(8, 'd[' + e.v + '] = ' + alt + ', π[' + e.v + '] = ' + u + '. Trekanten inn til ' + e.v + ' byttes til (' + u + ',' + e.v + ').', [{ k: 'd[v]', v: alt }], u, e.key);
+        }
+      }
+    }
+    P(4, 'Q = ∅. Alle d-verdier er korteste avstander fra s, og π-kantene danner korteste-sti-treet. Med binær heap: O((V + E) lg V).', [{ k: '|Q|', v: 0 }]);
+    return S;
+  }
+
+  tBellman() {
+    const G = this.GRAPHS.GNEG, S = [];
+    const ids = G.nodes.map((n) => n.id);
+    const d = {}, pi = {};
+    ids.forEach((i) => { d[i] = this.INF; pi[i] = '–'; });
+    const es = {};
+    const num = (x) => x === this.INF ? 1e9 : x;
+    const P = (line, note, vars, cur, hot) => S.push({
+      g: 'GNEG', line: line, note: note, vars: vars || [],
+      ns: (function () { const m = {}; ids.forEach((i) => { m[i] = cur === i ? 'cur' : (d[i] === '∞' ? 'white' : 'gray'); }); return m; })(),
+      es: Object.assign({}, es, hot ? { [hot]: 'active' } : {}), labels: Object.assign({}, d),
+      aux: [this.gtable('d — estimat', ids, d), this.gtable('π — forgjenger', ids, pi)]
+    });
+    P(1, 'INITIALIZE-SINGLE-SOURCE: d[s] = 0, resten ∞. Bellman-Ford tåler NEGATIVE kantvekter (se y→x = −3 og t→z = −4).', [{ k: 's', v: 's' }]);
+    d.s = 0;
+    for (let i = 1; i < ids.length; i++) {
+      P(2, 'Runde ' + i + ' av |V| − 1 = ' + (ids.length - 1) + '. Etter runde i er alle korteste stier med høyst i kanter funnet.', [{ k: 'i', v: i }]);
+      let changed = false;
+      for (const e of G.edges) {
+        const u = e[0], v = e[1], w = e[2];
+        const alt = num(d[u]) + w, better = num(d[u]) !== 1e9 && alt < num(d[v]);
+        P(4, 'RELAX(' + u + ',' + v + ',' + w + '): ' + d[u] + ' + ' + w + ' vs d[' + v + '] = ' + d[v] + '. ' + (better ? '→ forbedring.' : '→ ingen endring.') + ' Alle kanter relakseres i hver runde — derfor Θ(V·E).', [{ k: 'i', v: i }, { k: 'u', v: u }, { k: 'v', v: v }], u, u + '>' + v);
+        if (better) {
+          d[v] = alt; pi[v] = u; changed = true;
+          Object.keys(es).forEach((k) => { if (k.split('>')[1] === v) delete es[k]; });
+          es[u + '>' + v] = 'tree';
+          P(4, 'd[' + v + '] = ' + alt + ', π[' + v + '] = ' + u + '.', [{ k: 'd[v]', v: alt }], u, u + '>' + v);
+        }
+      }
+      if (!changed) {
+        P(2, 'Ingen kant ble forbedret i runde ' + i + ' → alle d er stabile, og vi kan stoppe tidlig. (Den rene CLRS-versjonen kjører likevel alle |V| − 1 rundene.)', [{ k: 'i', v: i }]);
+        break;
+      }
+    }
+    let neg = false;
+    for (const e of G.edges) {
+      const u = e[0], v = e[1], w = e[2];
+      const bad = num(d[u]) !== 1e9 && num(d[u]) + w < num(d[v]);
+      P(6, 'Kontrollrunde, kanten (' + u + ',' + v + '): er d[' + v + '] > d[' + u + '] + w? ' + (bad ? 'JA → grafen har en negativ sykel, og korteste sti finnes ikke. return FALSE.' : 'Nei.'), [{ k: 'u', v: u }, { k: 'v', v: v }], u, u + '>' + v);
+      if (bad) { neg = true; break; }
+    }
+    P(neg ? 7 : 8, neg ? 'return FALSE — negativ sykel oppdaget.' : 'return TRUE: ingen kant kan forbedres mer, så alle d-verdier er korteste avstander. Denne siste kontrollrunden er selve sykeldeteksjonen.', [{ k: 'svar', v: neg ? 'FALSE' : 'TRUE' }]);
+    return S;
+  }
+
+  tDagsp() {
+    const G = this.GRAPHS.GDAG, S = [];
+    const ids = G.nodes.map((n) => n.id);
+    const topo = ['r', 's', 't', 'x', 'y', 'z'];
+    const d = {}, pi = {};
+    ids.forEach((i) => { d[i] = this.INF; pi[i] = '–'; });
+    const es = {};
+    const num = (x) => x === this.INF ? 1e9 : x;
+    let doneIdx = -1;
+    const P = (line, note, vars, cur, hot) => S.push({
+      g: 'GDAG', line: line, note: note, vars: vars || [],
+      ns: (function () { const m = {}; ids.forEach((i) => { const ti = topo.indexOf(i); m[i] = cur === i ? 'cur' : (ti <= doneIdx ? 'done' : (d[i] === '∞' ? 'white' : 'gray')); }); return m; })(),
+      es: Object.assign({}, es, hot ? { [hot]: 'active' } : {}), labels: Object.assign({}, d),
+      aux: [this.gcells('Topologisk rekkefølge', topo, (n) => String(d[n]), (n) => topo.indexOf(n) <= doneIdx ? 'done' : 'plain'), this.gtable('d — korteste avstand fra s', ids, d)]
+    });
+    P(1, 'Steg 1: topologisk sortering gir rekkefølgen ' + topo.join(' → ') + '. Alle kanter går fremover i denne rekkefølgen.', [{ k: 'n', v: ids.length }]);
+    d.s = 0;
+    P(2, 'INITIALIZE-SINGLE-SOURCE med kilde s: d[s] = 0, resten ∞. Negative vekter er helt greit her, siden en DAG ikke kan ha sykler.', [{ k: 's', v: 's' }]);
+    for (let t = 0; t < topo.length; t++) {
+      const u = topo[t];
+      P(3, 'u = ' + u + ' (nr. ' + (t + 1) + ' i topologisk rekkefølge). d[' + u + '] = ' + d[u] + ' er nå ENDELIG: alle kanter inn i ' + u + ' kom fra noder vi allerede har behandlet.', [{ k: 'u', v: u }, { k: 'd[u]', v: d[u] }], u);
+      for (const e of this.adj(G, u)) {
+        const alt = num(d[u]) + e.w, better = num(d[u]) !== 1e9 && alt < num(d[e.v]);
+        P(5, 'RELAX(' + u + ',' + e.v + ',' + e.w + '): ' + d[u] + ' + ' + e.w + ' = ' + (num(d[u]) === 1e9 ? '∞' : alt) + ' vs d[' + e.v + '] = ' + d[e.v] + '. ' + (better ? '→ forbedring.' : '→ ingen endring.'), [{ k: 'u', v: u }, { k: 'v', v: e.v }], u, e.key);
+        if (better) {
+          d[e.v] = alt; pi[e.v] = u;
+          Object.keys(es).forEach((k) => { if (k.split('>')[1] === e.v) delete es[k]; });
+          es[e.key] = 'tree';
+          P(5, 'd[' + e.v + '] = ' + alt + ', π[' + e.v + '] = ' + u + '.', [{ k: 'd[v]', v: alt }], u, e.key);
+        }
+      }
+      doneIdx = t;
+    }
+    P(3, 'Ferdig i ÉN gjennomgang: hver kant relakseres nøyaktig én gang, derfor Θ(V + E) — raskere enn både Dijkstra og Bellman-Ford.', [{ k: 'n', v: ids.length }]);
+    return S;
+  }
+
+  tFloyd() {
+    const G = this.GRAPHS.GFW, S = [];
+    const ids = G.nodes.map((n) => n.id);
+    const n = ids.length;
+    const D = [];
+    for (let i = 0; i < n; i++) { D.push([]); for (let j = 0; j < n; j++) D[i].push(i === j ? 0 : this.INF); }
+    G.edges.forEach((e) => { D[ids.indexOf(e[0])][ids.indexOf(e[1])] = e[2]; });
+    const num = (x) => x === this.INF ? 1e9 : x;
+    const P = (line, note, vars, hot, k) => S.push({
+      g: 'GFW', line: line, note: note, vars: vars || [],
+      ns: (function () { const m = {}; ids.forEach((i2) => { m[i2] = k === i2 ? 'cur' : 'white'; }); return m; })(),
+      es: {}, labels: (function () { const m = {}; ids.forEach((i2) => { m[i2] = i2; }); return m; })(),
+      aux: [{
+        label: 'D — korteste avstander (rad i → kolonne j)', isMatrix: true, head: ids.slice(),
+        rows: ids.map((rid, i) => ({
+          head: rid,
+          cells: D[i].map((v, j) => ({ v: String(v), mark: hot && hot.i === i && hot.j === j ? 'key' : (hot && (hot.k === i || hot.k === j) ? 'compare' : (i === j ? 'out' : 'plain')) }))
+        }))
+      }]
+    });
+    P(1, 'D⁽⁰⁾ = vektmatrisen W: D[i][j] er vekten av kanten i → j, 0 på diagonalen og ∞ når det ikke finnes noen kant.', [{ k: 'n', v: n }]);
+    for (let k = 0; k < n; k++) {
+      P(2, 'k = ' + ids[k] + ': nå tillater vi at stiene bruker ' + ids[k] + ' som MELLOMNODE (i tillegg til de forrige). Rekkefølgen på løkkene er avgjørende — k må være ytterst.', [{ k: 'k', v: ids[k] }], { k: k }, ids[k]);
+      for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+          const via = num(D[i][k]) + num(D[k][j]);
+          const old = num(D[i][j]);
+          const better = via < old;
+          P(6, 'd[' + ids[i] + '][' + ids[j] + '] = min(' + D[i][j] + ', ' + D[i][k] + ' + ' + D[k][j] + ') = ' + (better ? via + ' → forbedret ved å gå om ' + ids[k] : String(D[i][j]) + ' → uendret'), [{ k: 'k', v: ids[k] }, { k: 'i', v: ids[i] }, { k: 'j', v: ids[j] }], { i: i, j: j, k: k }, ids[k]);
+          if (better) D[i][j] = via;
+        }
+      }
+    }
+    P(7, 'return D⁽ⁿ⁾. Tre nøstede løkker gir Θ(V³) uansett hvor mange kanter grafen har — men algoritmen finner korteste sti mellom ALLE par, og tåler negative vekter (bare ikke negative sykler).', [{ k: 'n', v: n }]);
+    return S;
+  }
+
+  tMaxflow() {
+    const G = this.GRAPHS.GFLOW, S = [];
+    const ids = G.nodes.map((n) => n.id);
+    const cap = {}, flow = {};
+    G.edges.forEach((e) => { cap[e[0] + '>' + e[1]] = e[2]; flow[e[0] + '>' + e[1]] = 0; });
+    let total = 0;
+    const P = (line, note, vars, path, hotSet) => S.push({
+      g: 'GFLOW', line: line, note: note, vars: vars || [],
+      ns: (function () { const m = {}; ids.forEach((i) => { m[i] = path && path.indexOf(i) >= 0 ? 'cur' : (i === 's' || i === 't' ? 'gray' : 'white'); }); return m; })(),
+      es: hotSet || {}, labels: (function () { const m = {}; ids.forEach((i2) => { m[i2] = i2 === 's' ? 's' : (i2 === 't' ? 't' : ''); }); return m; })(),
+      eLabels: (function () { const m = {}; Object.keys(cap).forEach((k) => { m[k] = flow[k] + '/' + cap[k]; }); return m; })(),
+      aux: [this.gcells('Flytverdi per kant (f/c)', Object.keys(cap), (k) => flow[k] + '/' + cap[k], (k) => flow[k] > 0 ? 'done' : 'plain')]
+    });
+    const augment = (path, amt, resid) => {
+      const hot = {};
+      for (let i = 0; i + 1 < path.length; i++) {
+        const fwd = path[i] + '>' + path[i + 1];
+        if (cap[fwd] !== undefined) hot[fwd] = 'active'; else hot[path[i + 1] + '>' + path[i]] = 'active';
+      }
+      P(2, 'BFS i restnettverket finner den forsterkende stien ' + path.join(' → ') + '.', [{ k: 'sti', v: path.length - 1 + ' kanter' }], path, hot);
+      P(3, 'Flaskehalsen er cf(p) = ' + amt + ' — den minste restkapasiteten langs stien. Mer enn dette kan ikke sendes.', [{ k: 'cf(p)', v: amt }], path, hot);
+      for (let i = 0; i + 1 < path.length; i++) {
+        const fwd = path[i] + '>' + path[i + 1], bwd = path[i + 1] + '>' + path[i];
+        if (cap[fwd] !== undefined) flow[fwd] += amt; else flow[bwd] -= amt;
+      }
+      total += amt;
+      P(5, 'Flyten økes med ' + amt + ' langs hele stien. ' + (resid ? 'Merk at kanten ' + resid + ' brukes BAKLENGS — vi trekker tilbake tidligere flyt. Det er restnettverket som gjør dette lovlig.' : '') + ' Total flyt: |f| = ' + total + '.', [{ k: '|f|', v: total }], path, hot);
+    };
+    P(1, 'Alle kanter starter med f = 0. Kantetiketten er f/c — flyt av kapasitet.', [{ k: '|f|', v: 0 }], null, {});
+    augment(['s', 'v1', 'v3', 't'], 12);
+    augment(['s', 'v2', 'v4', 't'], 4);
+    augment(['s', 'v2', 'v4', 'v3', 't'], 7, 'v4 → v3');
+    P(2, 'BFS finner ingen sti fra s til t i restnettverket lenger → while-løkka stopper. Max-flow/min-cut: verdien |f| = ' + total + ' er lik kapasiteten til minste snitt, og det er beviset på at flyten er maksimal.', [{ k: '|f|', v: total }], null, {});
+    return S;
+  }
+
+  // ---------- content ----------
+  GRAPH_ALGOS = [
+    {
+      id: 'bfs', name: 'BFS', no: 'Bredde-først-søk', tag: 'Traversering', family: 'Kø · uvektet korteste sti', graph: true,
+      best: 'Θ(V+E)', avg: 'Θ(V+E)', worst: 'Θ(V+E)', mem: 'O(V)',
+      idea: 'Utforsker grafen i bølger: først alle naboer til kilden, så alle naboer av dem. En FIFO-kø holder de oppdagede (grå) nodene, og fordi køen behandler nodene i økende d-verdi finner BFS korteste sti målt i ANTALL KANTER.',
+      invariant: 'Invariant: køen inneholder til enhver tid bare noder med d-verdi k eller k+1, i den rekkefølgen. Når en node tas ut av køen, er d-verdien dens endelig og lik δ(s, u).',
+      proof: 'Man viser først at d[v] ≥ δ(s,v) alltid (øvre grense), og deretter at når v dequeues er d[v] = δ(s,v) — ellers ville en node med mindre avstand ligget bak den i køen, noe FIFO-ordningen forbyr. Hver node enqueues maks én gang (den er hvit bare én gang), og hver kant undersøkes én gang per ende: Θ(V + E).',
+      when: 'Korteste sti i uvektede grafer, sammenhengskomponenter, nivåvis traversering, og som stifinner inne i Edmonds-Karp.',
+      pitfalls: [
+        'd-verdien settes når noden OPPDAGES (blir grå), ikke når den tas ut av køen.',
+        'Sjekken «er v hvit?» må gjøres før enqueue — ellers kan samme node legges i køen flere ganger og kjøretiden sprenger.',
+        'BFS gir korteste sti bare i uvektede grafer (eller når alle vekter er like). Med vekter må du bruke Dijkstra.',
+        'Θ(V + E) og ikke Θ(V·E): summen av alle nabolister er 2E i en urettet graf.'
+      ]
+    },
+    {
+      id: 'dfs', name: 'DFS', no: 'Dybde-først-søk', tag: 'Traversering', family: 'Rekursjon · tidsstempler', graph: true,
+      best: 'Θ(V+E)', avg: 'Θ(V+E)', worst: 'Θ(V+E)', mem: 'O(V)',
+      idea: 'Går så dypt som mulig før den rygger. Hver node får to tidsstempler: d (når den ble grå) og f (når den ble svart). Tidsstemplene og kantklassifiseringen er verktøyet bak topologisk sortering og sterke komponenter.',
+      invariant: 'Parentesteoremet: intervallene [d[u], f[u]] er enten helt disjunkte, eller det ene ligger helt inni det andre — og da er noden en etterkommer i DFS-treet. En node er grå nøyaktig så lenge den ligger på rekursjonsstacken.',
+      proof: 'Hovedløkka besøker hver node én gang, DFS-VISIT kalles bare på hvite noder, og nabolista til hver node gjennomgås én gang: Θ(V + E). Hvitsti-teoremet: v er etterkommer av u hvis og bare hvis det finnes en sti fra u til v med bare hvite noder på tidspunktet d[u].',
+      when: 'Topologisk sortering, sterke komponenter, sykeldeteksjon, og som byggekloss i mange DP-på-graf-algoritmer.',
+      pitfalls: [
+        'En tilbakekant (kant til en GRÅ node) betyr sykel. Kant til en svart node gjør det ikke.',
+        'Hovedløkka over alle noder er nødvendig — uten den mister du alt som ikke er nåbart fra startnoden.',
+        'DFS finner IKKE korteste sti, selv ikke i uvektede grafer.',
+        'Rekursjonsdybden kan bli Θ(V) — det er minneforbruket, ikke kjøretiden.'
+      ]
+    },
+    {
+      id: 'topo', name: 'TOPOLOGICAL-SORT', no: 'Topologisk sortering', tag: 'DAG', family: 'DFS + synkende f-verdi', graph: true,
+      best: 'Θ(V+E)', avg: 'Θ(V+E)', worst: 'Θ(V+E)', mem: 'O(V)',
+      idea: 'Kjører DFS og setter hver node FORAN i en lenket liste i det øyeblikket den blir svart. Resultatet er nodene sortert etter synkende f-verdi — en rekkefølge der hver kant peker fremover.',
+      invariant: 'Når en node blir svart, er alle noder den kan nå allerede svarte og ligger derfor lenger bak i lista. Dermed peker hver kant (u,v) fremover i lista.',
+      proof: 'Nøkkellemma: i en DAG gjelder f[u] > f[v] for hver kant (u,v). Bevis: v kan ikke være grå når vi ser kanten (det ville vært en tilbakekant, altså en sykel); er v hvit blir den etterkommer av u og ferdig først; er v svart er f[v] allerede satt. Sortering etter synkende f er derfor topologisk. Kostnaden er DFS pluss O(1) per node: Θ(V + E).',
+      when: 'Rekkefølge på oppgaver med avhengigheter (kompilering, byggesystemer, emnekrav), og som første steg i DAG-SHORTEST-PATHS.',
+      pitfalls: [
+        'Kun for DAG-er. Finner DFS en tilbakekant, finnes det ingen topologisk sortering.',
+        'Lista bygges ved å sette noder FORAN (unshift) — ikke bakerst.',
+        'Topologisk sortering er ikke unik: flere gyldige rekkefølger kan finnes.',
+        'Man sorterer ikke f-verdiene med en sorteringsalgoritme — DFS gir rekkefølgen gratis, ellers ville det kostet Θ(V lg V).'
+      ]
+    },
+    {
+      id: 'scc', name: 'STRONGLY-CONNECTED-COMPONENTS', no: 'Sterke komponenter (Kosaraju)', tag: 'Rettet graf', family: 'To DFS-kjøringer · Gᵀ', graph: true,
+      best: 'Θ(V+E)', avg: 'Θ(V+E)', worst: 'Θ(V+E)', mem: 'O(V)',
+      idea: 'To DFS-kjøringer: den første regner ut f-verdier i G, den andre kjører på den transponerte grafen Gᵀ, men tar nodene i synkende f-rekkefølge. Hvert DFS-tre i andre runde er nøyaktig én sterk komponent.',
+      invariant: 'Komponentgrafen er en DAG. Ved å starte i noden med høyest f starter vi i en KILDE-komponent i komponentgrafen til G — som i Gᵀ er en sluk-komponent, og derfra kan DFS ikke «lekke» ut i andre komponenter.',
+      proof: 'G og Gᵀ har de samme sterke komponentene (u ↝ v og v ↝ u gjelder i begge retninger). Lemma: for to ulike komponenter C og C′ med en kant C → C′ gjelder f(C) > f(C′). Andre DFS starter derfor alltid i en komponent uten utgående kanter i Gᵀ, og hvert tre fanger presis én komponent. To DFS + transponering: Θ(V + E).',
+      when: 'Finne sykliske avhengigheter, 2-SAT, kondensere en graf til en DAG før videre analyse.',
+      pitfalls: [
+        'Andre DFS må gå i SYNKENDE f fra første kjøring — vilkårlig rekkefølge gir feil svar.',
+        'Det er den andre DFS-en som kjører på Gᵀ, ikke den første.',
+        'Transponering er Θ(V + E) — det ødelegger ikke den lineære kjøretiden.',
+        'En enkelt node uten sykler er sin egen sterke komponent.'
+      ]
+    },
+    {
+      id: 'kruskal', name: 'MST-KRUSKAL', no: 'Kruskals algoritme', tag: 'MST', family: 'Grådig · union-find', graph: true,
+      best: 'O(E lg V)', avg: 'O(E lg V)', worst: 'O(E lg V)', mem: 'O(V)',
+      idea: 'Sorterer alle kantene etter vekt og går gjennom dem fra lettest til tyngst. En kant tas med hvis og bare hvis endene ligger i ulike komponenter — sjekket med FIND-SET i en disjunkt-mengde-struktur.',
+      invariant: 'A er alltid en delmengde av et minimalt spenntre, og den grådige kanten er en trygg kant: den letteste kanten som krysser snittet mellom en komponent og resten.',
+      proof: 'Snitt-teoremet: hvis A er del av et MST og (u,v) er en lettest kant som krysser et snitt som respekterer A, så er A ∪ {(u,v)} også del av et MST. Kruskal velger alltid en slik kant. Kjøretid: O(E lg E) til sortering pluss O(E) union-find-operasjoner à nesten konstant tid; siden E < V² er lg E = O(lg V), altså O(E lg V).',
+      when: 'Sparse grafer og når kantene allerede er sortert. Enkel å implementere med union-find.',
+      pitfalls: [
+        'Kanten forkastes når FIND-SET(u) == FIND-SET(v) — like representanter betyr sykel.',
+        'Sorteringen dominerer kjøretiden; union-find er nesten gratis (amortisert α(V)).',
+        'Underveis er A en SKOG av flere trær — først til slutt henger den sammen.',
+        'MST er ikke nødvendigvis unikt når flere kanter har samme vekt, men totalvekten er alltid den samme.'
+      ]
+    },
+    {
+      id: 'prim', name: 'MST-PRIM', no: 'Prims algoritme', tag: 'MST', family: 'Grådig · min-prioritetskø', graph: true,
+      best: 'O(E lg V)', avg: 'O(E lg V)', worst: 'O(E lg V)', mem: 'O(V)',
+      idea: 'Vokser ETT tre fra en rot. Hver node utenfor treet har en key = vekten av den letteste kjente kanten inn til treet; EXTRACT-MIN henter den billigste noden, og naboenes key oppdateres med DECREASE-KEY.',
+      invariant: 'Nodene utenfor Q utgjør ett sammenhengende tre som er del av et MST. For hver v i Q er key[v] vekten av den letteste kanten fra v til treet, og π[v] er den andre enden av den kanten.',
+      proof: 'Samme snitt-teorem som Kruskal, men snittet er alltid (treet, resten): EXTRACT-MIN plukker per definisjon den letteste kanten som krysser dette snittet, altså en trygg kant. Kjøretid med binær min-heap: V EXTRACT-MIN à O(lg V) pluss E DECREASE-KEY à O(lg V) = O(E lg V). Med Fibonacci-heap: O(E + V lg V).',
+      when: 'Tette grafer (særlig med Fibonacci-heap eller enkel array-kø), og når du vil ha ett voksende tre i stedet for en skog.',
+      pitfalls: [
+        'key[v] er vekten av ÉN kant — ikke avstanden fra roten. Det er hele forskjellen fra Dijkstra.',
+        'Oppdater bare noder som fortsatt er i Q; glemmer du den sjekken kan du lage sykler.',
+        'Prim krever en sammenhengende graf for å gi et spenntre (ellers får du treet for én komponent).',
+        'MST handler om totalvekt — det gir ikke korteste sti mellom to noder.'
+      ]
+    },
+    {
+      id: 'bellman', name: 'BELLMAN-FORD', no: 'Bellman-Ford', tag: 'Korteste sti', family: 'Relaksering · tåler negative vekter', graph: true,
+      best: 'Θ(V·E)', avg: 'Θ(V·E)', worst: 'Θ(V·E)', mem: 'O(V)',
+      idea: 'Relakserer ALLE kantene |V| − 1 ganger. Etter runde i er alle korteste stier med høyst i kanter funnet. En siste kontrollrunde avgjør om grafen har en negativ sykel.',
+      invariant: 'Etter i runder gjelder: d[v] = vekten av den korteste stien fra s til v som bruker høyst i kanter (eller mindre, hvis en kortere sti er funnet tidligere).',
+      proof: 'Sti-relakseringsegenskapen: relakserer du kantene langs en korteste sti i riktig rekkefølge, blir d korrekt. En korteste sti uten sykler har høyst |V| − 1 kanter, så |V| − 1 runder er nok uansett rekkefølge. Hvis en kant fortsatt kan relakseres etter dette, må en sti bruke ≥ |V| kanter, altså inneholde en sykel med negativ vekt. Θ(V·E).',
+      when: 'Når grafen kan ha negative kantvekter, når du må oppdage negative sykler, og som forarbeid i Johnsons algoritme.',
+      pitfalls: [
+        'Nøyaktig |V| − 1 runder (ikke |V|) — og den ekstra kontrollrunden er sykeldeteksjon, ikke en runde til.',
+        'Korteste sti finnes ikke i det hele tatt hvis en negativ sykel er nåbar fra s — svar da FALSE, ikke −∞.',
+        'Negative KANTER er greit; negative SYKLER er problemet.',
+        'Θ(V·E) er mye tregere enn Dijkstra — bruk Dijkstra når alle vekter er ikke-negative.'
+      ]
+    },
+    {
+      id: 'dagsp', name: 'DAG-SHORTEST-PATHS', no: 'Korteste sti i DAG', tag: 'Korteste sti', family: 'Topologisk rekkefølge · én runde', graph: true,
+      best: 'Θ(V+E)', avg: 'Θ(V+E)', worst: 'Θ(V+E)', mem: 'O(V)',
+      idea: 'Topologisk sorter nodene og relakser hver nodes utkanter én gang i den rekkefølgen. Fordi alle kanter peker fremover, er d[u] alltid ferdig når vi kommer til u — også med negative vekter.',
+      invariant: 'Når u behandles, er d[u] = δ(s, u): alle kanter inn i u kommer fra noder tidligere i den topologiske rekkefølgen, og de er allerede relaksert.',
+      proof: 'Kantene langs en korteste sti relakseres i stiens egen rekkefølge (den topologiske rekkefølgen respekterer alle kanter), så sti-relakseringsegenskapen gir riktig d etter én gjennomgang. Topologisk sortering er Θ(V + E), og hver kant relakseres nøyaktig én gang: Θ(V + E) totalt.',
+      when: 'Prosjektplanlegging og kritisk sti (bytt min til max), DP over en DAG, korteste/lengste sti når grafen er asyklisk.',
+      pitfalls: [
+        'Kun for DAG-er — med en sykel finnes ingen topologisk rekkefølge.',
+        'Negative vekter er helt greit her, i motsetning til i Dijkstra.',
+        'Rekkefølgen er hele poenget: relakserer du i vilkårlig rekkefølge trenger du Bellman-Ford.',
+        'Bytt min til max i RELAX og du får LENGSTE sti — noe som er NP-hardt i generelle grafer.'
+      ]
+    },
+    {
+      id: 'dijkstra', name: 'DIJKSTRA', no: 'Dijkstras algoritme', tag: 'Korteste sti', family: 'Grådig · min-prioritetskø', graph: true,
+      best: 'O((V+E) lg V)', avg: 'O((V+E) lg V)', worst: 'O((V+E) lg V)', mem: 'O(V)',
+      idea: 'Grådig korteste sti med ikke-negative vekter. Noden i køen med minst d-verdi hentes ut, legges i S — og d-verdien er da endelig — før alle utkantene relakseres.',
+      invariant: 'For hver node u i S gjelder d[u] = δ(s, u). For nodene i Q er d[u] vekten av den korteste stien som bare går gjennom S (pluss én siste kant).',
+      proof: 'Anta at u er den første noden som tas ut med d[u] > δ(s,u). På en korteste sti til u finnes en første node y utenfor S, med forgjenger x i S. Da er d[y] = δ(s,y) ≤ δ(s,u) ≤ d[u], så y ville blitt valgt før u — motsigelse. Beviset bruker at vektene er ikke-negative; med en negativ kant kan en «ferdig» node forbedres senere. Kjøretid med binær heap: O((V + E) lg V), med Fibonacci-heap O(E + V lg V).',
+      when: 'Ruteplanlegging, nettverksrouting — standardvalget for korteste sti når ingen vekt er negativ.',
+      pitfalls: [
+        'Fungerer IKKE med negative kantvekter, selv uten negative sykler — bruk Bellman-Ford.',
+        'd[u] er endelig først når u tas ut av køen, ikke når verdien settes.',
+        'Prim minimerer én kant (key), Dijkstra minimerer summen langs stien (d). Pseudokoden ser nesten like ut.',
+        'Kjøretiden avhenger av prioritetskøen: array gir O(V²), binær heap O((V+E) lg V).'
+      ]
+    },
+    {
+      id: 'floyd', name: 'FLOYD-WARSHALL', no: 'Alle par korteste sti', tag: 'Alle par', family: 'Dynamisk programmering · matrise', graph: true,
+      best: 'Θ(V³)', avg: 'Θ(V³)', worst: 'Θ(V³)', mem: 'Θ(V²)',
+      idea: 'Dynamisk programmering over hvilke noder som får brukes som MELLOMNODER. Etter runde k inneholder D korteste stier som bare bruker nodene 1..k underveis.',
+      invariant: 'd⁽ᵏ⁾ᵢⱼ = vekten av den korteste stien fra i til j der alle mellomnoder ligger i mengden {1, …, k}.',
+      proof: 'Rekursjonen d⁽ᵏ⁾ᵢⱼ = min(d⁽ᵏ⁻¹⁾ᵢⱼ, d⁽ᵏ⁻¹⁾ᵢₖ + d⁽ᵏ⁻¹⁾ₖⱼ) dekker de to mulighetene: stien bruker ikke k, eller den går gjennom k én gang (mer enn én gang er aldri bedre uten negative sykler). Tre nøstede løkker med k ytterst gir Θ(V³) og Θ(V²) minne. Negative kanter er greit; negative sykler kjennes igjen på at diagonalen blir negativ.',
+      when: 'Alle-par-avstander i tette grafer, transitiv lukning, og når V er lite (noen hundre noder).',
+      pitfalls: [
+        'k MÅ være den ytterste løkka — bytter du rekkefølge blir svaret feil.',
+        'Θ(V³) uavhengig av antall kanter; for sparse grafer er Johnson (Dijkstra fra hver node) bedre.',
+        'Negative sykler oppdages ved at d[i][i] < 0 for en node i.',
+        'Bruk ∞-aritmetikk: ∞ + x skal fortsatt være ∞, ikke overflyt.'
+      ]
+    },
+    {
+      id: 'maxflow', name: 'FORD-FULKERSON', no: 'Maksimal flyt (Edmonds-Karp)', tag: 'Maks flyt', family: 'Restnettverk · forsterkende stier', graph: true,
+      best: 'O(V·E²)', avg: 'O(V·E²)', worst: 'O(V·E²)', mem: 'O(V+E)',
+      idea: 'Start med flyt 0, finn en sti fra s til t i restnettverket, og send så mye som flaskehalsen tillater. Gjenta til ingen sti finnes. Restnettverket har også baklengs-kanter, så tidligere valg kan angres.',
+      invariant: 'f er alltid en lovlig flyt (kapasitetsbegrensning og flytbevaring holder). Flyten er maksimal nøyaktig når restnettverket ikke har noen sti fra s til t.',
+      proof: 'Max-flow/min-cut-teoremet: |f| = kapasiteten til et minste snitt ⟺ ingen forsterkende sti finnes. Med BFS som stifinner (Edmonds-Karp) vokser stiene monotont i lengde, og hver kant blir kritisk O(V) ganger, så antall iterasjoner er O(V·E) og totalen O(V·E²) — uavhengig av kapasitetsverdiene. Med vilkårlig stivalg og irrasjonale kapasiteter kan Ford-Fulkerson i teorien kjøre evig.',
+      when: 'Maksimal gjennomstrømming i nettverk, bipartitt matching, oppgavefordeling og segmentering — mange problemer kan reduseres til maks flyt.',
+      pitfalls: [
+        'Baklengs-kantene i restnettverket er nødvendige — uten dem blir svaret ikke maksimalt.',
+        'Ford-Fulkerson er en METODE; kjøretiden avhenger av hvordan stien velges. Edmonds-Karp = BFS.',
+        'Flaskehalsen er MINSTE restkapasitet langs stien, ikke minste kapasitet i grafen.',
+        'Maks flyt = min snitt. Blir du bedt om minste snitt: kjør maks flyt, og snittet er nodene som er nåbare fra s i restnettverket.'
+      ]
+    }
+  ];
+
+  ALGOS = [
+    {
+      id: 'insertion', name: 'INSERTION-SORT', no: 'Innsettingssortering', tag: 'F1–F2', family: 'Sammenligningsbasert · in-place',
+      best: 'Θ(n)', avg: 'Θ(n²)', worst: 'Θ(n²)', mem: 'Θ(1)', stable: 'Ja', inplace: 'Ja', cmp: 'Ja',
+      idea: 'Bygger et sortert prefiks fra venstre. For hvert nytt element (key) skyves alle større elementer i prefikset én plass til høyre, og key settes inn i hullet — som når du sorterer kort i hånda.',
+      invariant: 'Løkkeinvariant: ved starten av hver iterasjon av for-løkka består A[1..j−1] av de samme elementene som opprinnelig lå der, i sortert rekkefølge.',
+      proof: 'Initialisering: j = 2 gir A[1..1], trivielt sortert. Vedlikehold: while-løkka skyver alle elementer større enn key ett steg til høyre og setter key i hullet, så A[1..j] blir sortert. Terminering: løkka slutter med j = n + 1, og invarianten gir at A[1..n] er sortert. Mer presist er kjøretiden Θ(n + I), der I er antall inversjoner i input.',
+      when: 'Best på små eller nesten sorterte datasett, og som «bunn» i hybride sorteringer (f.eks. når quicksort får små delproblemer). Brukes også inne i bucket sort.',
+      pitfalls: [
+        'while-betingelsen må teste i > 0 FØR A[i] > key — kortsluttende and, ellers leser du utenfor arrayet.',
+        'Best case Θ(n) gjelder for insertion sort, ikke for selection sort (som alltid er Θ(n²)).',
+        'Den flytter elementer ved forskyvning, ikke ved bytte (swap) — tell flytt og sammenligninger hver for seg.',
+        'Θ(n²) er average OG worst case, men med ulik konstant: worst case er omvendt sortert input.'
+      ]
+    },
+    {
+      id: 'merge', name: 'MERGE-SORT', no: 'Flettesortering', tag: 'F3', family: 'Splitt-og-hersk · stabil',
+      best: 'Θ(n log n)', avg: 'Θ(n log n)', worst: 'Θ(n log n)', mem: 'Θ(n)', stable: 'Ja', inplace: 'Nei', cmp: 'Ja',
+      idea: 'Splitt arrayet i to like halvdeler, sorter hver halvdel rekursivt, og flett de to sorterte halvdelene sammen i lineær tid. Delingen tar ikke hensyn til verdiene, så kjøretiden er identisk i alle tilfeller.',
+      invariant: 'MERGE-invariant: ved starten av hver iterasjon inneholder A[p..k−1] de k − p minste elementene av L og R, i sortert rekkefølge, og L[i] og R[j] er de minste elementene som ennå ikke er kopiert tilbake.',
+      proof: 'Rekurrens: T(n) = 2T(n/2) + Θ(n). Master-teoremet med a = 2, b = 2, f(n) = Θ(n) gir case 2, altså T(n) = Θ(n log n). Intuitivt: rekursjonstreet har lg n + 1 nivåer, og hvert nivå gjør Θ(n) arbeid i flettingen.',
+      when: 'Når du trenger garantert n log n og stabilitet, på eksterne data (harddisk/strømmer) og på lenkede lister, der fletting kan gjøres uten ekstra minne.',
+      pitfalls: [
+        'Den er IKKE in-place: Θ(n) ekstra minne til L og R er en del av svaret.',
+        'Vaktpostene (∞) er ikke pynt — uten dem trengs en ekstra tomhetssjekk i hver iterasjon.',
+        'Stabiliteten krever L[i] ≤ R[j] (ikke <): ved likhet må elementet fra venstre halvdel tas først.',
+        'Best case er også Θ(n log n) — allerede sortert input gir ingen gevinst.'
+      ]
+    },
+    {
+      id: 'quick', name: 'QUICKSORT', no: 'Kvikksortering (med PARTITION)', tag: 'F3', family: 'Splitt-og-hersk · in-place',
+      best: 'Θ(n log n)', avg: 'Θ(n log n)', worst: 'Θ(n²)', mem: 'Θ(log n)*', stable: 'Nei', inplace: 'Ja', cmp: 'Ja',
+      idea: 'Velg en pivot, partisjoner arrayet slik at alt ≤ pivot står til venstre og alt > pivot til høyre, og sorter de to sidene rekursivt. Pivoten er ferdig plassert etter partisjoneringen, så det trengs ingen flettefase.',
+      invariant: 'PARTITION-invariant: for hver indeks t gjelder at A[p..i] ≤ x, A[i+1..j−1] > x, og A[r] = x. i er slutten av «små»-området, j er skannepekeren.',
+      proof: 'Maksimalt ubalansert deling gir T(n) = T(n−1) + Θ(n) = Θ(n²). Perfekt deling gir T(n) = 2T(n/2) + Θ(n) = Θ(n log n). Selv en fast 9-til-1-deling gir T(n) = T(9n/10) + T(n/10) + Θ(n) = Θ(n log n) — treet får bare dybde log₁₀ᐟ⁹ n. Forventet kjøretid over tilfeldige pivotvalg er O(n log n) fordi to elementer sammenlignes maksimalt én gang. (*Stackdybde: forventet Θ(log n), worst case Θ(n).)',
+      when: 'Standardvalget for intern sortering i praksis: in-place, god cache-lokalitet og små konstanter. Bruk RANDOMIZED-QUICKSORT eller median-of-three for å unngå worst case.',
+      pitfalls: [
+        'Sortert input er WORST case (ikke best) når pivot er A[r] — hver partisjon gir 0 og n−1 elementer.',
+        'q er en indeks, ikke pivotverdien. Rekursjonen går på p..q−1 og q+1..r — pivoten skal ekskluderes.',
+        'Glemmer du det siste byttet A[i+1] ↔ A[r] står pivoten på feil plass og alt kollapser.',
+        'Randomisering gir FORVENTET Θ(n log n), aldri en garanti — worst case er fortsatt Θ(n²).',
+        'Quicksort er ikke stabil: byttene flytter like elementer forbi hverandre.'
+      ]
+    },
+    {
+      id: 'counting', name: 'COUNTING-SORT', no: 'Tellesortering', tag: 'F4', family: 'Lineær tid · ikke sammenligningsbasert',
+      best: 'Θ(n + k)', avg: 'Θ(n + k)', worst: 'Θ(n + k)', mem: 'Θ(n + k)', stable: 'Ja', inplace: 'Nei', cmp: 'Nei',
+      idea: 'Teller hvor mange det er av hver verdi i 0..k, gjør tellingene om til prefikssummer (antall elementer ≤ i), og leser input baklengs for å plassere hvert element direkte på sin endelige posisjon i utdataarrayet B.',
+      invariant: 'Etter prefikssummen gjelder: C[i] = antall elementer i A som er ≤ i. Derfor er C[A[j]] nøyaktig den siste ledige posisjonen i B for verdien A[j].',
+      proof: 'Θ(k) til nullstilling, Θ(n) til telling, Θ(k) til prefikssum og Θ(n) til plassering gir Θ(n + k). Nedre grense Ω(n log n) gjelder bare sammenligningsbaserte algoritmer — her sammenlignes aldri to elementer, derfor kan vi være lineære. Hvis k = O(n) blir totalen Θ(n).',
+      when: 'Små heltallsnøkler med lite spenn (karakterer, aldre, siffer). Viktigst som den stabile byggeklossen inne i radix sort.',
+      pitfalls: [
+        'Lineær tid krever k = O(n). Er k = n², er Θ(n + k) = Θ(n²).',
+        'Den siste løkka MÅ gå baklengs (downto 1) — det er det som gir stabilitet, og stabilitet er det radix sort bygger på.',
+        'Krever at nøklene er heltall i et kjent intervall; den kan ikke sortere vilkårlige objekter uten nøkkelfunksjon.',
+        'Ikke in-place: både B (Θ(n)) og C (Θ(k)) er ekstra minne.'
+      ]
+    },
+    {
+      id: 'radix', name: 'RADIX-SORT', no: 'Radikssortering', tag: 'F4', family: 'Lineær tid · ikke sammenligningsbasert',
+      best: 'Θ(d(n + k))', avg: 'Θ(d(n + k))', worst: 'Θ(d(n + k))', mem: 'Θ(n + k)', stable: 'Ja', inplace: 'Nei', cmp: 'Nei',
+      idea: 'Sorterer tall siffer for siffer med en stabil sortering (counting sort), fra minst til mest signifikante siffer (LSD). Etter pass i er tallene korrekt sortert på sine i siste sifre.',
+      invariant: 'Etter pass i er A sortert med hensyn på de i minst signifikante sifrene. Stabiliteten sikrer at rekkefølgen fra pass i overlever pass i + 1 når sifrene er like.',
+      proof: 'Induksjon over i: anta A er sortert på de i siste sifrene. I pass i + 1 kommer tall med mindre siffer først; tall med samme siffer beholder rekkefølgen fra pass i (stabilitet), og de var da korrekt ordnet på de i siste sifrene. d pass à Θ(n + k) gir Θ(d(n + k)). For b-bits tall delt i sifre på r bits: Θ((b/r)(n + 2ʳ)), minimert rundt r ≈ lg n.',
+      when: 'Store mengder heltall eller fast-lengde strenger (postnumre, ID-er). Ofte raskere enn quicksort i praksis når nøklene er korte.',
+      pitfalls: [
+        'Må gå fra MINST til mest signifikante siffer. MSD-varianten krever rekursjon per bøtte.',
+        'Den underliggende sorteringen må være stabil — med en ustabil sortering blir resultatet feil, ikke bare tregt.',
+        'd er ikke en konstant du kan ignorere: Θ(d(n+k)) er bare lineært når d er konstant.',
+        'Ikke in-place, og krever fast nøkkelformat (samme antall sifre, evt. med ledende nuller).'
+      ]
+    },
+    {
+      id: 'bucket', name: 'BUCKET-SORT', no: 'Bøttesortering', tag: 'F4', family: 'Lineær tid (forventet) · fordelingsantakelse',
+      best: 'Θ(n)', avg: 'Θ(n)', worst: 'Θ(n²)', mem: 'Θ(n)', stable: 'Ja*', inplace: 'Nei', cmp: 'Delvis',
+      idea: 'Deler intervallet [0, 1) i n like bøtter, legger hvert element i bøtte ⌊n · A[i]⌋, sorterer hver bøtte med insertion sort og konkatenerer bøttene i rekkefølge.',
+      invariant: 'Alle elementer i B[i] er mindre enn alle elementer i B[i+1]. Konkatenering av sorterte bøtter er derfor sortert.',
+      proof: 'La nᵢ være antall elementer i bøtte i. Total kostnad er Θ(n) + Σ O(nᵢ²). Med uniform fordeling er nᵢ binomisk med p = 1/n, så E[nᵢ²] = Var + (E[nᵢ])² = (1 − 1/n) + 1 = 2 − 1/n. Da er E[Σ O(nᵢ²)] = O(n), og forventet total Θ(n). Worst case er at alle n elementene havner i samme bøtte: Θ(n²) fra insertion sort. (*Stabil hvis bøttesorteringen er stabil.)',
+      when: 'Når du vet at dataene er (omtrent) uniformt fordelt over et kjent intervall — f.eks. normaliserte målinger eller hashverdier.',
+      pitfalls: [
+        'Θ(n) er FORVENTET tid under uniformitetsantakelsen, ikke en garanti.',
+        'Worst case er Θ(n²), ikke Θ(n log n) — fordi bøttene sorteres med insertion sort.',
+        'Bøtteindeksen er ⌊n · A[i]⌋ og forutsetter at verdiene ligger i [0, 1); ellers må du normalisere først.',
+        'Antall bøtter er n (ikke en vilkårlig konstant) — det er dette som gir forventet ett element per bøtte.'
+      ]
+    },
+    {
+      id: 'rselect', name: 'RANDOMIZED-SELECT', no: 'Rangering / utvalg i forventet lineær tid', tag: 'F4', family: 'Rangering · splitt-og-hersk med én gren',
+      best: 'Θ(n)', avg: 'Θ(n) forventet', worst: 'Θ(n²)', mem: 'Θ(1)*', stable: 'Nei', inplace: 'Ja', cmp: 'Ja',
+      idea: 'Finner det i. minste elementet uten å sortere. Bruker quicksorts PARTITION med tilfeldig pivot, men går bare videre i DEN siden svaret kan ligge i — den andre halvparten forkastes helt.',
+      invariant: 'Etter partisjonering er pivoten det k. minste i A[p..r], der k = q − p + 1. Er i < k ligger svaret i A[p..q−1] med uendret rang i; er i > k ligger det i A[q+1..r] med rang i − k.',
+      proof: 'Fordi bare én gren følges, blir rekurrensen T(n) ≤ T(maks delproblem) + O(n). Med tilfeldig pivot er delproblemet i forventning maksimalt 3n/4, så E[T(n)] ≤ Σₖ O(n(3/4)ᵏ) = O(n) — en geometrisk rekke, ikke log n nivåer med n arbeid. Worst case (alltid den dårligste pivoten) er T(n) = T(n−1) + O(n) = Θ(n²). (*Θ(1) iterativt; rekursivt forventet Θ(log n) stack.)',
+      when: 'Median, persentiler og «topp i» i lineær tid, og for å velge en god pivot. Å sortere først ville kostet Θ(n log n).',
+      pitfalls: [
+        'Rangen må justeres i høyre gren: i − k, ikke i. Dette er den vanligste feilen.',
+        'Kjøretiden er FORVENTET Θ(n); worst case er Θ(n²) — garantien får du bare med SELECT (median-of-medians).',
+        'k = q − p + 1 er rangen innenfor delarrayet A[p..r], ikke en global indeks.',
+        'Algoritmen permuterer input — den er in-place men destruktiv.'
+      ]
+    },
+    {
+      id: 'select', name: 'SELECT', no: 'Median-of-medians (kjenne til)', tag: 'F4', family: 'Rangering · garantert lineær',
+      best: 'Θ(n)', avg: 'Θ(n)', worst: 'Θ(n)', mem: 'Θ(n)', stable: 'Nei', inplace: 'Nei', cmp: 'Ja',
+      idea: 'Deterministisk utvalg med garantert lineær worst case: del i grupper på 5, finn medianen i hver gruppe, velg rekursivt medianen av disse medianene som pivot, og partisjoner rundt den.',
+      invariant: 'Medianen av medianene x er større enn minst 3n/10 og mindre enn minst 3n/10 av elementene, så partisjoneringen forkaster alltid minst 3/10 av arrayet.',
+      proof: 'T(n) ≤ T(⌈n/5⌉) + T(7n/10 + 6) + O(n). Siden 1/5 + 7/10 = 9/10 < 1, gir substitusjon T(n) = O(n). Med grupper på 3 blir summen 1/3 + 2/3 = 1, og beviset kollapser — derfor 5.',
+      when: 'Når worst case må være lineær (sanntidskrav, adversarial input), eller som pivotvelger for å gi quicksort garantert Θ(n log n).',
+      whyNoSteps: 'Dette er pensum på «kjenne til»-nivå: du skal vite at deterministisk utvalg finnes, at den garanterer Θ(n) i worst case via median-of-medians med grupper på 5, og hvorfor 5 og ikke 3 — men ikke kunne kjøre den for hånd. Pseudokoden over er en skisse, og derfor er det ingen steg-for-steg-visualisering her.',
+      pitfalls: [
+        'Gruppestørrelsen 5 er ikke tilfeldig: med 3 løser ikke rekurrensen til O(n).',
+        'Θ(n) gjelder her i WORST case — forskjellen fra RANDOMIZED-SELECT, som bare har forventet Θ(n).',
+        'Konstantene er store, så i praksis er RANDOMIZED-SELECT nesten alltid raskere.'
+      ]
+    }
+  ];
+
+  renderVals() {
+    const C = this.C;
+    this.heroRef = this.heroRef || React.createRef();
+    const hero = this.hero || { nodes: [], edges: [] };
+    const view = this.state.view;
+    const cat = this.state.cat || 'sort';
+    const LIST = cat === 'graph' ? this.GRAPH_ALGOS : this.ALGOS;
+    const legend = this.LEGEND.map((g) => ({ label: g[1], bg: C[g[0]].bg, bd: C[g[0]].bd }));
+    const out = {
+      isHome: view === 'home', isList: view === 'list', isDetail: view === 'detail', notHome: view !== 'home',
+      crumb: view === 'home' ? 'Startside' : (cat === 'graph' ? 'Grafalgoritmer' : 'Sortering'),
+      catTitle: cat === 'graph' ? 'Grafalgoritmer' : 'Sorteringsalgoritmer',
+      catIntro: cat === 'graph'
+        ? 'Elleve algoritmer på grafer: traversering (BFS, DFS), rekkefølge og komponenter (topologisk sortering, sterke komponenter), minimale spenntrær (Kruskal, Prim), korteste sti (Dijkstra, Bellman-Ford, DAG, Floyd-Warshall) og maksimal flyt. Fargene følger CLRS: hvit = uoppdaget, grå = oppdaget, svart = ferdig.'
+        : 'Åtte algoritmer fra F1–F4: innsettingssortering, splitt-og-hersk, sortering i lineær tid og rangering. Nedre grense for sammenligningsbasert sortering er Ω(n log n) — de tre siste bryter den ved å ikke sammenligne elementene direkte.',
+      backToListLabel: cat === 'graph' ? '← Tilbake til grafalgoritmer' : '← Tilbake til sortering',
+      legend: legend,
+      heroRef: this.heroRef,
+      heroV: hero.nodes.length,
+      heroE: hero.edges.length,
+      showLegend: this.props.showLegend !== false,
+      showTheory: this.props.showTheory !== false,
+      codeOrder: this.props.codeRight ? 2 : 0,
+      goHome: () => this.setState({ view: 'home' }),
+      goList: () => this.setState({ view: 'list' }),
+      goBack: () => this.setState({ view: view === 'list' ? 'home' : 'list' }),
+      backLabel: view === 'list' ? 'Startside' : 'Alle algoritmer',
+      next: () => this.step(1),
+      prev: () => this.step(-1),
+      reset: () => this.setState({ step: 0 }),
+      categories: [
+        { name: 'Sorteringsalgoritmer', tag: 'F1–F4', count: '8 algoritmer', ready: true, soon: false, bg: 'var(--color-neutral-100)', tagClass: 'tag-accent', blurb: 'Innsettingssortering, splitt-og-hersk og sortering i lineær tid — med pseudokode, invarianter og steg-for-steg.', open: () => this.setState({ view: 'list', cat: 'sort' }) },
+        { name: 'Grafalgoritmer', tag: 'F5–F11', count: '11 algoritmer', ready: true, soon: false, bg: 'var(--color-neutral-100)', tagClass: 'tag-accent', blurb: 'Traversering, topologisk sortering, sterke komponenter, spenntrær, korteste sti og maksimal flyt — tegnet som graf.', open: () => this.setState({ view: 'list', cat: 'graph' }) },
+        { name: 'Dynamisk programmering', tag: 'DP', count: '—', ready: false, soon: true, bg: 'var(--color-surface)', tagClass: 'tag-neutral', blurb: 'Optimal delstruktur og memoisering.', open: () => {} },
+        { name: 'Datastrukturer', tag: 'Hashing · trær · heap', count: '—', ready: false, soon: true, bg: 'var(--color-surface)', tagClass: 'tag-neutral', blurb: 'Operasjoner og amortisert analyse.', open: () => {} }
+      ],
+      algos: LIST.map((a) => ({
+        name: a.name, no: a.no, best: a.best, avg: a.avg, worst: a.worst, tag: a.tag,
+        open: () => this.setState({ view: 'detail', algo: a.id, step: 0 })
+      }))
+    };
+
+    const a = LIST.find((x) => x.id === this.state.algo) || LIST[0];
+    const steps = this.trace(a.id);
+    const idx = Math.max(0, Math.min(steps.length - 1, this.state.step));
+    const s = steps[idx] || null;
+    const ai = LIST.indexOf(a);
+    const nx = LIST[(ai + 1) % LIST.length];
+
+    out.d = a;
+    out.hasSteps = steps.length > 0;
+    out.noSteps = steps.length === 0;
+    out.nextAlgoLabel = 'Neste: ' + nx.name + ' →';
+    out.nextAlgo = () => this.setState({ view: 'detail', algo: nx.id, step: 0 });
+    out.facts = a.graph ? [
+      { k: 'Kjøretid', v: a.worst, fg: 'var(--color-text)' },
+      { k: 'Ekstra minne', v: a.mem, fg: 'var(--color-text)' },
+      { k: 'Kategori', v: a.tag, fg: 'var(--color-accent-700)' }
+    ] : [
+      { k: 'Best case', v: a.best, fg: 'var(--color-text)' },
+      { k: 'Average case', v: a.avg, fg: 'var(--color-text)' },
+      { k: 'Worst case', v: a.worst, fg: 'var(--color-accent-700)' },
+      { k: 'Ekstra minne', v: a.mem, fg: 'var(--color-text)' },
+      { k: 'Stabil', v: a.stable, fg: 'var(--color-text)' },
+      { k: 'In-place', v: a.inplace, fg: 'var(--color-text)' }
+    ];
+    out.props = a.graph ? [
+      { k: 'Kjøretid', v: a.worst }, { k: 'Ekstra minne', v: a.mem }, { k: 'Type', v: a.family }
+    ] : [
+      { k: 'Stabil', v: a.stable }, { k: 'In-place', v: a.inplace },
+      { k: 'Sammenligningsbasert', v: a.cmp }, { k: 'Ekstra minne', v: a.mem }, { k: 'Forelesning', v: a.tag }
+    ];
+    out.pitfalls = (a.pitfalls || []).map((t, i) => ({ n: String(i + 1).padStart(2, '0'), t: t }));
+
+    let num = 0;
+    out.lines = this.pc(a.id).map((l, i) => {
+      const cur2 = s && s.line === i && !l.b;
+      if (l.h) num = 0;
+      const n = l.h || l.b || /^\s*\/\//.test(l.t) ? '' : String(++num);
+      const cur = cur2;
+      return {
+        n: n, t: l.b ? ' ' : l.t, pad: (l.i || 0) * 18,
+        bg: cur ? 'var(--color-accent-200)' : 'transparent',
+        fg: cur ? 'var(--color-accent-800)' : (l.h ? 'var(--color-text)' : (/^\s*\/\//.test(l.t) ? 'var(--color-neutral-500)' : 'var(--color-text)')),
+        numFg: cur ? 'var(--color-accent-700)' : 'var(--color-neutral-400)',
+        fw: l.h ? '800' : (cur ? '700' : '400'),
+        tt: l.h ? 'none' : 'none'
+      };
+    });
+
+    if (s) {
+      const sz = this.SIZES[a.id] || { aux: 0, stack: 0, card: 0 };
+      out.auxH = sz.aux; out.stackH = sz.stack;
+      out.isGraph = !!s.g; out.isArray = !s.g;
+      out.hintText = s.g
+        ? 'Piltastene ← → fungerer også. Tallet inni noden er nodens nøkkelverdi (d, key, f eller d/f).'
+        : 'Piltastene ← → fungerer også. Indekser vises 1-basert, som i CLRS.';
+      if (s.g) {
+        const G = this.GRAPHS[s.g];
+        const pos = {}; G.nodes.forEach((n) => { pos[n.id] = n; });
+        out.gh = G.h; out.gvb = '0 0 ' + G.w + ' ' + G.h; out.gAspect = G.w + ' / ' + G.h;
+        out.legend = this.GLEGEND.map((g) => ({ label: g[1], bg: this.NC[g[0]].fill, bd: '2px solid ' + this.NC[g[0]].stroke }))
+          .concat([{ label: 'valgt/tre-kant', bg: 'var(--color-accent)', bd: '2px solid var(--color-accent)' }, { label: 'kanten som vurderes', bg: 'var(--color-accent-700)', bd: '2px solid var(--color-accent-700)' }]);
+        out.gnodes = G.nodes.map((n) => {
+          const st = this.NC[(s.ns || {})[n.id] || 'white'] || this.NC.white;
+          return {
+            cx: n.x, cy: n.y, ty: n.y + 6, ny: n.lb ? n.y + 40 : n.y - 28,
+            lp: (n.x / G.w * 100).toFixed(2), tp: (n.y / G.h * 100).toFixed(2),
+            np: ((n.y + (n.lb ? 40 : -38)) / G.h * 100).toFixed(2),
+            fill: st.fill, stroke: st.stroke, sw: st.w, txt: st.text,
+            label: (s.labels || {})[n.id] === undefined ? '' : String((s.labels || {})[n.id]), name: n.id
+          };
+        });
+        const trim = (from, to, r) => {
+          const dx = to.x - from.x, dy = to.y - from.y, L = Math.sqrt(dx * dx + dy * dy) || 1;
+          return { x: from.x + (dx / L) * r, y: from.y + (dy / L) * r };
+        };
+        out.gedges = G.edges.filter((e) => e[0] !== e[1]).map((e0) => {
+          const e = s.transpose ? [e0[1], e0[0], e0[2], e0[3] === undefined ? undefined : -e0[3]] : e0;
+          const A2 = pos[e[0]], B2 = pos[e[1]], key = e0[0] + '>' + e0[1];
+          const state = (s.es || {})[key] || 'plain';
+          const st = this.EC[state] || this.EC.plain;
+          const dx = B2.x - A2.x, dy = B2.y - A2.y, L = Math.sqrt(dx * dx + dy * dy) || 1;
+          const curve = e[3] || 0;
+          const cx = (A2.x + B2.x) / 2 + (-dy / L) * curve, cy = (A2.y + B2.y) / 2 + (dx / L) * curve;
+          const p1 = trim(A2, { x: cx, y: cy }, 22), p2 = trim(B2, { x: cx, y: cy }, G.dir ? 27 : 22);
+          const mx = (p1.x + 2 * cx + p2.x) / 4, my = (p1.y + 2 * cy + p2.y) / 4;
+          const lab = (s.eLabels || {})[key] !== undefined ? (s.eLabels || {})[key] : (e[2] === undefined ? '' : String(e[2]));
+          return {
+            d: 'M ' + p1.x.toFixed(1) + ' ' + p1.y.toFixed(1) + ' Q ' + cx.toFixed(1) + ' ' + cy.toFixed(1) + ' ' + p2.x.toFixed(1) + ' ' + p2.y.toFixed(1),
+            stroke: st.stroke, w: st.w, marker: G.dir ? 'url(#arw-' + state + ')' : '',
+            label: lab, lx: mx + (-dy / L) * 15, ly: my + (dx / L) * 15 + 5,
+            lxp: ((mx + (-dy / L) * 15) / G.w * 100).toFixed(2), lyp: ((my + (dx / L) * 15) / G.h * 100).toFixed(2),
+            lfg: state === 'plain' || state === 'reject' ? 'var(--color-neutral-700)' : 'var(--color-accent-800)'
+          };
+        });
+      } else {
+        out.gnodes = []; out.gedges = []; out.gh = 0; out.gvb = '0 0 10 10'; out.gAspect = '2 / 1';
+      }
+      const allow = this.PTRS[a.id] || [];
+      const arr = s.arr || [];
+      const ptrAt = {};
+      s.vars.forEach((v) => {
+        if (allow.indexOf(v.k) < 0) return;
+        const at = Number(v.v) - 1;
+        if (!(at >= 0 && at < arr.length)) return;
+        ptrAt[at] = (ptrAt[at] ? ptrAt[at] + ' ' : '') + v.k;
+      });
+      out.cells = arr.map((v, i) => {
+        const c = C[s.marks[i] || 'plain'] || C.plain;
+        return {
+          v: typeof v === 'number' ? (v % 1 === 0 ? String(v) : v.toFixed(2)) : String(v),
+          idx: String(i + 1), ptr: ptrAt[i] || '', bg: c.bg, fg: c.fg, bd: c.bd
+        };
+      });
+      out.note = s.note;
+      out.vars = s.vars; out.hasVars = s.vars.length > 0;
+      out.stack = (s.stack || []).map((t, i) => ({ t: t, pad: i * 10, bg: i === (s.stack.length - 1) ? 'var(--color-accent-200)' : 'transparent', fg: i === (s.stack.length - 1) ? 'var(--color-accent-800)' : 'var(--color-neutral-700)' }));
+      out.hasStack = !!(s.stack && s.stack.length);
+      out.showStack = sz.stack > 0;
+      out.aux = (s.aux || []).map((p) => {
+        if (p.isMatrix) {
+          return {
+            label: p.label, isCells: false, isBuckets: false, isMatrix: true, cardH: sz.card, head: p.head,
+            rows: p.rows.map((r) => ({
+              head: r.head,
+              cells: r.cells.map((c) => {
+                const cc = C[c.mark || 'plain'] || C.plain;
+                return { v: c.v, bg: cc.bg, fg: cc.fg, bd: cc.bd };
+              })
+            }))
+          };
+        }
+        if (p.isBuckets) {
+          return {
+            label: p.label, isCells: false, isBuckets: true, isMatrix: false, cardH: sz.card,
+            buckets: p.buckets.map((b) => ({
+              label: b.label, edge: b.hot ? 'var(--color-accent)' : 'var(--color-neutral-300)', bg: b.hot ? 'var(--color-accent-100)' : 'var(--color-neutral-100)',
+              labelFg: b.hot ? 'var(--color-accent-700)' : 'var(--color-neutral-500)',
+              items: b.items.map((it) => ({ v: it.v, bg: C[it.mark || 'plain'].bg, fg: C[it.mark || 'plain'].fg, bd: C[it.mark || 'plain'].bd }))
+            }))
+          };
+        }
+        return {
+          label: p.label, isCells: true, isBuckets: false, isMatrix: false, cardH: sz.card,
+          cells: p.cells.map((c) => {
+            const cc = C[c.mark || 'plain'] || C.plain;
+            return { v: String(c.v), sub: c.sub, ptr: c.ptr || '', bg: cc.bg, fg: cc.fg, bd: cc.bd };
+          })
+        };
+      });
+      out.mainLabel = s.g ? (s.transpose ? 'Gᵀ — grafen med alle kanter snudd' : 'G — grafen underveis') : (a.id === 'counting' ? 'A — input-array (leses, endres ikke)' : 'A — arrayet underveis');
+      out.stepNo = idx + 1;
+      out.stepTotal = steps.length;
+      out.pct = Math.round(((idx + 1) / steps.length) * 100);
+    } else {
+      out.cells = []; out.note = ''; out.vars = []; out.hasVars = false; out.stack = []; out.hasStack = false; out.aux = []; out.auxH = 0; out.stackH = 0;
+      out.isGraph = false; out.isArray = true; out.gnodes = []; out.gedges = []; out.gh = 0; out.gvb = '0 0 10 10'; out.gAspect = '2 / 1'; out.hintText = ''; out.showStack = false;
+      out.mainLabel = ''; out.stepNo = 0; out.stepTotal = 0; out.pct = 0;
+    }
+    return out;
+  }
+}
+
+</script>
+</body>
+</html>
