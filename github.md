@@ -3,14 +3,15 @@ branch: main
 
 ## Last sync
 
-date: 2026-09-21T00:00:00Z
-note: Repoet var tomt ved tilkobling (ingen commits). Innholdet er laget i dette prosjektet og skal pushes opp.
+date: 2026-09-22T00:00:00Z
+note: Push skjer lokalt fra brukerens maskin — dette prosjektet kan lese fra GitHub, men ikke skrive.
 
 ### Updated in this project
 
-- Bygget `index.html` — selvstendig, deploy-klar side (alt inlinet)
-- `README.md` med kjøre- og Vercel-instruksjoner
-- `vercel.json` (statisk, cleanUrls)
+- Typografi byttet til JetBrains Mono (Terminal-stil) i hele siden
+- Pseudokode klippes ikke lenger — vannrett scroll i kodekolonnen
+- Forsideoverskrift på to linjer, kategoritittel får plass på én
+- `index.html` bygget på nytt (467 KB, selvstendig)
 
 ## Screen map
 
