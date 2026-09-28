@@ -3,6 +3,10 @@
 Interaktiv visualisering av pensumalgoritmene i Algoritmer og datastrukturer (NTNU).
 Velg kategori → algoritme, og stegg gjennom CLRS-pseudokoden mens dataene vises steg for steg.
 
+innboforsikring-estimat.vercel.app
+
+**Live** [algoritmevisualisering-alg-dat.vercel.app](https://algoritmevisualisering-alg-dat.vercel.app/)
+
 **Innhold**
 
 - Sortering: INSERTION-SORT, MERGE-SORT, QUICKSORT, COUNTING-SORT, RADIX-SORT, BUCKET-SORT, RANDOMIZED-SELECT, SELECT
@@ -17,17 +21,6 @@ Rent statisk — ingen bygging:
 ```
 npx serve .
 ```
-
-## Deploy til Vercel
-
-`index.html` er en komplett, selvstendig side (all CSS, JS og fonter er inlinet).
-
-```
-npm i -g vercel
-vercel
-```
-
-Eller koble repoet i Vercel-dashbordet: Framework preset **Other**, ingen build command, output directory `.`.
 
 ## Filer
 
