@@ -207,7 +207,7 @@
 
             <sc-if value="{{ isArray }}" hint-placeholder-val="{{ true }}">
               <div style="display: flex; align-items: flex-start; gap: var(--space-3); overflow-x: auto; overflow-y: hidden; padding-bottom: var(--space-1);">
-                <div style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 20px; padding-top: 24px; flex: 0 0 auto;">A</div>
+                <div style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 20px; padding-top: 24px; flex: 0 0 auto;">{{ arrName }}</div>
                 <div style="display: flex; flex: 0 0 auto;">
                   <sc-for list="{{ cells }}" as="c" hint-placeholder-count="8">
                     <div style="display: flex; flex-direction: column; min-width: 48px; margin-left: -2px;">
@@ -401,6 +401,20 @@ class Component extends DCLogic {
     merge: { aux: 256, stack: 124, card: 0 },
     quick: { aux: 0, stack: 152, card: 0 },
     heap: { aux: 200, stack: 172, card: 0 },
+    bisect: { aux: 0, stack: 152, card: 0 },
+    hash: { aux: 165, stack: 0, card: 112 },
+    dyntable: { aux: 250, stack: 0, card: 0 },
+    pq: { aux: 200, stack: 0, card: 0 },
+    bst: { aux: 100, stack: 152, card: 0 },
+    dset: { aux: 250, stack: 152, card: 0 },
+    cutrod: { aux: 250, stack: 0, card: 0 },
+    lcs: { aux: 330, stack: 0, card: 0 },
+    knapsack: { aux: 240, stack: 0, card: 0 },
+    activity: { aux: 110, stack: 0, card: 0 },
+    huffman: { aux: 110, stack: 0, card: 0 },
+    galeshapley: { aux: 340, stack: 0, card: 0 },
+    tclosure: { aux: 215, stack: 0, card: 0 },
+    johnson: { aux: 250, stack: 0, card: 0 },
     counting: { aux: 256, stack: 0, card: 0 },
     radix: { aux: 300, stack: 0, card: 112 },
     bucket: { aux: 300, stack: 0, card: 112 },
@@ -419,7 +433,41 @@ class Component extends DCLogic {
     maxflow: { aux: 140, stack: 0, card: 0 }
   };
 
-  PTRS = { insertion: ['i', 'j'], merge: ['k'], quick: ['i', 'j'], heap: ['i', 'l', 'r'], counting: ['j'], bucket: ['i'], rselect: ['q'], radix: [] };
+  PTRS = { insertion: ['i', 'j'], merge: ['k'], quick: ['i', 'j'], heap: ['i', 'l', 'r'], bisect: ['p', 'q', 'r'], pq: ['i'], cutrod: ['i'], lcs: ['i'], knapsack: ['i'], activity: ['m', 'k'], counting: ['j'], bucket: ['i'], rselect: ['q'], radix: [] };
+
+  LEGENDS = {
+    bisect: [['range', 'søkeområdet A[p..r]'], ['pivot', 'midtelementet A[q]'], ['out', 'forkastet'], ['done', 'funnet']],
+    hash: [['key', 'nøkkelen som settes inn'], ['compare', 'sammenlignes'], ['done', 'satt inn / funnet'], ['pivot', 'slettes'], ['out', 'tom luke (NIL)']],
+    dyntable: [['plain', 'element i tabellen'], ['out', 'ledig luke'], ['compare', 'kopieres til ny tabell'], ['key', 'nettopp satt inn']],
+    pq: [['key', 'nøkkelen som flyttes'], ['compare', 'sammenlignes / byttes'], ['pivot', 'maksimum som tas ut'], ['done', 'på plass']],
+    cutrod: [['compare', 'p[i] / r[j − i] som prøves'], ['key', 'r[j] / s[j] som fylles nå'], ['done', 'løst delinstans'], ['out', 'ikke løst ennå']],
+    lcs: [['key', 'cellen som fylles / følges'], ['compare', 'cellene den avhenger av'], ['done', 'på rekonstruksjonsstien'], ['out', 'ikke fylt ennå']],
+    knapsack: [['key', 'cellen som fylles / gjenstand i'], ['compare', 'cellene den avhenger av'], ['done', 'valgt / på stien'], ['out', 'ikke fylt ennå']],
+    activity: [['done', 'valgt'], ['key', 'valgt nå'], ['compare', 'vurderes'], ['pivot', 'sist valgte, f[k]'], ['out', 'forkastet (overlapper)']]
+  };
+
+  CATS = {
+    sort: {
+      list: 'ALGOS', title: 'Sorteringsalgoritmer', crumb: 'Sortering', back: 'sortering', lec: 'F1, F3–F5',
+      blurb: 'Innsettingssortering, splitt-og-hersk, heapsort og sortering i lineær tid — med pseudokode, invarianter og steg-for-steg.',
+      intro: 'Sortering, søk og rangering fra F1, F3, F4 og F5: innsettingssortering, splitt-og-hersk (inkl. binærsøk), heapsort, sortering i lineær tid og rangering. Nedre grense for sammenligningsbasert sortering er Ω(n log n) — counting, radix og bucket sort bryter den ved å ikke sammenligne elementene direkte.'
+    },
+    ds: {
+      list: 'DS_ALGOS', title: 'Datastrukturer', crumb: 'Datastrukturer', back: 'datastrukturer', lec: 'F2, F5, F9',
+      blurb: 'Hashtabeller, dynamiske tabeller, prioritetskøer, binære søketrær og disjunkte mengder — operasjon for operasjon.',
+      intro: 'Datastrukturene fra F2, F5 og F9: hashing med kjeding, dynamiske tabeller med amortisert analyse, hauger som prioritetskø, binære søketrær og skog-implementasjonen av disjunkte mengder. Her er det operasjonene og kostnaden deres som er poenget.'
+    },
+    dp: {
+      list: 'DP_ALGOS', title: 'Dynamisk programmering og grådighet', crumb: 'DP og grådighet', back: 'DP og grådighet', lec: 'F6–F7',
+      blurb: 'Stavkapping, LCS og ryggsekk med tabeller — og grådige algoritmer: aktivitetsutvelgelse, Huffman og Gale-Shapley.',
+      intro: 'F6 og F7. Dynamisk programmering løser overlappende delinstanser én gang og lagrer svaret (optimal delstruktur + overlappende delinstanser). Grådige algoritmer tar det lokalt beste valget og løser bare ett delproblem videre (optimal delstruktur + grådighetsegenskapen).'
+    },
+    graph: {
+      list: 'GRAPH_ALGOS', title: 'Grafalgoritmer', crumb: 'Grafalgoritmer', back: 'grafalgoritmer', lec: 'F8–F12',
+      blurb: 'Traversering, topologisk sortering, sterke komponenter, spenntrær, korteste sti og maksimal flyt — tegnet som graf.',
+      intro: 'Tretten algoritmer på grafer (F8–F12): traversering (BFS, DFS), rekkefølge og komponenter (topologisk sortering, sterke komponenter), minimale spenntrær (Kruskal, Prim), korteste sti fra én (Bellman-Ford, DAG, Dijkstra), fra alle (Floyd-Warshall, transitiv tillukning, Johnson) og maksimal flyt. Fargene følger CLRS: hvit = uoppdaget, grå = oppdaget, svart = ferdig.'
+    }
+  };
 
   LEGEND = [
     ['plain', 'uberørt'], ['range', 'aktivt delproblem'], ['compare', 'sammenlignes'],
@@ -875,7 +923,256 @@ class Component extends DCLogic {
         L(3, 'øk flyten langs (u,v) med cf(p)'),
         B(),
         L(0, '// EDMONDS-KARP: velg p som korteste sti (BFS)')
-      ]
+      ],
+      bisect: [
+        H('BISECT(A, p, r, v)'),
+        L(1, 'if p ≤ r'),
+        L(2, 'q = ⌊(p + r)/2⌋'),
+        L(2, 'if v == A[q]'),
+        L(3, 'return q'),
+        L(2, 'elseif v < A[q]'),
+        L(3, 'return BISECT(A, p, q − 1, v)'),
+        L(2, 'else return BISECT(A, q + 1, r, v)'),
+        L(1, 'else return NIL'),
+        B(),
+        H('BISECT′(A, p, r, v)'),
+        L(1, 'while p ≤ r'),
+        L(2, 'q = ⌊(p + r)/2⌋'),
+        L(2, 'if v == A[q]'),
+        L(3, 'return q'),
+        L(2, 'elseif v < A[q]'),
+        L(3, 'r = q − 1'),
+        L(2, 'else p = q + 1'),
+        L(1, 'return NIL')
+      ],
+      hash: [
+        H('CHAINED-HASH-INSERT(T, x)'),
+        L(1, 'LIST-PREPEND(T[h(x.key)], x)'),
+        B(),
+        H('CHAINED-HASH-SEARCH(T, k)'),
+        L(1, 'return LIST-SEARCH(T[h(k)], k)'),
+        B(),
+        H('CHAINED-HASH-DELETE(T, x)'),
+        L(1, 'LIST-DELETE(T[h(x.key)], x)'),
+        B(),
+        L(0, '// her: divisjonsmetoden h(k) = k mod m, m = 9')
+      ],
+      dyntable: [
+        H('TABLE-INSERT(T, x)'),
+        L(1, 'if T.size == 0'),
+        L(2, 'allocate T.table with 1 slot'),
+        L(2, 'T.size = 1'),
+        L(1, 'if T.num == T.size'),
+        L(2, 'allocate new-table with 2 · T.size slots'),
+        L(2, 'insert all items in T.table into new-table'),
+        L(2, 'free T.table'),
+        L(2, 'T.table = new-table'),
+        L(2, 'T.size = 2 · T.size'),
+        L(1, 'insert x into T.table'),
+        L(1, 'T.num = T.num + 1')
+      ],
+      pq: [
+        H('HEAP-MAXIMUM(A)'),
+        L(1, 'return A[1]'),
+        B(),
+        H('HEAP-EXTRACT-MAX(A)'),
+        L(1, 'if A.heap-size < 1'),
+        L(2, 'error "heap underflow"'),
+        L(1, 'max = A[1]'),
+        L(1, 'A[1] = A[A.heap-size]'),
+        L(1, 'A.heap-size = A.heap-size − 1'),
+        L(1, 'MAX-HEAPIFY(A, 1)'),
+        L(1, 'return max'),
+        B(),
+        H('HEAP-INCREASE-KEY(A, i, key)'),
+        L(1, 'if key < A[i]'),
+        L(2, 'error "new key is smaller than current key"'),
+        L(1, 'A[i] = key'),
+        L(1, 'while i > 1 and A[PARENT(i)] < A[i]'),
+        L(2, 'exchange A[i] with A[PARENT(i)]'),
+        L(2, 'i = PARENT(i)'),
+        B(),
+        H('MAX-HEAP-INSERT(A, key)'),
+        L(1, 'A.heap-size = A.heap-size + 1'),
+        L(1, 'A[A.heap-size] = −∞'),
+        L(1, 'HEAP-INCREASE-KEY(A, A.heap-size, key)')
+      ],
+      bst: [
+        H('TREE-INSERT(T, z)'),
+        L(1, 'y = NIL'),
+        L(1, 'x = T.root'),
+        L(1, 'while x ≠ NIL'),
+        L(2, 'y = x'),
+        L(2, 'if z.key < x.key'),
+        L(3, 'x = x.left'),
+        L(2, 'else x = x.right'),
+        L(1, 'z.p = y'),
+        L(1, 'if y == NIL'),
+        L(2, 'T.root = z          // treet var tomt'),
+        L(1, 'elseif z.key < y.key'),
+        L(2, 'y.left = z'),
+        L(1, 'else y.right = z'),
+        B(),
+        H('TREE-SEARCH(x, k)'),
+        L(1, 'if x == NIL or k == x.key'),
+        L(2, 'return x'),
+        L(1, 'if k < x.key'),
+        L(2, 'return TREE-SEARCH(x.left, k)'),
+        L(1, 'else return TREE-SEARCH(x.right, k)'),
+        B(),
+        H('TREE-SUCCESSOR(x)'),
+        L(1, 'if x.right ≠ NIL'),
+        L(2, 'return TREE-MINIMUM(x.right)'),
+        L(1, 'y = x.p'),
+        L(1, 'while y ≠ NIL and x == y.right'),
+        L(2, 'x = y'),
+        L(2, 'y = y.p'),
+        L(1, 'return y'),
+        B(),
+        H('INORDER-TREE-WALK(x)'),
+        L(1, 'if x ≠ NIL'),
+        L(2, 'INORDER-TREE-WALK(x.left)'),
+        L(2, 'print x.key'),
+        L(2, 'INORDER-TREE-WALK(x.right)')
+      ],
+      dset: [
+        H('MAKE-SET(x)'),
+        L(1, 'x.p = x'),
+        L(1, 'x.rank = 0'),
+        B(),
+        H('UNION(x, y)'),
+        L(1, 'LINK(FIND-SET(x), FIND-SET(y))'),
+        B(),
+        H('LINK(x, y)'),
+        L(1, 'if x.rank > y.rank'),
+        L(2, 'y.p = x'),
+        L(1, 'else x.p = y'),
+        L(2, 'if x.rank == y.rank'),
+        L(3, 'y.rank = y.rank + 1'),
+        B(),
+        H('FIND-SET(x)'),
+        L(1, 'if x ≠ x.p'),
+        L(2, 'x.p = FIND-SET(x.p)    // stikomprimering'),
+        L(1, 'return x.p')
+      ],
+      cutrod: [
+        H('EXTENDED-BOTTOM-UP-CUT-ROD(p, n)'),
+        L(1, 'la r[0..n] og s[1..n] være nye arrays'),
+        L(1, 'r[0] = 0'),
+        L(1, 'for j = 1 to n           // løs delinstans j'),
+        L(2, 'q = −∞'),
+        L(2, 'for i = 1 to j         // første bit har lengde i'),
+        L(3, 'if q < p[i] + r[j − i]'),
+        L(4, 'q = p[i] + r[j − i]'),
+        L(4, 's[j] = i'),
+        L(2, 'r[j] = q'),
+        L(1, 'return r og s'),
+        B(),
+        H('PRINT-CUT-ROD-SOLUTION(p, n)'),
+        L(1, '(r, s) = EXTENDED-BOTTOM-UP-CUT-ROD(p, n)'),
+        L(1, 'while n > 0'),
+        L(2, 'print s[n]'),
+        L(2, 'n = n − s[n]')
+      ],
+      lcs: [
+        H('LCS-LENGTH(X, Y, m, n)'),
+        L(1, 'la b[1..m, 1..n] og c[0..m, 0..n] være nye tabeller'),
+        L(1, 'c[i, 0] = 0 og c[0, j] = 0 for alle i og j'),
+        L(1, 'for i = 1 to m'),
+        L(2, 'for j = 1 to n'),
+        L(3, 'if xᵢ == yⱼ'),
+        L(4, 'c[i, j] = c[i − 1, j − 1] + 1;  b[i, j] = "↖"'),
+        L(3, 'elseif c[i − 1, j] ≥ c[i, j − 1]'),
+        L(4, 'c[i, j] = c[i − 1, j];  b[i, j] = "↑"'),
+        L(3, 'else c[i, j] = c[i, j − 1];  b[i, j] = "←"'),
+        L(1, 'return c og b'),
+        B(),
+        H('PRINT-LCS(b, X, i, j)'),
+        L(1, 'if i == 0 or j == 0: return'),
+        L(1, 'if b[i, j] == "↖"'),
+        L(2, 'PRINT-LCS(b, X, i − 1, j − 1);  print xᵢ'),
+        L(1, 'elseif b[i, j] == "↑": PRINT-LCS(b, X, i − 1, j)'),
+        L(1, 'else PRINT-LCS(b, X, i, j − 1)')
+      ],
+      knapsack: [
+        H('KNAPSACK(n, W)'),
+        L(1, 'la K[0..n, 0..W] være en ny tabell'),
+        L(1, 'for j = 0 to W: K[0, j] = 0'),
+        L(1, 'for i = 1 to n'),
+        L(2, 'for j = 0 to W'),
+        L(3, 'x = K[i − 1, j]               // uten gjenstand i'),
+        L(3, 'if j < w[i]'),
+        L(4, 'K[i, j] = x                  // i får ikke plass'),
+        L(3, 'else y = K[i − 1, j − w[i]] + v[i]   // med i'),
+        L(4, 'K[i, j] = max(x, y)'),
+        L(1, 'return K[n, W]')
+      ],
+      activity: [
+        H('GREEDY-ACTIVITY-SELECTOR(s, f, n)'),
+        L(1, 'A = {a₁}'),
+        L(1, 'k = 1'),
+        L(1, 'for m = 2 to n'),
+        L(2, 'if s[m] ≥ f[k]'),
+        L(3, 'A = A ∪ {aₘ}'),
+        L(3, 'k = m'),
+        L(1, 'return A')
+      ],
+      huffman: [
+        H('HUFFMAN(C)'),
+        L(1, 'n = |C|'),
+        L(1, 'Q = C             // min-prioritetskø på freq'),
+        L(1, 'for i = 1 to n − 1'),
+        L(2, 'allocate a new node z'),
+        L(2, 'z.left = x = EXTRACT-MIN(Q)'),
+        L(2, 'z.right = y = EXTRACT-MIN(Q)'),
+        L(2, 'z.freq = x.freq + y.freq'),
+        L(2, 'INSERT(Q, z)'),
+        L(1, 'return EXTRACT-MIN(Q)    // rota i treet')
+      ],
+      galeshapley: [
+        H('GALE-SHAPLEY(menn, kvinner, rangeringer)'),
+        L(1, 'alle kvinner og menn er ledige'),
+        L(1, 'while en kvinne w er ledig'),
+        L(2, 'm = første mann på w sin liste hun ikke har fridd til'),
+        L(2, 'if m er ledig'),
+        L(3, 'w og m forloves'),
+        L(2, 'elseif m rangerer w over sin forlovede w′'),
+        L(3, 'forlovelsen m–w′ brytes, og w′ blir ledig'),
+        L(3, 'w og m forloves'),
+        L(2, 'else m avviser w, og w forblir ledig'),
+        L(1, 'return de forlovede parene')
+      ],
+      tclosure: [
+        H('TRANSITIVE-CLOSURE(G, n)'),
+        L(1, 'la T⁽⁰⁾ være en ny n × n-matrise'),
+        L(1, 'for i = 1 to n'),
+        L(2, 'for j = 1 to n'),
+        L(3, 'if i == j or (i, j) ∈ G.E'),
+        L(4, 't⁽⁰⁾ᵢⱼ = 1'),
+        L(3, 'else t⁽⁰⁾ᵢⱼ = 0'),
+        L(1, 'for k = 1 to n'),
+        L(2, 'la T⁽ᵏ⁾ være en ny n × n-matrise'),
+        L(2, 'for i = 1 to n'),
+        L(3, 'for j = 1 to n'),
+        L(4, 't⁽ᵏ⁾ᵢⱼ = t⁽ᵏ⁻¹⁾ᵢⱼ ∨ (t⁽ᵏ⁻¹⁾ᵢₖ ∧ t⁽ᵏ⁻¹⁾ₖⱼ)'),
+        L(1, 'return T⁽ⁿ⁾')
+      ],
+      johnson: [
+        H('JOHNSON(G, w)'),
+        L(1, 'lag G′: ny node s og kanter (s, v) med w(s, v) = 0'),
+        L(1, 'if BELLMAN-FORD(G′, w, s) == FALSE'),
+        L(2, 'print "grafen har en negativ sykel"'),
+        L(1, 'else for each v ∈ G′.V'),
+        L(3, 'h(v) = δ(s, v)        // fra Bellman-Ford'),
+        L(2, 'for each (u, v) ∈ G′.E'),
+        L(3, 'ŵ(u, v) = w(u, v) + h(u) − h(v)'),
+        L(2, 'la D = (dᵤᵥ) være en ny n × n-matrise'),
+        L(2, 'for each u ∈ G.V'),
+        L(3, 'DIJKSTRA(G, ŵ, u) gir δ̂(u, v) for alle v'),
+        L(3, 'for each v ∈ G.V'),
+        L(4, 'dᵤᵥ = δ̂(u, v) + h(v) − h(u)'),
+        L(2, 'return D')
+      ],
     };
     return P[id] || [];
   }
@@ -884,7 +1181,9 @@ class Component extends DCLogic {
   trace(id) {
     this._c = this._c || {};
     if (!this._c[id]) {
-      const f = { insertion: 'tInsertion', merge: 'tMerge', quick: 'tQuick', heap: 'tHeap', counting: 'tCounting', radix: 'tRadix', bucket: 'tBucket', rselect: 'tSelect' }[id];
+      const f = { insertion: 'tInsertion', merge: 'tMerge', quick: 'tQuick', heap: 'tHeap', counting: 'tCounting', radix: 'tRadix', bucket: 'tBucket', rselect: 'tSelect', bisect: 'tBisect',
+        hash: 'tHash', dyntable: 'tDynTable', pq: 'tPQ', bst: 'tBst', dset: 'tDset',
+        cutrod: 'tCutRod', lcs: 'tLcs', knapsack: 'tKnapsack', activity: 'tActivity', huffman: 'tHuffman', galeshapley: 'tGaleShapley' }[id];
       this._c[id] = f ? this[f]() : this.gtrace(id);
     }
     return this._c[id];
@@ -1203,12 +1502,12 @@ class Component extends DCLogic {
       for (let j = p; j < r; j++) {
         const m = rng(p, r, { [r]: 'pivot', [j]: 'compare' }); for (let t = p; t <= i; t++) m[t] = 'done';
         const ok = A[j] <= x;
-        P(16, m, 'PARTITION: A[' + (j + 1) + '] = ' + A[j] + ' ≤ x = ' + x + '? ' + (ok ? 'Ja → bytt inn i venstre side.' : 'Nei → la det ligge.'), [{ k: 'j', v: j + 1 }, { k: 'x', v: x }]);
+        P(14, m, 'PARTITION: A[' + (j + 1) + '] = ' + A[j] + ' ≤ x = ' + x + '? ' + (ok ? 'Ja → bytt inn i venstre side.' : 'Nei → la det ligge.'), [{ k: 'j', v: j + 1 }, { k: 'x', v: x }]);
         if (ok) { i++; const t0 = A[i]; A[i] = A[j]; A[j] = t0; }
       }
       const t1 = A[i + 1]; A[i + 1] = A[r]; A[r] = t1;
       const m3 = rng(p, r, { [i + 1]: 'pivot' }); for (let t = p; t <= i; t++) m3[t] = 'done';
-      P(16, m3, 'Pivoten ' + x + ' står nå på sin endelige plass, indeks q = ' + (i + 2) + '.', [{ k: 'q', v: i + 2 }]);
+      P(14, m3, 'Pivoten ' + x + ' står nå på sin endelige plass, indeks q = ' + (i + 2) + '.', [{ k: 'q', v: i + 2 }]);
       return i + 1;
     };
     const rs = (p, r, i) => {
@@ -1216,9 +1515,9 @@ class Component extends DCLogic {
       P(1, rng(p, r), 'RANDOMIZED-SELECT på A[' + (p + 1) + '..' + (r + 1) + '], vi vil ha det ' + i + '. minste elementet AV DENNE delen. p == r? ' + (p === r ? 'Ja.' : 'Nei.'), [{ k: 'p', v: p + 1 }, { k: 'r', v: r + 1 }, { k: 'i', v: i }]);
       if (p === r) { P(2, rng(p, r, { [p]: 'key' }), 'Ett element igjen → svaret er A[' + (p + 1) + '] = ' + A[p] + '.', [{ k: 'svar', v: A[p] }]); stack.pop(); return A[p]; }
       const jr = p + ((r - p) >> 1);
-      P(13, rng(p, r, { [jr]: 'compare' }), 'RANDOM(p, r) velger indeks ' + (jr + 1) + ' som pivot (her fast for at eksempelet skal være reproduserbart — i praksis tilfeldig).', [{ k: 'j', v: jr + 1 }]);
+      P(12, rng(p, r, { [jr]: 'compare' }), 'RANDOM(p, r) velger indeks ' + (jr + 1) + ' som pivot (her fast for at eksempelet skal være reproduserbart — i praksis tilfeldig).', [{ k: 'j', v: jr + 1 }]);
       const t0 = A[jr]; A[jr] = A[r]; A[r] = t0;
-      P(14, rng(p, r, { [r]: 'pivot' }), 'Pivoten byttes til slutten, så vanlig PARTITION kan brukes uendret. Det tilfeldige valget er det som gjør forventet kjøretid O(n).', []);
+      P(13, rng(p, r, { [r]: 'pivot' }), 'Pivoten byttes til slutten, så vanlig PARTITION kan brukes uendret. Det tilfeldige valget er det som gjør forventet kjøretid O(n).', []);
       const q = partition(p, r);
       const k = q - p + 1;
       P(4, rng(p, r, { [q]: 'pivot' }), 'k = q − p + 1 = ' + k + ': pivoten er det ' + k + '. minste i A[' + (p + 1) + '..' + (r + 1) + '].', [{ k: 'q', v: q + 1 }, { k: 'k', v: k }, { k: 'i', v: i }]);
@@ -1232,6 +1531,578 @@ class Component extends DCLogic {
     };
     P(0, {}, 'Vi vil finne det ' + target + '. minste elementet (rang ' + target + ') uten å sortere hele arrayet.', [{ k: 'n', v: A.length }, { k: 'i', v: target }]);
     rs(0, A.length - 1, target);
+    return S;
+  }
+
+  tBisect() {
+    const A = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31], S = [], stack = [];
+    let v = 23;
+    const P = (line, marks, note, vars) => S.push({ line: line, arr: A.slice(), marks: marks, note: note, vars: vars || [], stack: stack.slice() });
+    const rng = (p, r, extra) => { const m = {}; for (let t = 0; t < A.length; t++) m[t] = t >= p && t <= r ? 'range' : 'out'; return Object.assign(m, extra || {}); };
+    P(0, {}, 'A er sortert — det er det eneste kravet. Vi leter etter v = 23 med den rekursive BISECT(A, 1, n, v).', [{ k: 'n', v: A.length }, { k: 'v', v: v }]);
+    const rec = (p, r) => {
+      stack.push('BISECT(A, ' + (p + 1) + ', ' + (r + 1) + ', ' + v + ')');
+      P(1, rng(p, r), 'p = ' + (p + 1) + ', r = ' + (r + 1) + '. p ≤ r? ' + (p <= r ? 'Ja — delarrayet A[' + (p + 1) + '..' + (r + 1) + '] er ikke tomt.' : 'Nei — delarrayet er tomt.'), [{ k: 'p', v: p + 1 }, { k: 'r', v: r + 1 }, { k: 'v', v: v }]);
+      if (p > r) { P(8, {}, 'return NIL: v finnes ikke.', []); stack.pop(); return -1; }
+      const q = Math.floor((p + r) / 2);
+      P(2, rng(p, r, { [q]: 'pivot' }), 'q = ⌊(' + (p + 1) + ' + ' + (r + 1) + ')/2⌋ = ' + (q + 1) + '. Midtelementet er A[' + (q + 1) + '] = ' + A[q] + '.', [{ k: 'p', v: p + 1 }, { k: 'q', v: q + 1 }, { k: 'r', v: r + 1 }]);
+      if (A[q] === v) { P(4, rng(p, r, { [q]: 'done' }), 'v == A[q] → return q = ' + (q + 1) + '. Funnet etter ' + stack.length + ' kall.', [{ k: 'q', v: q + 1 }]); stack.pop(); return q; }
+      let res;
+      if (v < A[q]) {
+        P(6, rng(p, q - 1, { [q]: 'pivot' }), v + ' < ' + A[q] + ' → v kan bare ligge til VENSTRE. Høyre halvdel og A[q] forkastes.', [{ k: 'q', v: q + 1 }]);
+        res = rec(p, q - 1);
+      } else {
+        P(7, rng(q + 1, r, { [q]: 'pivot' }), v + ' > ' + A[q] + ' → v kan bare ligge til HØYRE. Venstre halvdel og A[q] forkastes.', [{ k: 'q', v: q + 1 }]);
+        res = rec(q + 1, r);
+      }
+      stack.pop();
+      return res;
+    };
+    rec(0, A.length - 1);
+    v = 6;
+    stack.length = 0;
+    stack.push('BISECT′(A, 1, ' + A.length + ', 6)');
+    P(10, {}, 'Nytt søk med den iterative BISECT′ og v = 6, som ikke finnes. Samme logikk, men p og r flyttes i en while-løkke i stedet for rekursive kall — ingen kall-stack som vokser.', [{ k: 'v', v: v }]);
+    let p = 0, r = A.length - 1;
+    for (;;) {
+      P(11, rng(p, r), 'while p ≤ r: p = ' + (p + 1) + ', r = ' + (r + 1) + (p <= r ? ' → fortsett.' : ' → p > r, løkka stopper.'), [{ k: 'p', v: p + 1 }, { k: 'r', v: r + 1 }, { k: 'v', v: v }]);
+      if (p > r) break;
+      const q = Math.floor((p + r) / 2);
+      P(12, rng(p, r, { [q]: 'pivot' }), 'q = ⌊(' + (p + 1) + ' + ' + (r + 1) + ')/2⌋ = ' + (q + 1) + ', A[q] = ' + A[q] + '.', [{ k: 'p', v: p + 1 }, { k: 'q', v: q + 1 }, { k: 'r', v: r + 1 }]);
+      if (v < A[q]) { r = q - 1; P(16, rng(p, r, { [q]: 'pivot' }), v + ' < ' + A[q] + ' → r = q − 1 = ' + (r + 1) + '.', [{ k: 'p', v: p + 1 }, { k: 'r', v: r + 1 }]); }
+      else { p = q + 1; P(17, rng(p, r, { [q]: 'pivot' }), v + ' > ' + A[q] + ' → p = q + 1 = ' + (p + 1) + '.', [{ k: 'p', v: p + 1 }, { k: 'r', v: r + 1 }]); }
+    }
+    P(18, {}, 'return NIL: 6 finnes ikke i A. Hver iterasjon halverer r − p + 1, så det blir høyst ⌊lg n⌋ + 1 iterasjoner: Θ(lg n) i worst case. T(n) = T(n/2) + Θ(1).', [{ k: 'n', v: A.length }]);
+    return S;
+  }
+
+  tHash() {
+    const K = [5, 28, 19, 15, 20, 33, 12, 17, 10], m = 9, S = [];
+    const T = []; for (let i = 0; i < m; i++) T.push([]);
+    const panel = (hot, im) => ({
+      label: 'T[0..m−1] — hver luke peker til en lenket liste (hodet øverst)', isBuckets: true,
+      buckets: T.map((b, i) => ({ label: 'T[' + i + ']', items: b.length ? b.map((x, j) => ({ v: String(x), mark: (im || {})[i + ':' + j] || 'plain' })) : [{ v: 'NIL', mark: 'out' }], hot: i === hot }))
+    });
+    const P = (line, marks, note, vars, hot, im) => S.push({ line: line, arr: K.slice(), marks: marks, note: note, vars: vars || [], mainLabel: 'Nøklene som settes inn, i rekkefølge', aux: [panel(hot === undefined ? -1 : hot, im)] });
+    P(9, {}, 'Nøklene settes inn én etter én i en tabell med m = 9 luker. Hashfunksjonen er divisjonsmetoden h(k) = k mod 9. Kollisjoner løses ved kjeding: nøkler med samme hashverdi havner i samme lenkede liste.', [{ k: 'm', v: m }, { k: 'n', v: K.length }]);
+    const done = {};
+    K.forEach((k, j) => {
+      const h = k % m, coll = T[h].length > 0;
+      T[h].unshift(k);
+      P(1, Object.assign({}, done, { [j]: 'key' }), 'Sett inn ' + k + ': h(' + k + ') = ' + k + ' mod 9 = ' + h + '. ' + (coll ? 'KOLLISJON — T[' + h + '] er ikke tom. ' + k + ' legges først i lista (LIST-PREPEND), så innsetting er O(1) uansett.' : 'T[' + h + '] var tom, så ' + k + ' blir hodet i lista.'), [{ k: 'k', v: k }, { k: 'h(k)', v: h }], h, { [h + ':0']: 'key' });
+      done[j] = 'done';
+    });
+    const search = (k) => {
+      const h = k % m;
+      P(4, done, 'CHAINED-HASH-SEARCH(T, ' + k + '): h(' + k + ') = ' + h + ', så vi trenger bare å lete i T[' + h + '], som har ' + T[h].length + ' element(er).', [{ k: 'k', v: k }, { k: 'h(k)', v: h }], h);
+      for (let j = 0; j < T[h].length; j++) {
+        const hit = T[h][j] === k;
+        P(4, done, 'LIST-SEARCH sammenligner med ' + T[h][j] + ': ' + (hit ? 'treff! Funnet etter ' + (j + 1) + ' sammenligning(er).' : 'ikke ' + k + ' → videre til neste i lista.'), [{ k: 'k', v: k }, { k: 'sammenligninger', v: j + 1 }], h, { [h + ':' + j]: hit ? 'done' : 'compare' });
+        if (hit) return;
+      }
+      P(4, done, 'Slutten av lista er nådd (NIL) → ' + k + ' finnes ikke. Et mislykket søk går alltid gjennom HELE kjeden: forventet Θ(1 + α).', [{ k: 'k', v: k }], h);
+    };
+    search(28);
+    search(37);
+    const h19 = 19 % m, pos = T[h19].indexOf(19);
+    P(7, done, 'CHAINED-HASH-DELETE(T, x) for nøkkelen 19: med dobbelt lenket liste og en peker x rett til elementet kobles det ut i O(1). Med enkelt lenket liste må vi først finne forgjengeren: O(n).', [{ k: 'k', v: 19 }, { k: 'h(k)', v: h19 }], h19, { [h19 + ':' + pos]: 'pivot' });
+    T[h19].splice(pos, 1);
+    P(7, done, '19 er fjernet fra T[' + h19 + ']. Lastfaktoren er α = n/m = 8/9. Med enkel uniform hashing har hver kjede forventet lengde α, så med α = O(1) tar alle operasjonene forventet O(1). Worst case (alt i én luke) er Θ(n) for søk.', [{ k: 'α', v: (8 / 9).toFixed(2) }], h19);
+    return S;
+  }
+
+  tDynTable() {
+    const S = [], costs = [];
+    let table = [], size = 0, num = 0, total = 0;
+    const mk = (extra) => { const m = {}; for (let t = 0; t < size; t++) m[t] = t < num ? 'plain' : 'out'; return Object.assign(m, extra || {}); };
+    const P = (line, marks, note, vars) => S.push({
+      line: line, arr: table.length ? table.slice() : ['∅'], marks: marks, note: note, vars: vars || [],
+      mainLabel: 'T.table — tabellen underveis (T.size = ' + size + ')',
+      aux: [
+        this.cells('cᵢ — faktisk kostnad for innsetting nr. i', costs.length ? costs.slice() : ['–'], { mark: (k) => k === costs.length - 1 ? 'key' : 'plain' }),
+        this.cells('Σcᵢ hittil — alltid ≤ 3i', costs.length ? costs.map((_, k) => costs.slice(0, k + 1).reduce((x, y) => x + y, 0) + '≤' + 3 * (k + 1)) : ['–'])
+      ]
+    });
+    P(0, {}, 'Tom dynamisk tabell: T.size = 0 og T.num = 0. Vi setter inn x = 1, 2, …, 9 og ser på hva hver innsetting faktisk koster. Tabellen dobles når den er full.', [{ k: 'T.num', v: 0 }, { k: 'T.size', v: 0 }]);
+    for (let x = 1; x <= 9; x++) {
+      let c = 1;
+      if (size === 0) {
+        table = ['·']; size = 1;
+        P(3, mk(), 'Første innsetting: tabellen allokeres med 1 luke.', [{ k: 'x', v: x }, { k: 'T.size', v: 1 }]);
+      } else if (num === size) {
+        P(4, mk(), 'T.num = T.size = ' + size + ' → tabellen er FULL (α = 1). Den må utvides før ' + x + ' får plass.', [{ k: 'x', v: x }, { k: 'T.num', v: num }, { k: 'T.size', v: size }]);
+        table = table.concat(new Array(size).fill('·')); size *= 2;
+        const cp = {}; for (let t = 0; t < num; t++) cp[t] = 'compare';
+        P(6, mk(cp), 'Ny tabell med 2 · ' + (size / 2) + ' = ' + size + ' luker, og alle ' + num + ' elementene kopieres over. Kopieringen koster ' + num + ' — det er DETTE som gjør enkelte innsettinger dyre.', [{ k: 'x', v: x }, { k: 'kopiert', v: num }, { k: 'T.size', v: size }]);
+        c += num;
+      }
+      table[num] = x; num++; costs.push(c); total += c;
+      P(10, mk({ [num - 1]: 'key' }), 'Sett inn ' + x + ' på plass ' + num + '. Faktisk kostnad c' + x + ' = ' + c + (c > 1 ? ' (1 innsetting + ' + (c - 1) + ' kopieringer)' : '') + '. Totalt hittil ' + total + ' ≤ 3 · ' + x + ' = ' + 3 * x + '.', [{ k: 'T.num', v: num }, { k: 'T.size', v: size }, { k: 'cᵢ', v: c }, { k: 'Σcᵢ', v: total }]);
+    }
+    P(0, mk(), 'Aggregert analyse: n innsettinger koster høyst n + Σ 2ʲ < n + 2n = 3n totalt, selv om én enkelt innsetting kan koste Θ(n). Amortisert kostnad per innsetting er derfor 3n/n = O(1).', [{ k: 'n', v: 9 }, { k: 'Σcᵢ', v: total }]);
+    return S;
+  }
+
+  heapLevels(A, n, extra, label) {
+    const h = extra || {}, rows = [];
+    for (let d = 0, s0 = 0; s0 < n; d++, s0 = 2 * s0 + 1) {
+      const cells = [];
+      for (let k = s0; k < Math.min(n, 2 * s0 + 1); k++) cells.push({ v: String(A[k]), mark: h[k] || 'plain' });
+      rows.push({ head: 'nv ' + d, cells: cells });
+    }
+    return { label: label || 'Heapen som binærtre — én rad per nivå (nv)', isMatrix: true, head: [], rows: rows };
+  }
+
+  tPQ() {
+    const A = [16, 14, 10, 8, 7, 9, 3, 2, 4, 1], S = [];
+    let hs = A.length, op = '—';
+    const P = (line, marks, note, vars) => S.push({ line: line, arr: A.slice(0, hs), marks: marks || {}, note: note, vars: [{ k: 'operasjon', v: op }].concat(vars || []), mainLabel: 'A[1..heap-size] — heapen som array', aux: [this.heapLevels(A, hs, marks)] });
+    const heapify = (i) => {
+      for (;;) {
+        const l = 2 * i + 1, r = 2 * i + 2;
+        let lg = i;
+        if (l < hs && A[l] > A[lg]) lg = l;
+        if (r < hs && A[r] > A[lg]) lg = r;
+        if (lg === i) { P(9, { [i]: 'done' }, 'MAX-HEAPIFY: ' + A[i] + ' er ≥ barna sine (eller er et løv) → heap-egenskapen er gjenopprettet.', [{ k: 'i', v: i + 1 }]); return; }
+        const t = A[i]; A[i] = A[lg]; A[lg] = t;
+        P(9, { [i]: 'compare', [lg]: 'key' }, 'MAX-HEAPIFY: største barn er ' + A[i] + ' → bytt, og ' + A[lg] + ' synker ett nivå ned til plass ' + (lg + 1) + '.', [{ k: 'i', v: lg + 1 }]);
+        i = lg;
+      }
+    };
+    const increase = (i, key) => {
+      A[i] = key;
+      P(15, { [i]: 'key' }, 'A[' + (i + 1) + '] = ' + key + '. Nøkkelen er økt og kan nå være større enn forelderen, så den må boble OPPOVER.', [{ k: 'i', v: i + 1 }, { k: 'key', v: key }]);
+      while (i > 0 && A[(i - 1) >> 1] < A[i]) {
+        const p = (i - 1) >> 1;
+        P(16, { [i]: 'key', [p]: 'compare' }, 'i = ' + (i + 1) + ': forelderen A[' + (p + 1) + '] = ' + A[p] + ' < ' + A[i] + ' → bytt.', [{ k: 'i', v: i + 1 }, { k: 'PARENT(i)', v: p + 1 }]);
+        const t = A[i]; A[i] = A[p]; A[p] = t;
+        P(18, { [p]: 'key' }, 'Byttet er gjort, og i = PARENT(i) = ' + (p + 1) + '.', [{ k: 'i', v: p + 1 }]);
+        i = p;
+      }
+      P(16, { [i]: 'done' }, i === 0 ? 'i = 1: nøkkelen har nådd rota → løkka stopper.' : 'Forelderen A[' + (((i - 1) >> 1) + 1) + '] = ' + A[(i - 1) >> 1] + ' ≥ ' + A[i] + ' → heap-egenskapen holder, løkka stopper. Høyst lg n bytter: O(lg n).', [{ k: 'i', v: i + 1 }]);
+    };
+    P(0, {}, 'En max-heap brukt som maks-prioritetskø. A = [16, 14, 10, 8, 7, 9, 3, 2, 4, 1] oppfyller heap-egenskapen A[PARENT(i)] ≥ A[i]. Vi kjører fire operasjoner etter hverandre.', [{ k: 'heap-size', v: hs }]);
+    op = 'HEAP-MAXIMUM';
+    P(1, { 0: 'done' }, 'HEAP-MAXIMUM: maksimum ligger alltid i rota, A[1] = ' + A[0] + '. Θ(1).', [{ k: 'max', v: A[0] }]);
+    op = 'EXTRACT-MAX';
+    const mx = A[0];
+    P(6, { 0: 'pivot' }, 'HEAP-EXTRACT-MAX: heapen er ikke tom, og max = A[1] = ' + mx + '.', [{ k: 'max', v: mx }, { k: 'heap-size', v: hs }]);
+    A[0] = A[hs - 1];
+    P(7, { 0: 'key', [hs - 1]: 'compare' }, 'A[1] = A[heap-size] = ' + A[0] + ': det siste løvet flyttes opp til rota.', [{ k: 'heap-size', v: hs }]);
+    hs--;
+    P(8, { 0: 'key' }, 'heap-size = ' + hs + '. Den siste plassen er ikke lenger en del av heapen. Rota bryter nå trolig heap-egenskapen.', [{ k: 'heap-size', v: hs }]);
+    heapify(0);
+    P(10, {}, 'return max = ' + mx + '. O(lg n) — én sti ned gjennom treet.', [{ k: 'max', v: mx }, { k: 'heap-size', v: hs }]);
+    op = 'INCREASE-KEY';
+    P(13, { 8: 'key' }, 'HEAP-INCREASE-KEY(A, 9, 15): key = 15 ≥ A[9] = ' + A[8] + ', så økningen er lovlig.', [{ k: 'i', v: 9 }, { k: 'key', v: 15 }]);
+    increase(8, 15);
+    op = 'MAX-HEAP-INSERT';
+    hs++; A[hs - 1] = '−∞';
+    P(22, { [hs - 1]: 'key' }, 'MAX-HEAP-INSERT(A, 11): heap-size = ' + hs + ', og den nye plassen får nøkkelen −∞ — da er heapen fortsatt gyldig.', [{ k: 'heap-size', v: hs }, { k: 'key', v: 11 }]);
+    P(23, { [hs - 1]: 'key' }, 'Så «økes» −∞ til 11 med HEAP-INCREASE-KEY. Innsetting er altså bare en forkledd INCREASE-KEY.', [{ k: 'i', v: hs }, { k: 'key', v: 11 }]);
+    increase(hs - 1, 11);
+    op = '—';
+    P(0, {}, 'Alle operasjonene unntatt HEAP-MAXIMUM er O(lg n), fordi de følger én sti mellom rota og et løv. Prim og Dijkstra bruker nettopp slike køer — med min-heap, EXTRACT-MIN og DECREASE-KEY.', [{ k: 'heap-size', v: hs }]);
+    return S;
+  }
+
+  layoutForest(roots, kids, w, top, dy) {
+    const pos = {};
+    let slot = 0;
+    const place = (u, d) => {
+      const ch = kids[u] || [];
+      if (!ch.length) { pos[u] = { s: slot, d: d }; slot += 1; return; }
+      ch.forEach((c) => place(c, d + 1));
+      pos[u] = { s: (pos[ch[0]].s + pos[ch[ch.length - 1]].s) / 2, d: d };
+    };
+    roots.forEach((r, i) => { if (i) slot += 0.5; place(r, 0); });
+    const span = Math.max(1, slot - 1);
+    Object.keys(pos).forEach((k) => { pos[k].x = 44 + (pos[k].s / span) * (w - 88); pos[k].y = top + pos[k].d * dy; });
+    return pos;
+  }
+
+  tBst() {
+    const keys = [15, 6, 18, 3, 7, 17, 20, 2, 4, 13, 9], S = [], stack = [];
+    const sorted = keys.slice().sort((a, b) => a - b);
+    const nodes = {};
+    let root = null, inserted = 0;
+    const P = (line, note, vars, st) => {
+      const o = st || {};
+      const g = { w: 640, h: 300, dir: false, nodes: [], edges: [] };
+      const ns = {}, labels = {};
+      Object.keys(nodes).forEach((k) => {
+        const n = nodes[k];
+        g.nodes.push({ id: k, name: '', x: 40 + sorted.indexOf(n.key) * 56, y: 36 + n.depth * 56 });
+        if (n.p) g.edges.push([String(n.p.key), k]);
+        ns[k] = (o.ns || {})[k] || 'white';
+        labels[k] = k;
+      });
+      S.push({
+        g: g, line: line, note: note, vars: vars || [], ns: ns, es: o.es || {}, labels: labels, stack: stack.slice(),
+        mainLabel: 'T — binært søketre (venstre deltre ≤ x.key ≤ høyre deltre)',
+        aux: [this.cells(o.auxLabel || 'Innsettingsrekkefølge', o.auxVals || keys, { mark: o.auxMark || ((k) => k < inserted ? 'done' : (k === inserted ? 'key' : 'plain')) })]
+      });
+    };
+    const path = (arr) => { const ns = {}, es = {}; arr.forEach((k, i) => { ns[k] = 'gray'; if (i) es[arr[i - 1] + '>' + k] = 'active'; }); return { ns: ns, es: es }; };
+    P(0, 'Vi bygger et binært søketre ved å sette inn ' + keys.join(', ') + ' i den rekkefølgen. Binær-søketre-egenskapen: alt i venstre deltre til x er ≤ x.key, alt i høyre deltre er ≥ x.key.', [{ k: 'n', v: keys.length }]);
+    keys.forEach((z, zi) => {
+      inserted = zi;
+      let y = null, x = root;
+      const pth = [];
+      while (x) {
+        y = x; pth.push(String(x.key));
+        const left = z < x.key;
+        const st = path(pth); st.ns[String(x.key)] = 'cur';
+        P(left ? 6 : 7, 'Sett inn ' + z + ': ' + z + (left ? ' < ' : ' ≥ ') + x.key + ' → gå til ' + (left ? 'VENSTRE' : 'HØYRE') + ' barn' + ((left ? x.left : x.right) ? ' (' + (left ? x.left : x.right).key + ').' : ', som er NIL.'), [{ k: 'z', v: z }, { k: 'x', v: x.key }, { k: 'y', v: y.key }], st);
+        x = left ? x.left : x.right;
+      }
+      const n = { key: z, left: null, right: null, p: y, depth: y ? y.depth + 1 : 0 };
+      nodes[String(z)] = n;
+      if (!y) root = n; else if (z < y.key) y.left = n; else y.right = n;
+      const st = path(pth.concat([String(z)])); st.ns[String(z)] = 'done';
+      P(!y ? 10 : (z < y.key ? 12 : 13), !y ? z + ' blir rota — treet var tomt.' : z + ' henges på som ' + (z < y.key ? 'venstre' : 'høyre') + ' barn av y = ' + y.key + ' på dybde ' + n.depth + '. Innsetting koster O(h), der h er høyden til treet.', [{ k: 'z', v: z }, { k: 'dybde', v: n.depth }], st);
+    });
+    inserted = keys.length;
+    const search = (x, k, pth) => {
+      stack.push('TREE-SEARCH(' + (x ? x.key : 'NIL') + ', ' + k + ')');
+      const p2 = x ? pth.concat([String(x.key)]) : pth;
+      const st = path(p2);
+      if (x) st.ns[String(x.key)] = x.key === k ? 'done' : 'cur';
+      if (!x || x.key === k) {
+        P(17, !x ? 'x = NIL → ' + k + ' finnes ikke.' : 'k == x.key → fant ' + k + ' etter ' + p2.length + ' noder. Søket følger én sti fra rota: O(h).', [{ k: 'k', v: k }], st);
+        stack.pop(); return x;
+      }
+      P(k < x.key ? 19 : 20, k + (k < x.key ? ' < ' : ' > ') + x.key + ' → søk videre i ' + (k < x.key ? 'venstre' : 'høyre') + ' deltre.', [{ k: 'k', v: k }, { k: 'x', v: x.key }], st);
+      const res = search(k < x.key ? x.left : x.right, k, p2);
+      stack.pop(); return res;
+    };
+    P(16, 'Alle nøklene er satt inn. TREE-SEARCH(T.root, 13): start i rota og gå ned mot venstre eller høyre.', [{ k: 'k', v: 13 }]);
+    search(root, 13, []);
+    let x = nodes['13'], yy = x.p;
+    const up = ['13'];
+    P(23, 'TREE-SUCCESSOR(13): har 13 et høyre deltre? Nei → etterfølgeren er den laveste forfaren der vi kommer opp fra et VENSTRE barn.', [{ k: 'x', v: 13 }], { ns: { '13': 'cur' } });
+    while (yy && x === yy.right) {
+      up.push(String(yy.key));
+      const st = { ns: {}, es: {} }; up.forEach((k) => { st.ns[k] = 'gray'; }); st.ns[String(yy.key)] = 'cur';
+      P(27, x.key + ' er HØYRE barn av ' + yy.key + ' → fortsett oppover: x = ' + yy.key + ', y = ' + (yy.p ? yy.p.key : 'NIL') + '.', [{ k: 'x', v: yy.key }, { k: 'y', v: yy.p ? yy.p.key : 'NIL' }], st);
+      x = yy; yy = yy.p;
+    }
+    const fin = { ns: {} }; up.forEach((k) => { fin.ns[k] = 'gray'; }); fin.ns[String(yy.key)] = 'done';
+    P(29, x.key + ' er VENSTRE barn av ' + yy.key + ' → return y = ' + yy.key + '. Etterfølgeren til 13 er ' + yy.key + ', neste nøkkel i sortert rekkefølge.', [{ k: 'y', v: yy.key }], fin);
+    const all = { ns: {} }; keys.forEach((k) => { all.ns[String(k)] = 'done'; });
+    P(34, 'INORDER-TREE-WALK(T.root) skriver ut venstre deltre, så noden, så høyre deltre. På et binært søketre gir det nøklene i SORTERT rekkefølge, i Θ(n) tid. Høyden avgjør alt annet: forventet Θ(lg n) for et tilfeldig bygd tre, men Θ(n) hvis nøklene kommer sortert.', [{ k: 'n', v: keys.length }],
+      Object.assign(all, { auxLabel: 'Utskrift fra INORDER-TREE-WALK', auxVals: sorted, auxMark: () => 'done' }));
+    return S;
+  }
+
+  tDset() {
+    const ids = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'], S = [], stack = [];
+    const par = {}, rank = {}, made = [];
+    const blank = () => ids.reduce((m, i) => { m[i] = '–'; return m; }, {});
+    const P = (line, note, vars, hot) => {
+      const kids = {}; made.forEach((i) => { kids[i] = []; });
+      made.forEach((i) => { if (par[i] !== i) kids[par[i]].push(i); });
+      const pos = this.layoutForest(made.filter((i) => par[i] === i), kids, 600, 46, 64);
+      const g = { w: 600, h: 260, dir: true, nodes: made.map((i) => ({ id: i, name: '', x: pos[i].x, y: pos[i].y })), edges: made.filter((i) => par[i] !== i).map((i) => [i, par[i]]) };
+      const ns = {}, labels = {};
+      made.forEach((i) => { ns[i] = (hot || {})[i] || (par[i] === i ? 'black' : 'white'); labels[i] = i; });
+      S.push({
+        g: g, line: line, note: note, vars: vars || [], ns: ns, es: {}, labels: labels, stack: stack.slice(),
+        mainLabel: 'Skogen av disjunkte mengder (pil = x.p, svart = representant)',
+        aux: [this.gtable('x.p — forelder', ids, Object.assign(blank(), par)), this.gtable('x.rank — øvre grense på høyden', ids, Object.assign(blank(), rank))]
+      });
+    };
+    P(0, 'Åtte elementer a–h. Hver mengde lagres som et rotfast tre der hver node bare peker på forelderen sin, og rota er mengdens representant.', [{ k: 'n', v: 8 }]);
+    ids.forEach((x) => { par[x] = x; rank[x] = 0; made.push(x); });
+    P(2, 'MAKE-SET på alle åtte: hver node er sin egen forelder og har rank 0. Åtte trær med én node hver.', [{ k: 'mengder', v: 8 }]);
+    const find = (x, pathArr) => {
+      stack.push('FIND-SET(' + x + ')');
+      const pa = pathArr.concat([x]);
+      const hot = {}; pa.forEach((i) => { hot[i] = 'gray'; }); hot[x] = 'cur';
+      if (par[x] === x) { P(17, x + ' er sin egen forelder → ' + x + ' er representanten. return ' + x + '.', [{ k: 'x', v: x }], hot); stack.pop(); return x; }
+      P(15, x + '.p = ' + par[x] + ' ≠ ' + x + ' → ' + x + ' er ikke rota. Følg pekeren oppover.', [{ k: 'x', v: x }, { k: 'x.p', v: par[x] }], hot);
+      const r = find(par[x], pa);
+      if (par[x] !== r) {
+        const old = par[x]; par[x] = r;
+        P(16, 'Stikomprimering: ' + x + '.p settes rett til rota ' + r + ' (var ' + old + '). Neste FIND-SET(' + x + ') tar bare ett steg.', [{ k: 'x', v: x }, { k: 'x.p', v: r }], { [x]: 'cur', [r]: 'done' });
+      }
+      stack.pop(); return r;
+    };
+    const link = (x, y) => {
+      stack.push('LINK(' + x + ', ' + y + ')');
+      if (rank[x] > rank[y]) {
+        par[y] = x;
+        P(9, 'rank(' + x + ') = ' + rank[x] + ' > rank(' + y + ') = ' + rank[y] + ' → ' + y + ' henges under ' + x + '. Det lave treet under det høye, så høyden øker ikke.', [{ k: 'x', v: x }, { k: 'y', v: y }], { [x]: 'done', [y]: 'cur' });
+      } else if (rank[x] === rank[y]) {
+        par[x] = y; rank[y]++;
+        P(12, 'Lik rank (' + (rank[y] - 1) + ') → ' + x + ' henges under ' + y + ', og ' + y + '.rank øker til ' + rank[y] + '. Bare her kan høyden vokse — derfor blir trærne O(lg n) høye.', [{ k: 'x', v: x }, { k: 'y', v: y }, { k: 'y.rank', v: rank[y] }], { [y]: 'done', [x]: 'cur' });
+      } else {
+        par[x] = y;
+        P(10, 'rank(' + x + ') = ' + rank[x] + ' < rank(' + y + ') = ' + rank[y] + ' → ' + x + ' henges under ' + y + '.', [{ k: 'x', v: x }, { k: 'y', v: y }], { [y]: 'done', [x]: 'cur' });
+      }
+      stack.pop();
+    };
+    const union = (x, y) => {
+      stack.length = 0; stack.push('UNION(' + x + ', ' + y + ')');
+      P(5, 'UNION(' + x + ', ' + y + '): finn representanten til hver av dem, og link de to røttene.', [{ k: 'x', v: x }, { k: 'y', v: y }], { [x]: 'cur', [y]: 'cur' });
+      const rx = find(x, []), ry = find(y, []);
+      link(rx, ry);
+      stack.pop();
+    };
+    union('a', 'b'); union('c', 'd'); union('a', 'c'); union('e', 'f'); union('g', 'h'); union('e', 'g'); union('b', 'f');
+    P(14, 'Nå er alle åtte i én mengde med rot h. a ligger dypest (a → b → d → h). FIND-SET(a) vil komprimere hele stien.', [{ k: 'mengder', v: 1 }], { a: 'cur' });
+    find('a', []);
+    P(17, 'Etter stikomprimeringen peker a og b rett på h. Med union by rank og stikomprimering tar m operasjoner O(m · α(n)) tid — α vokser så sakte at den i praksis er konstant (≤ 4).', [{ k: 'mengder', v: 1 }]);
+    return S;
+  }
+
+  tCutRod() {
+    const p = [1, 5, 8, 9, 10, 17, 17, 20], n = p.length, S = [];
+    const r = new Array(n + 1).fill('·'), s = new Array(n).fill('·');
+    const P = (line, marks, note, vars, hot) => {
+      const h = hot || {};
+      S.push({
+        line: line, arr: p.slice(), marks: marks, note: note, vars: vars || [], mainLabel: 'p[i] — prisen for en stang av lengde i',
+        aux: [
+          this.cells('r[0..n] — beste inntekt for en stang av lengde j', r.slice(), { base: 0, mark: (k) => k === h.r ? 'key' : (k === h.rr ? 'compare' : (r[k] === '·' ? 'out' : 'done')) }),
+          this.cells('s[1..n] — lengden på første bit i en optimal løsning', s.slice(), { mark: (k) => k + 1 === h.s ? 'key' : (s[k] === '·' ? 'out' : 'plain') })
+        ]
+      });
+    };
+    P(0, {}, 'Stavkapping: en stang av lengde n kan kuttes i biter, og en bit av lengde i selges for p[i]. Hva er maksimal inntekt? Vi løser delinstansene j = 0, 1, …, n nedenfra og lagrer svarene i r.', [{ k: 'n', v: n }]);
+    r[0] = 0;
+    P(2, {}, 'r[0] = 0: en stang av lengde 0 er verdiløs. Dette er basistilfellet.', [], { r: 0 });
+    for (let j = 1; j <= n; j++) {
+      let q = -Infinity;
+      P(3, {}, 'Delinstans j = ' + j + '. Alle mindre delinstanser r[0..' + (j - 1) + '] er allerede løst — rekkefølgen følger avhengighetene i delinstansgrafen.', [{ k: 'j', v: j }], { r: j });
+      for (let i = 1; i <= j; i++) {
+        const cand = p[i - 1] + r[j - i];
+        const better = q < cand;
+        const txt = 'i = ' + i + ': første bit av lengde ' + i + ' (p[' + i + '] = ' + p[i - 1] + ') + beste for resten r[' + (j - i) + '] = ' + r[j - i] + ' gir ' + cand + '. ' + (better ? 'Bedre enn q = ' + (q === -Infinity ? '−∞' : q) + ' → q = ' + cand + ' og s[' + j + '] = ' + i + '.' : 'Ikke bedre enn q = ' + q + '.');
+        if (better) { q = cand; s[j - 1] = i; }
+        P(better ? 8 : 6, { [i - 1]: 'compare' }, txt, [{ k: 'j', v: j }, { k: 'i', v: i }, { k: 'q', v: q }], { r: j, rr: j - i, s: better ? j : 0 });
+      }
+      r[j] = q;
+      P(9, {}, 'r[' + j + '] = ' + q + '. Hver delinstans løses én gang og slås opp i O(1) etterpå — det er hele gevinsten mot den naive rekursjonen, som bruker Θ(2ⁿ).', [{ k: 'j', v: j }, { k: 'r[j]', v: q }], { r: j });
+    }
+    let m = n;
+    const cuts = [];
+    P(14, {}, 'r[' + n + '] = ' + r[n] + ' er den optimale inntekten. For å finne SELVE kuttene følger vi de lagrede beslutningene i s baklengs.', [{ k: 'n', v: n }]);
+    while (m > 0) {
+      const c = s[m - 1];
+      cuts.push(c);
+      P(15, { [c - 1]: 'done' }, 'print s[' + m + '] = ' + c + ' → kutt av en bit med lengde ' + c + ' (pris ' + p[c - 1] + '). Igjen: lengde ' + (m - c) + '.', [{ k: 'n', v: m }, { k: 's[n]', v: c }], { s: m });
+      m -= c;
+    }
+    P(16, {}, 'Optimal oppdeling: ' + cuts.join(' + ') + ' = ' + n + ' med inntekt ' + r[n] + '. To nøstede løkker gir Θ(n²).', [{ k: 'inntekt', v: r[n] }]);
+    return S;
+  }
+
+  tLcs() {
+    const X = 'ABCBDAB'.split(''), Y = 'BDCABA'.split(''), m = X.length, n = Y.length, S = [];
+    const c = [], b = [];
+    for (let i = 0; i <= m; i++) { c.push([]); b.push([]); for (let j = 0; j <= n; j++) { c[i].push(i === 0 || j === 0 ? 0 : null); b[i].push(''); } }
+    const P = (line, note, vars, hot, xi) => {
+      const h = hot || {};
+      S.push({
+        line: line, arr: X.slice(), marks: xi === undefined || xi < 0 ? {} : { [xi]: 'key' }, note: note, vars: vars || [],
+        mainLabel: 'X = ' + X.join('') + ' (rader)  ·  Y = ' + Y.join('') + ' (kolonner)',
+        aux: [{
+          label: 'c[i, j] med pilene fra b — lengden av en LCS for Xᵢ og Yⱼ', isMatrix: true, head: ['–'].concat(Y),
+          rows: c.map((row, i) => ({ head: i === 0 ? '–' : X[i - 1], cells: row.map((v, j) => ({ v: v === null ? '' : b[i][j] + v, mark: h[i + ',' + j] || (v === null ? 'out' : 'plain') })) }))
+        }]
+      });
+    };
+    P(2, 'Rad 0 og kolonne 0 er 0: en LCS med en tom sekvens er tom. Tabellen fylles rad for rad, fordi c[i, j] bare avhenger av cellen over, cellen til venstre og cellen diagonalt opp til venstre.', [{ k: 'm', v: m }, { k: 'n', v: n }]);
+    for (let i = 1; i <= m; i++) {
+      for (let j = 1; j <= n; j++) {
+        let line, txt;
+        const hot = { [i + ',' + j]: 'key' };
+        if (X[i - 1] === Y[j - 1]) {
+          c[i][j] = c[i - 1][j - 1] + 1; b[i][j] = '↖'; line = 6; hot[(i - 1) + ',' + (j - 1)] = 'compare';
+          txt = 'x' + i + ' = y' + j + ' = ' + X[i - 1] + ' → like tegn! c = c[' + (i - 1) + ', ' + (j - 1) + '] + 1 = ' + c[i][j] + '. Tegnet kan være med i en LCS.';
+        } else if (c[i - 1][j] >= c[i][j - 1]) {
+          c[i][j] = c[i - 1][j]; b[i][j] = '↑'; line = 8; hot[(i - 1) + ',' + j] = 'compare'; hot[i + ',' + (j - 1)] = 'compare';
+          txt = X[i - 1] + ' ≠ ' + Y[j - 1] + ': c[' + (i - 1) + ', ' + j + '] = ' + c[i - 1][j] + ' ≥ c[' + i + ', ' + (j - 1) + '] = ' + c[i][j - 1] + ' → ta verdien ovenfra (dropp x' + i + ').';
+        } else {
+          c[i][j] = c[i][j - 1]; b[i][j] = '←'; line = 9; hot[(i - 1) + ',' + j] = 'compare'; hot[i + ',' + (j - 1)] = 'compare';
+          txt = X[i - 1] + ' ≠ ' + Y[j - 1] + ': c[' + i + ', ' + (j - 1) + '] = ' + c[i][j - 1] + ' > c[' + (i - 1) + ', ' + j + '] = ' + c[i - 1][j] + ' → ta verdien fra venstre (dropp y' + j + ').';
+        }
+        P(line, txt, [{ k: 'i', v: i }, { k: 'j', v: j }, { k: 'c[i,j]', v: c[i][j] }], hot, i - 1);
+      }
+    }
+    let i = m, j = n;
+    const path = {}, lcs = [];
+    P(10, 'Tabellen er full: |LCS| = c[' + m + ', ' + n + '] = ' + c[m][n] + '. Θ(mn) celler à O(1). Nå følger vi pilene baklengs fra hjørnet for å finne selve sekvensen.', [{ k: '|LCS|', v: c[m][n] }], { [m + ',' + n]: 'key' });
+    while (i > 0 && j > 0) {
+      path[i + ',' + j] = 'done';
+      const hot = Object.assign({}, path, { [i + ',' + j]: 'key' });
+      if (b[i][j] === '↖') { lcs.unshift(X[i - 1]); P(15, '↖ i (' + i + ', ' + j + '): ' + X[i - 1] + ' er med i LCS-en. Gå diagonalt.', [{ k: 'i', v: i }, { k: 'j', v: j }, { k: 'LCS', v: lcs.join('') }], hot, i - 1); i--; j--; }
+      else if (b[i][j] === '↑') { P(16, '↑ i (' + i + ', ' + j + '): gå opp.', [{ k: 'i', v: i }, { k: 'j', v: j }], hot, i - 1); i--; }
+      else { P(17, '← i (' + i + ', ' + j + '): gå til venstre.', [{ k: 'i', v: i }, { k: 'j', v: j }], hot, i - 1); j--; }
+    }
+    P(13, 'i eller j er 0 → ferdig. En LCS er ' + lcs.join('') + ' (lengde ' + lcs.length + '). Rekonstruksjonen tar O(m + n).', [{ k: 'LCS', v: lcs.join('') }], path);
+    return S;
+  }
+
+  tKnapsack() {
+    const w = [1, 3, 4, 5], v = [1, 4, 5, 7], n = w.length, W = 7, S = [];
+    const K = [];
+    for (let i = 0; i <= n; i++) { K.push([]); for (let j = 0; j <= W; j++) K[i].push(i === 0 ? 0 : null); }
+    const head = []; for (let j = 0; j <= W; j++) head.push('j=' + j);
+    const P = (line, note, vars, hot, im) => {
+      const h = hot || {};
+      S.push({
+        line: line, arr: w.map((x, k) => x + '/' + v[k]), marks: im || {}, note: note, vars: vars || [], mainLabel: 'Gjenstander — vekt/verdi (w[i]/v[i]), kapasitet W = ' + W,
+        aux: [{ label: 'K[i, j] — beste verdi med gjenstand 1..i og kapasitet j', isMatrix: true, head: head,
+          rows: K.map((row, i) => ({ head: 'i=' + i, cells: row.map((x, j) => ({ v: x === null ? '' : String(x), mark: h[i + ',' + j] || (x === null ? 'out' : 'plain') })) })) }]
+      });
+    };
+    P(2, 'Binær (0-1) ryggsekk: hver gjenstand tas med helt eller ikke i det hele tatt. Delinstans (i, j) = beste verdi med de i første gjenstandene og kapasitet j. Rad 0 er 0 — uten gjenstander er verdien 0.', [{ k: 'n', v: n }, { k: 'W', v: W }]);
+    for (let i = 1; i <= n; i++) {
+      for (let j = 0; j <= W; j++) {
+        const x = K[i - 1][j];
+        const hot = { [i + ',' + j]: 'key', [(i - 1) + ',' + j]: 'compare' };
+        if (j < w[i - 1]) {
+          K[i][j] = x;
+          P(7, 'j = ' + j + ' < w[' + i + '] = ' + w[i - 1] + ': gjenstand ' + i + ' får ikke plass → K[' + i + ', ' + j + '] = K[' + (i - 1) + ', ' + j + '] = ' + x + '.', [{ k: 'i', v: i }, { k: 'j', v: j }], hot, { [i - 1]: 'key' });
+        } else {
+          const y = K[i - 1][j - w[i - 1]] + v[i - 1];
+          hot[(i - 1) + ',' + (j - w[i - 1])] = 'compare';
+          K[i][j] = Math.max(x, y);
+          P(9, 'j = ' + j + ': uten gjenstand ' + i + ' → x = ' + x + '. Med den → y = K[' + (i - 1) + ', ' + (j - w[i - 1]) + '] + ' + v[i - 1] + ' = ' + y + '. K[' + i + ', ' + j + '] = max = ' + K[i][j] + (y > x ? ' (ta med).' : ' (dropp).'), [{ k: 'i', v: i }, { k: 'j', v: j }, { k: 'x', v: x }, { k: 'y', v: y }], hot, { [i - 1]: 'key' });
+        }
+      }
+    }
+    let j = W;
+    const take = {}, path = {};
+    for (let i = n; i >= 1; i--) {
+      path[i + ',' + j] = 'done';
+      if (K[i][j] !== K[i - 1][j]) {
+        take[i - 1] = 'done';
+        P(10, 'K[' + i + ', ' + j + '] = ' + K[i][j] + ' ≠ K[' + (i - 1) + ', ' + j + '] = ' + K[i - 1][j] + ' → gjenstand ' + i + ' er med. Trekk fra vekten: j = ' + j + ' − ' + w[i - 1] + ' = ' + (j - w[i - 1]) + '.', [{ k: 'i', v: i }, { k: 'j', v: j }], Object.assign({}, path), Object.assign({}, take));
+        j -= w[i - 1];
+      } else {
+        P(10, 'K[' + i + ', ' + j + '] = K[' + (i - 1) + ', ' + j + '] → gjenstand ' + i + ' er ikke med.', [{ k: 'i', v: i }, { k: 'j', v: j }], Object.assign({}, path), Object.assign({}, take));
+      }
+    }
+    P(10, 'Optimal verdi K[' + n + ', ' + W + '] = ' + K[n][W] + '. Kjøretiden Θ(nW) er polynomisk i TALLVERDIEN W, men W tar bare lg W bits å skrive ned. Algoritmen er derfor pseudopolynomisk, og problemet er fortsatt NP-hardt.', [{ k: 'verdi', v: K[n][W] }], path, take);
+    return S;
+  }
+
+  tActivity() {
+    const s = [1, 3, 0, 5, 3, 5, 6, 8, 8, 2, 12], f = [4, 5, 6, 7, 9, 9, 10, 11, 12, 14, 16], n = s.length, S = [];
+    const st = {}, A = [];
+    const P = (line, note, vars, extra) => S.push({
+      line: line, arr: s.map((x, i) => x + '–' + f[i]), marks: Object.assign({}, st, extra || {}), note: note, vars: vars || [], mainLabel: 'Aktiviteter aᵢ = [sᵢ, fᵢ), sortert etter sluttid f',
+      aux: [this.cells('A — valgte aktiviteter', A.length ? A.map((i) => 'a' + (i + 1)) : ['∅'], { sub: (k) => A.length ? '[' + s[A[k]] + ', ' + f[A[k]] + ')' : '', mark: () => 'done' })]
+    });
+    P(0, 'Aktivitetene er sortert etter sluttid. Grådig valg: ta alltid den kompatible aktiviteten som slutter FØRST — da er mest mulig tid igjen til resten.', [{ k: 'n', v: n }]);
+    A.push(0); st[0] = 'done';
+    P(1, 'a1 slutter først (f = 4) og tas med. Grådighetsegenskapen: det finnes alltid en optimal løsning som inneholder aktiviteten med tidligst sluttid.', [{ k: 'k', v: 1 }]);
+    let k = 0;
+    for (let m = 1; m < n; m++) {
+      if (s[m] >= f[k]) {
+        A.push(m); st[m] = 'done';
+        P(5, 'm = ' + (m + 1) + ': s = ' + s[m] + ' ≥ f[k] = ' + f[k] + ' → kompatibel med den forrige valgte. a' + (m + 1) + ' tas med, og k = ' + (m + 1) + '.', [{ k: 'm', v: m + 1 }, { k: 'k', v: m + 1 }], { [m]: 'key' });
+        k = m;
+      } else {
+        st[m] = 'out';
+        P(4, 'm = ' + (m + 1) + ': s = ' + s[m] + ' < f[k] = ' + f[k] + ' → overlapper a' + (k + 1) + ' og hoppes over.', [{ k: 'm', v: m + 1 }, { k: 'k', v: k + 1 }], { [m]: 'compare', [k]: 'pivot' });
+      }
+    }
+    P(7, 'A = {' + A.map((i) => 'a' + (i + 1)).join(', ') + '}: ' + A.length + ' aktiviteter, som er optimalt. Hver aktivitet ses på én gang: Θ(n), pluss Θ(n lg n) hvis de må sorteres etter sluttid først.', [{ k: '|A|', v: A.length }]);
+    return S;
+  }
+
+  tHuffman() {
+    const C = [['f', 5], ['e', 9], ['c', 12], ['b', 13], ['d', 16], ['a', 45]], S = [];
+    const nodes = {};
+    C.forEach((x) => { nodes[x[0]] = { freq: x[1], left: null, right: null, leaf: true }; });
+    let Q = C.map((x) => x[0]), zc = 0;
+    const sortQ = () => { Q.sort((a, b) => nodes[a].freq - nodes[b].freq); };
+    const P = (line, note, vars, hot, codes) => {
+      const kids = {};
+      Object.keys(nodes).forEach((k) => { kids[k] = nodes[k].left ? [nodes[k].left, nodes[k].right] : []; });
+      const pos = this.layoutForest(Q.slice(), kids, 620, 40, 52);
+      const g = { w: 620, h: 310, dir: false, nodes: [], edges: [] };
+      const ns = {}, labels = {};
+      Object.keys(nodes).forEach((k) => {
+        const nd = nodes[k];
+        g.nodes.push({ id: k, name: nd.leaf ? k : '', lb: nd.leaf ? 1 : 0, x: pos[k].x, y: pos[k].y });
+        if (nd.left) { g.edges.push([k, nd.left, '0']); g.edges.push([k, nd.right, '1']); }
+        ns[k] = (hot || {})[k] || (Q.indexOf(k) >= 0 ? 'gray' : 'white');
+        labels[k] = nd.freq;
+      });
+      S.push({
+        g: g, line: line, note: note, vars: vars || [], ns: ns, es: {}, labels: labels,
+        mainLabel: 'Skogen av deltrær (tall = freq, kant 0 = venstre, 1 = høyre)',
+        aux: [codes
+          ? this.cells('Huffman-koder (tegn over, kode under)', codes.map((x) => x[1]), { sub: (k) => codes[k][0], mark: () => 'done' })
+          : this.gcells('Q — min-prioritetskø på freq', Q, (k) => String(nodes[k].freq), (k) => (hot || {})[k] === 'cur' ? 'key' : 'compare')]
+      });
+    };
+    P(2, 'Tegnene og frekvensene legges i en min-prioritetskø Q. Hvert tegn er et eget tre med én node. Målet er en prefikskode der hyppige tegn får korte kodeord.', [{ k: 'n', v: C.length }]);
+    for (let i = 1; i < C.length; i++) {
+      sortQ();
+      const x = Q[0], y = Q[1];
+      P(6, 'Iterasjon ' + i + ': de to minste i Q er ' + x + ' (' + nodes[x].freq + ') og ' + y + ' (' + nodes[y].freq + '). Grådig valg: de to sjeldneste skal ligge dypest i treet.', [{ k: 'i', v: i }, { k: 'x.freq', v: nodes[x].freq }, { k: 'y.freq', v: nodes[y].freq }], { [x]: 'cur', [y]: 'cur' });
+      Q = Q.slice(2);
+      const z = 'z' + (++zc);
+      nodes[z] = { freq: nodes[x].freq + nodes[y].freq, left: x, right: y, leaf: false };
+      Q.push(z); sortQ();
+      P(8, 'Ny node ' + z + ' med freq = ' + nodes[x].freq + ' + ' + nodes[y].freq + ' = ' + nodes[z].freq + '. Venstre barn ' + x + ' (kant 0), høyre barn ' + y + ' (kant 1). ' + z + ' settes inn i Q.', [{ k: 'i', v: i }, { k: 'z.freq', v: nodes[z].freq }, { k: '|Q|', v: Q.length }], { [z]: 'done' });
+    }
+    const codes = [];
+    const walk = (k, code) => { const nd = nodes[k]; if (nd.leaf) { codes.push([k, code || '0']); return; } walk(nd.left, code + '0'); walk(nd.right, code + '1'); };
+    walk(Q[0], '');
+    codes.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+    const bits = codes.reduce((t, x) => t + nodes[x[0]].freq * x[1].length, 0);
+    P(9, 'Én node igjen i Q: rota. Kodeordet til et tegn er stien fra rota (0 = venstre, 1 = høyre). Filen tar ' + bits + ' bits (Σ freq · dybde), mot 300 med fast 3-bits kode. Med binærhaug som Q: O(n lg n).', [{ k: 'bits', v: bits }], {}, codes);
+    return S;
+  }
+
+  tGaleShapley() {
+    const Wn = ['A', 'B', 'C', 'D'], Mn = ['W', 'X', 'Y', 'Z'], S = [];
+    const pref = { A: ['W', 'X', 'Y', 'Z'], B: ['W', 'Y', 'X', 'Z'], C: ['X', 'W', 'Z', 'Y'], D: ['W', 'Z', 'X', 'Y'], W: ['D', 'B', 'A', 'C'], X: ['A', 'C', 'B', 'D'], Y: ['B', 'A', 'D', 'C'], Z: ['C', 'D', 'A', 'B'] };
+    const next = { A: 0, B: 0, C: 0, D: 0 }, fiance = {}, rejected = {};
+    const baseNodes = Wn.map((id, i) => ({ id: id, name: '', x: 110, y: 45 + i * 70 })).concat(Mn.map((id, i) => ({ id: id, name: '', x: 410, y: 45 + i * 70 })));
+    const P = (line, note, vars, prop, propState) => {
+      const edges = [], es = {};
+      Wn.forEach((w) => { if (fiance[w]) { edges.push([w, fiance[w]]); es[w + '>' + fiance[w]] = 'tree'; } });
+      Object.keys(rejected).forEach((k) => { const pr = k.split('>'); if (fiance[pr[0]] !== pr[1]) { edges.push([pr[0], pr[1]]); es[k] = 'reject'; } });
+      if (prop) { const k = prop[0] + '>' + prop[1]; if (!es[k]) edges.push([prop[0], prop[1]]); es[k] = propState || 'active'; }
+      const ns = {}, labels = {};
+      Wn.concat(Mn).forEach((x) => { ns[x] = fiance[x] ? 'done' : 'white'; labels[x] = x; });
+      if (prop) { ns[prop[0]] = 'cur'; ns[prop[1]] = 'gray'; }
+      const isProp = (x, y) => prop && ((prop[0] === x && prop[1] === y) || (prop[1] === x && prop[0] === y));
+      S.push({
+        g: { w: 520, h: 300, dir: false, nodes: baseNodes, edges: edges }, line: line, note: note, vars: vars || [], ns: ns, es: es, labels: labels,
+        mainLabel: 'Kvinner A–D (venstre) frir til menn W–Z (høyre)',
+        aux: [{ label: 'Preferanselister — 1. er høyest rangert', isMatrix: true, head: ['1.', '2.', '3.', '4.'],
+          rows: Wn.concat(Mn).map((x) => ({ head: x, cells: pref[x].map((y) => ({ v: y, mark: fiance[x] === y ? 'done' : (isProp(x, y) ? 'key' : (rejected[x + '>' + y] || rejected[y + '>' + x] ? 'out' : 'plain')) })) })) }]
+      });
+    };
+    P(1, 'Fire kvinner (A–D) og fire menn (W–Z), hver med sin rangering. Her er det kvinnene som frir. Da får kvinnene den BESTE stabile matchingen de kan få, og mennene den dårligste.', [{ k: 'n', v: 4 }]);
+    let w;
+    while ((w = Wn.find((x) => !fiance[x]))) {
+      const m = pref[w][next[w]++];
+      P(3, w + ' er ledig og frir til ' + m + ' — den høyest rangerte på lista hennes som hun ikke har fridd til ennå.', [{ k: 'w', v: w }, { k: 'm', v: m }], [w, m]);
+      if (!fiance[m]) {
+        fiance[w] = m; fiance[m] = w;
+        P(5, m + ' er ledig → ' + w + ' og ' + m + ' forloves. En forlovelse er foreløpig: mannen kan bytte opp senere, men aldri ned.', [{ k: 'w', v: w }, { k: 'm', v: m }], [w, m], 'tree');
+      } else {
+        const w2 = fiance[m];
+        if (pref[m].indexOf(w) < pref[m].indexOf(w2)) {
+          delete fiance[w2]; rejected[w2 + '>' + m] = 1; fiance[w] = m; fiance[m] = w;
+          P(8, m + ' er forlovet med ' + w2 + ', men rangerer ' + w + ' høyere (' + (pref[m].indexOf(w) + 1) + '. mot ' + (pref[m].indexOf(w2) + 1) + '.). Forlovelsen med ' + w2 + ' brytes, ' + w2 + ' blir ledig, og ' + w + '–' + m + ' forloves.', [{ k: 'w', v: w }, { k: 'm', v: m }, { k: 'w′', v: w2 }], [w, m], 'tree');
+        } else {
+          rejected[w + '>' + m] = 1;
+          P(9, m + ' er forlovet med ' + w2 + ' og foretrekker henne (' + (pref[m].indexOf(w2) + 1) + '. mot ' + (pref[m].indexOf(w) + 1) + '.) → ' + m + ' avviser ' + w + ', som fortsatt er ledig.', [{ k: 'w', v: w }, { k: 'm', v: m }, { k: 'w′', v: w2 }], [w, m], 'reject');
+        }
+      }
+    }
+    P(10, 'Ingen ledige kvinner igjen → ' + Wn.map((x) => x + '–' + fiance[x]).join(', ') + '. Matchingen er stabil: det finnes ingen kvinne og mann som ikke er sammen, men som begge foretrekker hverandre (ingen blokkerende par). Hver kvinne frir til hver mann høyst én gang: O(n²).', [{ k: 'par', v: 4 }]);
     return S;
   }
 
@@ -1342,7 +2213,7 @@ class Component extends DCLogic {
   gtrace(id) {
     const f = {
       bfs: 'tBfs', dfs: 'tDfs', topo: 'tTopo', scc: 'tScc', kruskal: 'tKruskal', prim: 'tPrim',
-      bellman: 'tBellman', dagsp: 'tDagsp', dijkstra: 'tDijkstra', floyd: 'tFloyd', maxflow: 'tMaxflow'
+      bellman: 'tBellman', dagsp: 'tDagsp', dijkstra: 'tDijkstra', floyd: 'tFloyd', tclosure: 'tClosure', johnson: 'tJohnson', maxflow: 'tMaxflow'
     }[id];
     return f ? this[f]() : [];
   }
@@ -1799,10 +2670,117 @@ class Component extends DCLogic {
     return S;
   }
 
+  tClosure() {
+    const ids = ['1', '2', '3', '4'], n = 4, S = [];
+    const pos = { '1': [90, 60], '2': [370, 60], '3': [370, 200], '4': [90, 200] };
+    const E0 = [['2', '3'], ['2', '4'], ['3', '2', undefined, -24], ['4', '1'], ['4', '3']];
+    const curve = { '4>2': -24, '3>4': -24 };
+    const T = [];
+    for (let i = 0; i < n; i++) { T.push([]); for (let j = 0; j < n; j++) T[i].push(0); }
+    const added = [];
+    const P = (line, note, vars, hot, k, fresh) => {
+      const edges = E0.slice(), es = {};
+      added.forEach((key) => { const pr = key.split('>'); edges.push([pr[0], pr[1], undefined, curve[key] || 0]); es[key] = key === fresh ? 'active' : 'tree'; });
+      S.push({
+        g: { w: 460, h: 260, dir: true, nodes: ids.map((id) => ({ id: id, x: pos[id][0], y: pos[id][1], lb: pos[id][1] > 100 ? 1 : 0 })), edges: edges },
+        line: line, note: note, vars: vars || [],
+        ns: ids.reduce((m, id) => { m[id] = k === id ? 'cur' : 'white'; return m; }, {}), es: es,
+        labels: ids.reduce((m, id) => { m[id] = ''; return m; }, {}),
+        mainLabel: 'G — grønne kanter er stier som tillukningen har funnet',
+        aux: [{
+          label: 'T — t[i][j] = 1 hvis det finnes en sti i ↝ j', isMatrix: true, head: ids.slice(),
+          rows: ids.map((rid, i) => ({ head: rid, cells: T[i].map((v, j) => ({ v: String(v), mark: hot && hot.i === i && hot.j === j ? 'key' : (hot && hot.k !== undefined && (hot.k === i || hot.k === j) ? 'compare' : (v ? 'done' : 'plain')) })) }))
+        }]
+      });
+    };
+    for (let i = 0; i < n; i++) T[i][i] = 1;
+    E0.forEach((e) => { T[ids.indexOf(e[0])][ids.indexOf(e[1])] = 1; });
+    P(5, 'T⁽⁰⁾: t[i][j] = 1 hvis i = j eller det går en kant i → j. Samme oppbygning som Floyd-Warshall, men med ∨ og ∧ i stedet for min og +.', [{ k: 'n', v: n }]);
+    for (let k = 0; k < n; k++) {
+      P(7, 'k = ' + ids[k] + ': nå får stiene gå via node ' + ids[k] + '. En ny sti i ↝ j finnes hvis i ↝ ' + ids[k] + ' og ' + ids[k] + ' ↝ j (rad og kolonne ' + ids[k] + ' er markert).', [{ k: 'k', v: ids[k] }], { k: k }, ids[k]);
+      let any = false;
+      for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+          if (!T[i][j] && T[i][k] && T[k][j]) {
+            T[i][j] = 1; any = true;
+            const key = ids[i] + '>' + ids[j];
+            added.push(key);
+            P(11, 't[' + ids[i] + '][' + ids[j] + '] = 0 ∨ (t[' + ids[i] + '][' + ids[k] + '] ∧ t[' + ids[k] + '][' + ids[j] + ']) = 0 ∨ (1 ∧ 1) = 1. Ny sti ' + ids[i] + ' ↝ ' + ids[k] + ' ↝ ' + ids[j] + '.', [{ k: 'k', v: ids[k] }, { k: 'i', v: ids[i] }, { k: 'j', v: ids[j] }], { i: i, j: j, k: k }, ids[k], key);
+          }
+        }
+      }
+      if (!any) P(11, 'Ingen nye stier via ' + ids[k] + ': for alle i, j med t[i][j] = 0 er enten t[i][' + ids[k] + '] eller t[' + ids[k] + '][j] også 0.', [{ k: 'k', v: ids[k] }], { k: k }, ids[k]);
+    }
+    P(12, 'return T⁽ⁿ⁾. Node 1 når bare seg selv; 2, 3 og 4 når alle nodene. Θ(n³) som Floyd-Warshall, men logiske operasjoner på enkeltbits er raskere og bruker mindre minne enn aritmetikk på tall.', [{ k: 'n', v: n }]);
+    return S;
+  }
+
+  tJohnson() {
+    const ids = ['1', '2', '3', '4', '5'], S = [], INF = this.INF;
+    const pos = { '1': [70, 130], '2': [250, 40], '3': [430, 130], '4': [360, 240], '5': [140, 240], s: [250, 290] };
+    const E = [['1', '2', 3], ['1', '3', 8], ['1', '5', -4], ['2', '4', 1], ['2', '5', 7], ['3', '2', 4], ['4', '1', 2], ['4', '3', -5], ['5', '4', 6]];
+    let withS = false, reweighted = false;
+    const D = ids.map(() => ids.map(() => ''));
+    const P = (line, note, vars, labels, cur, eLab, rowHot) => {
+      const nodes = ids.map((id) => ({ id: id, x: pos[id][0], y: pos[id][1], lb: pos[id][1] > 150 ? 1 : 0 }));
+      const edges = E.map((e) => [e[0], e[1], e[2]]);
+      if (withS) { nodes.push({ id: 's', x: pos.s[0], y: pos.s[1], lb: 1 }); ids.forEach((v) => edges.push(['s', v, 0])); }
+      const ns = {};
+      nodes.forEach((nd) => { ns[nd.id] = nd.id === cur ? 'cur' : (nd.id === 's' ? 'gray' : 'white'); });
+      S.push({
+        g: { w: 500, h: 340, dir: true, nodes: nodes, edges: edges }, line: line, note: note, vars: vars || [], ns: ns, es: {},
+        labels: labels || {}, eLabels: eLab,
+        mainLabel: withS ? 'G′ — G pluss kilden s med 0-kanter til alle noder' : (reweighted ? 'G med de nye vektene ŵ' : 'G — rettet graf med negative kanter'),
+        aux: [{ label: 'D — korteste avstander dᵤᵥ (rad u → kolonne v)', isMatrix: true, head: ids.slice(), rows: ids.map((u, i) => ({ head: u, cells: D[i].map((x) => ({ v: String(x), mark: i === rowHot ? 'key' : (x === '' ? 'out' : 'done') })) })) }]
+      });
+    };
+    P(0, 'Johnson finner korteste stier mellom alle par i en graf som kan ha negative kanter (men ikke negative sykler). Idé: vekt om kantene så alle blir ikke-negative, og kjør Dijkstra fra hver node.', [{ k: '|V|', v: 5 }, { k: '|E|', v: 9 }]);
+    withS = true;
+    const d = { s: 0 };
+    ids.forEach((v) => { d[v] = INF; });
+    const lab = () => { const m = {}; ids.concat(['s']).forEach((v) => { m[v] = d[v]; }); return m; };
+    P(1, 'Ny node s med en kant av vekt 0 til hver node. Da er alle noder nåbare fra s, og ingen nye sykler oppstår, siden s ikke har innkanter.', [], lab());
+    const E2 = E.concat(ids.map((v) => ['s', v, 0]));
+    const num = (x) => (x === INF ? Infinity : x);
+    for (let pass = 1; pass <= ids.length; pass++) {
+      let ch = false;
+      E2.forEach((e) => { if (num(d[e[0]]) + e[2] < num(d[e[1]])) { d[e[1]] = d[e[0]] + e[2]; ch = true; } });
+      P(2, 'BELLMAN-FORD på G′, runde ' + pass + ': alle kanter relakseres. Tallet i noden er d[v].' + (ch ? '' : ' Ingen endring i denne runden — avstandene er endelige.'), [{ k: 'runde', v: pass }], lab());
+      if (!ch) break;
+    }
+    const h = {};
+    ids.forEach((v) => { h[v] = d[v]; });
+    P(5, 'BELLMAN-FORD returnerer TRUE: ingen negativ sykel. h(v) = δ(s, v), og tallet i noden er nå h(v).', ids.map((v) => ({ k: 'h(' + v + ')', v: h[v] })), Object.assign({}, h));
+    withS = false; reweighted = true;
+    const wh = {};
+    E.forEach((e) => { wh[e[0] + '>' + e[1]] = e[2] + h[e[0]] - h[e[1]]; });
+    P(7, 'Omvekting: ŵ(u, v) = w(u, v) + h(u) − h(v). Trekantulikheten h(v) ≤ h(u) + w(u, v) gir ŵ ≥ 0 for alle kanter. Hver sti u ↝ v endres med nøyaktig h(u) − h(v), så korteste stier forblir korteste.', [], Object.assign({}, h), null, Object.assign({}, wh));
+    ids.forEach((u, ui) => {
+      const dist = {}, done = {};
+      ids.forEach((v) => { dist[v] = Infinity; });
+      dist[u] = 0;
+      for (let it = 0; it < ids.length; it++) {
+        let best = null;
+        ids.forEach((v) => { if (!done[v] && (best === null || dist[v] < dist[best])) best = v; });
+        if (dist[best] === Infinity) break;
+        done[best] = true;
+        E.forEach((e) => { if (e[0] === best && dist[best] + wh[e[0] + '>' + e[1]] < dist[e[1]]) dist[e[1]] = dist[best] + wh[e[0] + '>' + e[1]]; });
+      }
+      const lab2 = {};
+      ids.forEach((v) => { lab2[v] = dist[v] === Infinity ? INF : dist[v]; });
+      P(10, 'DIJKSTRA(G, ŵ, ' + u + '): tallet i noden er δ̂(' + u + ', v), korteste avstand med de nye, ikke-negative vektene.', [{ k: 'u', v: u }], lab2, u, Object.assign({}, wh));
+      ids.forEach((v, vi) => { D[ui][vi] = dist[v] === Infinity ? INF : dist[v] + h[v] - h[u]; });
+      P(12, 'Rad ' + u + ' i D: dᵤᵥ = δ̂(' + u + ', v) + h(v) − h(' + u + '). Omvektingen trekkes fra igjen, så D inneholder de ekte avstandene.', [{ k: 'u', v: u }], lab2, u, Object.assign({}, wh), ui);
+    });
+    reweighted = false;
+    P(13, 'return D. Én Bellman-Ford (O(VE)) pluss V Dijkstra-kjøringer (O(V lg V + E) hver med Fibonacci-haug) gir O(V² lg V + VE) — bedre enn Floyd-Warshalls Θ(V³) når grafen er glissen.', [{ k: '|V|', v: 5 }]);
+    return S;
+  }
+
   // ---------- content ----------
   GRAPH_ALGOS = [
     {
-      id: 'bfs', name: 'BFS', no: 'Bredde-først-søk', tag: 'Traversering', family: 'Kø · uvektet korteste sti', graph: true,
+      id: 'bfs', lec: 'F8', name: 'BFS', no: 'Bredde-først-søk', tag: 'Traversering', family: 'Kø · uvektet korteste sti', graph: true,
       best: 'Θ(V+E)', avg: 'Θ(V+E)', worst: 'Θ(V+E)', mem: 'O(V)',
       idea: 'Utforsker grafen i bølger: først alle naboer til kilden, så alle naboer av dem. En FIFO-kø holder de oppdagede (grå) nodene, og fordi køen behandler nodene i økende d-verdi finner BFS korteste sti målt i ANTALL KANTER.',
       invariant: 'Invariant: køen inneholder til enhver tid bare noder med d-verdi k eller k+1, i den rekkefølgen. Når en node tas ut av køen, er d-verdien dens endelig og lik δ(s, u).',
@@ -1816,7 +2794,7 @@ class Component extends DCLogic {
       ]
     },
     {
-      id: 'dfs', name: 'DFS', no: 'Dybde-først-søk', tag: 'Traversering', family: 'Rekursjon · tidsstempler', graph: true,
+      id: 'dfs', lec: 'F8', name: 'DFS', no: 'Dybde-først-søk', tag: 'Traversering', family: 'Rekursjon · tidsstempler', graph: true,
       best: 'Θ(V+E)', avg: 'Θ(V+E)', worst: 'Θ(V+E)', mem: 'O(V)',
       idea: 'Går så dypt som mulig før den rygger. Hver node får to tidsstempler: d (når den ble grå) og f (når den ble svart). Tidsstemplene og kantklassifiseringen er verktøyet bak topologisk sortering og sterke komponenter.',
       invariant: 'Parentesteoremet: intervallene [d[u], f[u]] er enten helt disjunkte, eller det ene ligger helt inni det andre — og da er noden en etterkommer i DFS-treet. En node er grå nøyaktig så lenge den ligger på rekursjonsstacken.',
@@ -1830,7 +2808,7 @@ class Component extends DCLogic {
       ]
     },
     {
-      id: 'topo', name: 'TOPOLOGICAL-SORT', no: 'Topologisk sortering', tag: 'DAG', family: 'DFS + synkende f-verdi', graph: true,
+      id: 'topo', lec: 'F8', name: 'TOPOLOGICAL-SORT', no: 'Topologisk sortering', tag: 'DAG', family: 'DFS + synkende f-verdi', graph: true,
       best: 'Θ(V+E)', avg: 'Θ(V+E)', worst: 'Θ(V+E)', mem: 'O(V)',
       idea: 'Kjører DFS og setter hver node FORAN i en lenket liste i det øyeblikket den blir svart. Resultatet er nodene sortert etter synkende f-verdi — en rekkefølge der hver kant peker fremover.',
       invariant: 'Når en node blir svart, er alle noder den kan nå allerede svarte og ligger derfor lenger bak i lista. Dermed peker hver kant (u,v) fremover i lista.',
@@ -1844,7 +2822,7 @@ class Component extends DCLogic {
       ]
     },
     {
-      id: 'scc', name: 'STRONGLY-CONNECTED-COMPONENTS', no: 'Sterke komponenter (Kosaraju)', tag: 'Rettet graf', family: 'To DFS-kjøringer · Gᵀ', graph: true,
+      id: 'scc', lec: 'F8', name: 'STRONGLY-CONNECTED-COMPONENTS', no: 'Sterke komponenter (Kosaraju)', tag: 'Rettet graf', family: 'To DFS-kjøringer · Gᵀ', graph: true,
       best: 'Θ(V+E)', avg: 'Θ(V+E)', worst: 'Θ(V+E)', mem: 'O(V)',
       idea: 'To DFS-kjøringer: den første regner ut f-verdier i G, den andre kjører på den transponerte grafen Gᵀ, men tar nodene i synkende f-rekkefølge. Hvert DFS-tre i andre runde er nøyaktig én sterk komponent.',
       invariant: 'Komponentgrafen er en DAG. Ved å starte i noden med høyest f starter vi i en KILDE-komponent i komponentgrafen til G — som i Gᵀ er en sluk-komponent, og derfra kan DFS ikke «lekke» ut i andre komponenter.',
@@ -1858,7 +2836,7 @@ class Component extends DCLogic {
       ]
     },
     {
-      id: 'kruskal', name: 'MST-KRUSKAL', no: 'Kruskals algoritme', tag: 'MST', family: 'Grådig · union-find', graph: true,
+      id: 'kruskal', lec: 'F9', name: 'MST-KRUSKAL', no: 'Kruskals algoritme', tag: 'MST', family: 'Grådig · union-find', graph: true,
       best: 'O(E lg V)', avg: 'O(E lg V)', worst: 'O(E lg V)', mem: 'O(V)',
       idea: 'Sorterer alle kantene etter vekt og går gjennom dem fra lettest til tyngst. En kant tas med hvis og bare hvis endene ligger i ulike komponenter — sjekket med FIND-SET i en disjunkt-mengde-struktur.',
       invariant: 'A er alltid en delmengde av et minimalt spenntre, og den grådige kanten er en trygg kant: den letteste kanten som krysser snittet mellom en komponent og resten.',
@@ -1872,7 +2850,7 @@ class Component extends DCLogic {
       ]
     },
     {
-      id: 'prim', name: 'MST-PRIM', no: 'Prims algoritme', tag: 'MST', family: 'Grådig · min-prioritetskø', graph: true,
+      id: 'prim', lec: 'F9', name: 'MST-PRIM', no: 'Prims algoritme', tag: 'MST', family: 'Grådig · min-prioritetskø', graph: true,
       best: 'O(E lg V)', avg: 'O(E lg V)', worst: 'O(E lg V)', mem: 'O(V)',
       idea: 'Vokser ETT tre fra en rot. Hver node utenfor treet har en key = vekten av den letteste kjente kanten inn til treet; EXTRACT-MIN henter den billigste noden, og naboenes key oppdateres med DECREASE-KEY.',
       invariant: 'Nodene utenfor Q utgjør ett sammenhengende tre som er del av et MST. For hver v i Q er key[v] vekten av den letteste kanten fra v til treet, og π[v] er den andre enden av den kanten.',
@@ -1886,7 +2864,7 @@ class Component extends DCLogic {
       ]
     },
     {
-      id: 'bellman', name: 'BELLMAN-FORD', no: 'Bellman-Ford', tag: 'Korteste sti', family: 'Relaksering · tåler negative vekter', graph: true,
+      id: 'bellman', lec: 'F10', name: 'BELLMAN-FORD', no: 'Bellman-Ford', tag: 'Korteste sti', family: 'Relaksering · tåler negative vekter', graph: true,
       best: 'Θ(V·E)', avg: 'Θ(V·E)', worst: 'Θ(V·E)', mem: 'O(V)',
       idea: 'Relakserer ALLE kantene |V| − 1 ganger. Etter runde i er alle korteste stier med høyst i kanter funnet. En siste kontrollrunde avgjør om grafen har en negativ sykel.',
       invariant: 'Etter i runder gjelder: d[v] = vekten av den korteste stien fra s til v som bruker høyst i kanter (eller mindre, hvis en kortere sti er funnet tidligere).',
@@ -1900,7 +2878,7 @@ class Component extends DCLogic {
       ]
     },
     {
-      id: 'dagsp', name: 'DAG-SHORTEST-PATHS', no: 'Korteste sti i DAG', tag: 'Korteste sti', family: 'Topologisk rekkefølge · én runde', graph: true,
+      id: 'dagsp', lec: 'F10', name: 'DAG-SHORTEST-PATHS', no: 'Korteste sti i DAG', tag: 'Korteste sti', family: 'Topologisk rekkefølge · én runde', graph: true,
       best: 'Θ(V+E)', avg: 'Θ(V+E)', worst: 'Θ(V+E)', mem: 'O(V)',
       idea: 'Topologisk sorter nodene og relakser hver nodes utkanter én gang i den rekkefølgen. Fordi alle kanter peker fremover, er d[u] alltid ferdig når vi kommer til u — også med negative vekter.',
       invariant: 'Når u behandles, er d[u] = δ(s, u): alle kanter inn i u kommer fra noder tidligere i den topologiske rekkefølgen, og de er allerede relaksert.',
@@ -1914,7 +2892,7 @@ class Component extends DCLogic {
       ]
     },
     {
-      id: 'dijkstra', name: 'DIJKSTRA', no: 'Dijkstras algoritme', tag: 'Korteste sti', family: 'Grådig · min-prioritetskø', graph: true,
+      id: 'dijkstra', lec: 'F10', name: 'DIJKSTRA', no: 'Dijkstras algoritme', tag: 'Korteste sti', family: 'Grådig · min-prioritetskø', graph: true,
       best: 'O((V+E) lg V)', avg: 'O((V+E) lg V)', worst: 'O((V+E) lg V)', mem: 'O(V)',
       idea: 'Grådig korteste sti med ikke-negative vekter. Noden i køen med minst d-verdi hentes ut, legges i S — og d-verdien er da endelig — før alle utkantene relakseres.',
       invariant: 'For hver node u i S gjelder d[u] = δ(s, u). For nodene i Q er d[u] vekten av den korteste stien som bare går gjennom S (pluss én siste kant).',
@@ -1928,7 +2906,7 @@ class Component extends DCLogic {
       ]
     },
     {
-      id: 'floyd', name: 'FLOYD-WARSHALL', no: 'Alle par korteste sti', tag: 'Alle par', family: 'Dynamisk programmering · matrise', graph: true,
+      id: 'floyd', lec: 'F11', name: 'FLOYD-WARSHALL', no: 'Alle par korteste sti', tag: 'Alle par', family: 'Dynamisk programmering · matrise', graph: true,
       best: 'Θ(V³)', avg: 'Θ(V³)', worst: 'Θ(V³)', mem: 'Θ(V²)',
       idea: 'Dynamisk programmering over hvilke noder som får brukes som MELLOMNODER. Etter runde k inneholder D korteste stier som bare bruker nodene 1..k underveis.',
       invariant: 'd⁽ᵏ⁾ᵢⱼ = vekten av den korteste stien fra i til j der alle mellomnoder ligger i mengden {1, …, k}.',
@@ -1942,7 +2920,39 @@ class Component extends DCLogic {
       ]
     },
     {
-      id: 'maxflow', name: 'FORD-FULKERSON', no: 'Maksimal flyt (Edmonds-Karp)', tag: 'Maks flyt', family: 'Restnettverk · forsterkende stier', graph: true,
+      id: 'tclosure', name: 'TRANSITIVE-CLOSURE', no: 'Transitiv tillukning', tag: 'Alle par', lec: 'F11', family: 'Dynamisk programmering · boolsk matrise', graph: true,
+      best: 'Θ(V³)', avg: 'Θ(V³)', worst: 'Θ(V³)', mem: 'Θ(V²)',
+      hint: 'Grønne kanter er stier som ikke fantes som kanter i G.',
+      glegend: [['white', 'node'], ['cur', 'k — mellomnoden']],
+      idea: 'Finner for hvert par (i, j) om det finnes en sti fra i til j. Samme oppbygning som Floyd-Warshall: i runde k får stiene bruke nodene 1..k som mellomnoder, og t[i][j] blir 1 hvis det fantes en sti fra før, eller en sti i ↝ k og en sti k ↝ j.',
+      invariant: 't⁽ᵏ⁾ᵢⱼ = 1 hvis og bare hvis det finnes en sti fra i til j der alle mellomnodene er i {1, …, k}.',
+      proof: 'En sti med mellomnoder i {1..k} bruker enten ikke k (da er t⁽ᵏ⁻¹⁾ᵢⱼ = 1), eller den går i ↝ k ↝ j der begge delene bare bruker {1..k−1}. Tre nøstede løkker gir Θ(n³). Resultatet er grafen G* = (V, E*), der (i, j) ∈ E* hvis og bare hvis j kan nås fra i.',
+      when: 'Nåbarhet mellom alle par: avhengigheter i byggesystemer, arv og tilgang i hierarkier, og deteksjon av sykler (t[i][j] = t[j][i] = 1).',
+      pitfalls: [
+        'k må være ytterste løkke — samme krav som i Floyd-Warshall.',
+        'Diagonalen settes til 1 fra start: hver node når seg selv.',
+        'Du kan også kjøre Floyd-Warshall med vekt 1 på alle kanter, men boolske operasjoner er raskere og tar mindre plass.',
+        'Oppdateringen kan gjøres på stedet (én matrise) uten at svaret blir feil.'
+      ]
+    },
+    {
+      id: 'johnson', name: 'JOHNSON', no: 'Alle par korteste sti i glisne grafer', tag: 'Alle par', lec: 'F11', family: 'Bellman-Ford + omvekting + Dijkstra', graph: true,
+      best: 'O(V² lg V + VE)', avg: 'O(V² lg V + VE)', worst: 'O(V² lg V + VE)', mem: 'Θ(V²)',
+      hint: 'Tallet i noden er d[v], h(v) eller δ̂(u, v) — se forklaringen. Tallet på kanten er vekten.',
+      glegend: [['white', 'node'], ['gray', 'den nye kilden s'], ['cur', 'u — kilden for Dijkstra']],
+      idea: 'Legger til en ny kilde s med 0-kanter til alle noder og kjører Bellman-Ford for å finne h(v) = δ(s, v). Med ŵ(u, v) = w(u, v) + h(u) − h(v) blir alle vekter ikke-negative, så Dijkstra kan kjøres fra hver node. Til slutt trekkes omvektingen fra igjen.',
+      invariant: 'For hver kant er ŵ(u, v) ≥ 0 (trekantulikheten for h), og for hver sti p fra u til v er ŵ(p) = w(p) + h(u) − h(v). Den konstante forskyvningen endrer ikke hvilken sti som er kortest.',
+      proof: 'Summen av ŵ langs en sti teleskoperer: alle h-leddene for mellomnodene kanselleres, og bare h(u) − h(v) står igjen. Derfor er korteste stier de samme med w og ŵ. En negativ sykel i G er også en negativ sykel i G′, og oppdages av Bellman-Ford. Kjøretid: O(VE) for Bellman-Ford og V · O(V lg V + E) for Dijkstra med Fibonacci-haug, totalt O(V² lg V + VE). Med binærhaug blir det O(VE lg V).',
+      when: 'Alle par korteste sti i GLISNE grafer med negative kanter. For tette grafer er Floyd-Warshall (Θ(V³)) like bra og enklere.',
+      pitfalls: [
+        'ŵ(u, v) = w(u, v) + h(u) − h(v) — fortegnet er avgjørende. Byttet om blir vektene ikke ikke-negative.',
+        'Husk å regne tilbake: dᵤᵥ = δ̂(u, v) + h(v) − h(u).',
+        'Å bare legge til en konstant på alle kanter fungerer IKKE — stier med mange kanter straffes mer enn stier med få.',
+        'Returnerer Bellman-Ford FALSE, finnes det en negativ sykel, og korteste stier er ikke definert.'
+      ]
+    },
+    {
+      id: 'maxflow', lec: 'F12', name: 'FORD-FULKERSON', no: 'Maksimal flyt (Edmonds-Karp)', tag: 'Maks flyt', family: 'Restnettverk · forsterkende stier', graph: true,
       best: 'O(V·E²)', avg: 'O(V·E²)', worst: 'O(V·E²)', mem: 'O(V+E)',
       idea: 'Start med flyt 0, finn en sti fra s til t i restnettverket, og send så mye som flaskehalsen tillater. Gjenta til ingen sti finnes. Restnettverket har også baklengs-kanter, så tidligere valg kan angres.',
       invariant: 'f er alltid en lovlig flyt (kapasitetsbegrensning og flytbevaring holder). Flyten er maksimal nøyaktig når restnettverket ikke har noen sti fra s til t.',
@@ -1959,7 +2969,7 @@ class Component extends DCLogic {
 
   ALGOS = [
     {
-      id: 'insertion', name: 'INSERTION-SORT', no: 'Innsettingssortering', tag: 'F1–F2', family: 'Sammenligningsbasert · in-place',
+      id: 'insertion', lec: 'F1', name: 'INSERTION-SORT', no: 'Innsettingssortering', tag: 'F1', family: 'Sammenligningsbasert · in-place',
       best: 'Θ(n)', avg: 'Θ(n²)', worst: 'Θ(n²)', mem: 'Θ(1)', stable: 'Ja', inplace: 'Ja', cmp: 'Ja',
       idea: 'Bygger et sortert prefiks fra venstre. For hvert nytt element (key) skyves alle større elementer i prefikset én plass til høyre, og key settes inn i hullet — som når du sorterer kort i hånda.',
       invariant: 'Løkkeinvariant: ved starten av hver iterasjon av for-løkka består A[1..j−1] av de samme elementene som opprinnelig lå der, i sortert rekkefølge.',
@@ -1973,7 +2983,7 @@ class Component extends DCLogic {
       ]
     },
     {
-      id: 'merge', name: 'MERGE-SORT', no: 'Flettesortering', tag: 'F3', family: 'Splitt-og-hersk · stabil',
+      id: 'merge', lec: 'F3', name: 'MERGE-SORT', no: 'Flettesortering', tag: 'F3', family: 'Splitt-og-hersk · stabil',
       best: 'Θ(n log n)', avg: 'Θ(n log n)', worst: 'Θ(n log n)', mem: 'Θ(n)', stable: 'Ja', inplace: 'Nei', cmp: 'Ja',
       idea: 'Splitt arrayet i to like halvdeler, sorter hver halvdel rekursivt, og flett de to sorterte halvdelene sammen i lineær tid. Delingen tar ikke hensyn til verdiene, så kjøretiden er identisk i alle tilfeller.',
       invariant: 'MERGE-invariant: ved starten av hver iterasjon inneholder A[p..k−1] de k − p minste elementene av L og R, i sortert rekkefølge, og L[i] og R[j] er de minste elementene som ennå ikke er kopiert tilbake.',
@@ -1987,7 +2997,7 @@ class Component extends DCLogic {
       ]
     },
     {
-      id: 'quick', name: 'QUICKSORT', no: 'Kvikksortering (med PARTITION)', tag: 'F3', family: 'Splitt-og-hersk · in-place',
+      id: 'quick', lec: 'F3', name: 'QUICKSORT', no: 'Kvikksortering (med PARTITION)', tag: 'F3', family: 'Splitt-og-hersk · in-place',
       best: 'Θ(n log n)', avg: 'Θ(n log n)', worst: 'Θ(n²)', mem: 'Θ(log n)*', stable: 'Nei', inplace: 'Ja', cmp: 'Ja',
       idea: 'Velg en pivot, partisjoner arrayet slik at alt ≤ pivot står til venstre og alt > pivot til høyre, og sorter de to sidene rekursivt. Pivoten er ferdig plassert etter partisjoneringen, så det trengs ingen flettefase.',
       invariant: 'PARTITION-invariant: for hver indeks t gjelder at A[p..i] ≤ x, A[i+1..j−1] > x, og A[r] = x. i er slutten av «små»-området, j er skannepekeren.',
@@ -2002,8 +3012,22 @@ class Component extends DCLogic {
       ]
     },
     {
-      id: 'heap', name: 'HEAPSORT', no: 'Haugsortering (med max-heap)', tag: 'F5', family: 'Sammenligningsbasert · in-place · max-heap',
-      best: 'Θ(n log n)', avg: 'Θ(n log n)', worst: 'Θ(n log n)', mem: 'Θ(1)', stable: 'Nei', inplace: 'Ja', cmp: 'Ja',
+      id: 'bisect', name: 'BISECT', no: 'Binærsøk (rekursivt og iterativt)', tag: 'F3', lec: 'F3', family: 'Splitt-og-hersk · søk i sortert array', gen: true, design: 'Splitt og hersk',
+      best: 'Θ(1)', avg: 'Θ(lg n)', worst: 'Θ(lg n)', mem: 'Θ(lg n) / Θ(1)',
+      idea: 'Søker etter v i et sortert array ved å se på midtelementet A[q]. Er v mindre, kan den bare ligge til venstre; er den større, bare til høyre. Halvparten av søkeområdet forkastes i hvert steg. BISECT gjør dette rekursivt, BISECT′ med en while-løkke.',
+      invariant: 'Invariant: hvis v finnes i A, så ligger den i A[p..r]. Initielt er p = 1 og r = n. Hvert steg bevarer invarianten fordi A er sortert, og r − p + 1 minst halveres.',
+      proof: 'Rekurrensen er T(n) = T(n/2) + Θ(1). Master-teoremet med a = 1, b = 2, f(n) = Θ(1) gir tilfelle 2: T(n) = Θ(lg n). Best case er Θ(1) når v ligger midt i arrayet. Den iterative BISECT′ gjør det samme arbeidet, men trenger ikke rekursjonsstakken og bruker derfor Θ(1) ekstra minne.',
+      when: 'Søk i sorterte arrays, og som byggekloss overalt der du kan halvere et søkerom (f.eks. finne første indeks der en monoton betingelse blir sann).',
+      pitfalls: [
+        'Krever at A er SORTERT — på et usortert array gir binærsøk feil svar, ikke bare dårlig kjøretid.',
+        'Rekursjonen må gå på A[p..q−1] og A[q+1..r], ikke A[p..q] og A[q..r] — ellers kan den gå i evig løkke når p = r.',
+        'Den rekursive varianten bruker Θ(lg n) ekstra minne til kall-stakken; den iterative bruker Θ(1).',
+        'Θ(lg n) forutsetter tilfeldig tilgang (array). På en lenket liste koster det å finne midten Θ(n).'
+      ]
+    },
+    {
+      id: 'heap', lec: 'F5', name: 'HEAPSORT', no: 'Haugsortering (med max-heap)', tag: 'F5', family: 'Sammenligningsbasert · in-place · max-heap',
+      best: 'Θ(n log n)*', avg: 'Θ(n log n)', worst: 'Θ(n log n)', mem: 'Θ(1)', stable: 'Nei', inplace: 'Ja', cmp: 'Ja',
       idea: 'Gjør først arrayet om til en max-heap med BUILD-MAX-HEAP. Deretter byttes rota (maksimum) gjentatte ganger med siste element i heapen, heapen krymper med én, og MAX-HEAPIFY gjenoppretter heap-egenskapen. Den sorterte delen vokser fra høyre.',
       invariant: 'Løkkeinvariant i HEAPSORT: ved starten av hver iterasjon er A[1..i] en max-heap med de i minste elementene, og A[i+1..n] inneholder de n − i største elementene i sortert rekkefølge. Max-heap-egenskapen: A[PARENT(i)] ≥ A[i] for alle i > 1.',
       proof: 'MAX-HEAPIFY flytter et element maks h = ⌊lg n⌋ nivåer ned: O(lg n). BUILD-MAX-HEAP ser ut som n/2 · O(lg n), men det finnes høyst ⌈n/2ʰ⁺¹⌉ noder med høyde h, så kostnaden er Σₕ ⌈n/2ʰ⁺¹⌉ · O(h) = O(n · Σ h/2ʰ) = O(n). Sorteringsfasen gjør n − 1 bytter og kall på MAX-HEAPIFY à O(lg n): O(n lg n) totalt. Som sammenligningsbasert sortering kan den ikke gjøre det bedre enn Ω(n lg n) i worst case.',
@@ -2013,11 +3037,12 @@ class Component extends DCLogic {
         'Løkka i BUILD-MAX-HEAP går fra ⌊n/2⌋ NED til 1. Oppover er deltrærne ikke max-heaper ennå, og MAX-HEAPIFY gir feil resultat.',
         'MAX-HEAPIFY forutsetter at begge deltrærne under i allerede er max-heaper — den reparerer bare ett brudd, i roten.',
         'heap-size ≠ A.length: testen l ≤ A.heap-size hindrer at den sorterte halen trekkes tilbake inn i heapen.',
-        'Heapsort er ikke stabil: byttet A[1] ↔ A[i] flytter like elementer forbi hverandre.'
+        'Heapsort er ikke stabil: byttet A[1] ↔ A[i] flytter like elementer forbi hverandre.',
+        '* Best case er Θ(n log n) når nøklene er distinkte. Er ALLE nøklene like, gjør MAX-HEAPIFY aldri noen bytter, og kjøretiden blir Θ(n).'
       ]
     },
     {
-      id: 'counting', name: 'COUNTING-SORT', no: 'Tellesortering', tag: 'F4', family: 'Lineær tid · ikke sammenligningsbasert',
+      id: 'counting', lec: 'F4', name: 'COUNTING-SORT', no: 'Tellesortering', tag: 'F4', family: 'Lineær tid · ikke sammenligningsbasert',
       best: 'Θ(n + k)', avg: 'Θ(n + k)', worst: 'Θ(n + k)', mem: 'Θ(n + k)', stable: 'Ja', inplace: 'Nei', cmp: 'Nei',
       idea: 'Teller hvor mange det er av hver verdi i 0..k, gjør tellingene om til prefikssummer (antall elementer ≤ i), og leser input baklengs for å plassere hvert element direkte på sin endelige posisjon i utdataarrayet B.',
       invariant: 'Etter prefikssummen gjelder: C[i] = antall elementer i A som er ≤ i. Derfor er C[A[j]] nøyaktig den siste ledige posisjonen i B for verdien A[j].',
@@ -2031,7 +3056,7 @@ class Component extends DCLogic {
       ]
     },
     {
-      id: 'radix', name: 'RADIX-SORT', no: 'Radikssortering', tag: 'F4', family: 'Lineær tid · ikke sammenligningsbasert',
+      id: 'radix', lec: 'F4', name: 'RADIX-SORT', no: 'Radikssortering', tag: 'F4', family: 'Lineær tid · ikke sammenligningsbasert',
       best: 'Θ(d(n + k))', avg: 'Θ(d(n + k))', worst: 'Θ(d(n + k))', mem: 'Θ(n + k)', stable: 'Ja', inplace: 'Nei', cmp: 'Nei',
       idea: 'Sorterer tall siffer for siffer med en stabil sortering (counting sort), fra minst til mest signifikante siffer (LSD). Etter pass i er tallene korrekt sortert på sine i siste sifre.',
       invariant: 'Etter pass i er A sortert med hensyn på de i minst signifikante sifrene. Stabiliteten sikrer at rekkefølgen fra pass i overlever pass i + 1 når sifrene er like.',
@@ -2045,7 +3070,7 @@ class Component extends DCLogic {
       ]
     },
     {
-      id: 'bucket', name: 'BUCKET-SORT', no: 'Bøttesortering', tag: 'F4', family: 'Lineær tid (forventet) · fordelingsantakelse',
+      id: 'bucket', lec: 'F4', name: 'BUCKET-SORT', no: 'Bøttesortering', tag: 'F4', family: 'Lineær tid (forventet) · fordelingsantakelse',
       best: 'Θ(n)', avg: 'Θ(n)', worst: 'Θ(n²)', mem: 'Θ(n)', stable: 'Ja*', inplace: 'Nei', cmp: 'Delvis',
       idea: 'Deler intervallet [0, 1) i n like bøtter, legger hvert element i bøtte ⌊n · A[i]⌋, sorterer hver bøtte med insertion sort og konkatenerer bøttene i rekkefølge.',
       invariant: 'Alle elementer i B[i] er mindre enn alle elementer i B[i+1]. Konkatenering av sorterte bøtter er derfor sortert.',
@@ -2059,7 +3084,7 @@ class Component extends DCLogic {
       ]
     },
     {
-      id: 'rselect', name: 'RANDOMIZED-SELECT', no: 'Rangering / utvalg i forventet lineær tid', tag: 'F4', family: 'Rangering · splitt-og-hersk med én gren',
+      id: 'rselect', lec: 'F4', name: 'RANDOMIZED-SELECT', no: 'Rangering / utvalg i forventet lineær tid', tag: 'F4', family: 'Rangering · splitt-og-hersk med én gren',
       best: 'Θ(n)', avg: 'Θ(n) forventet', worst: 'Θ(n²)', mem: 'Θ(1)*', stable: 'Nei', inplace: 'Ja', cmp: 'Ja',
       idea: 'Finner det i. minste elementet uten å sortere. Bruker quicksorts PARTITION med tilfeldig pivot, men går bare videre i DEN siden svaret kan ligge i — den andre halvparten forkastes helt.',
       invariant: 'Etter partisjonering er pivoten det k. minste i A[p..r], der k = q − p + 1. Er i < k ligger svaret i A[p..q−1] med uendret rang i; er i > k ligger det i A[q+1..r] med rang i − k.',
@@ -2073,7 +3098,7 @@ class Component extends DCLogic {
       ]
     },
     {
-      id: 'select', name: 'SELECT', no: 'Median-of-medians (kjenne til)', tag: 'F4', family: 'Rangering · garantert lineær',
+      id: 'select', lec: 'F4', name: 'SELECT', no: 'Median-of-medians (kjenne til)', tag: 'F4', family: 'Rangering · garantert lineær',
       best: 'Θ(n)', avg: 'Θ(n)', worst: 'Θ(n)', mem: 'Θ(n)', stable: 'Nei', inplace: 'Nei', cmp: 'Ja',
       idea: 'Deterministisk utvalg med garantert lineær worst case: del i grupper på 5, finn medianen i hver gruppe, velg rekursivt medianen av disse medianene som pivot, og partisjoner rundt den.',
       invariant: 'Medianen av medianene x er større enn minst 3n/10 og mindre enn minst 3n/10 av elementene, så partisjoneringen forkaster alltid minst 3/10 av arrayet.',
@@ -2088,22 +3113,190 @@ class Component extends DCLogic {
     }
   ];
 
+  DS_ALGOS = [
+    {
+      id: 'hash', name: 'CHAINED-HASH', no: 'Hashtabell med kjeding', tag: 'Hashing', lec: 'F2', family: 'Hashtabell · kjeding · divisjonsmetoden', gen: true, design: 'Hashing',
+      best: 'Θ(1)', avg: 'Θ(1 + α)', worst: 'Θ(n)', bestK: 'Innsetting', avgK: 'Søk (forventet)', worstK: 'Søk (worst case)', mem: 'Θ(m + n)',
+      idea: 'En hashfunksjon h avbilder hver nøkkel på en luke i en tabell T[0..m−1]. Når to nøkler havner i samme luke (kollisjon), legges de i samme lenkede liste. Innsetting skjer først i lista, søk går bare gjennom lista i luke h(k).',
+      invariant: 'Luke j inneholder en peker til hodet av en lenket liste med nøyaktig de nøklene k som har h(k) = j, eller NIL hvis det ikke er noen.',
+      proof: 'Med enkel uniform hashing havner hver nøkkel i hver luke med sannsynlighet 1/m, uavhengig av de andre. Forventet lengde på en kjede er da lastfaktoren α = n/m. Et mislykket søk går gjennom en hel kjede: Θ(1 + α). Et vellykket søk ser i snitt på halve kjeden foran nøkkelen: også Θ(1 + α). Er m = Θ(n), er α = O(1) og alle operasjoner tar forventet O(1). Direkte adressering er spesialtilfellet der universet er så lite at hver nøkkel har sin egen luke (worst case O(1)); perfekt hashing gir worst case O(1) for søk i statiske datasett.',
+      when: 'Ordbøker og mengder med innsetting, søk og sletting i forventet konstant tid — når du ikke trenger rekkefølge (til det bruker du søketrær).',
+      pitfalls: [
+        'Worst case for søk er Θ(n): alle nøklene kan hashe til samme luke. O(1) er FORVENTET tid under en antakelse om hashfunksjonen.',
+        'Divisjonsmetoden h(k) = k mod m: velg m som et primtall som ikke ligger nær en toerpotens. m = 2ᵖ gir bare de p laveste bitene av k.',
+        'Multiplikasjonsmetoden h(k) = ⌊m (kA mod 1)⌋ med 0 < A < 1 er ikke følsom for valget av m — der går toerpotenser fint.',
+        'Sletting er O(1) bare med dobbelt lenket liste og en peker til elementet. Med en nøkkel må du søke først.'
+      ]
+    },
+    {
+      id: 'dyntable', name: 'TABLE-INSERT', no: 'Dynamisk tabell (amortisert analyse)', tag: 'Amortisert analyse', lec: 'F2', family: 'Dynamisk tabell · dobling · aggregert analyse', gen: true, design: 'Aggregert analyse',
+      best: 'Θ(1)', avg: 'O(1) amortisert', worst: 'Θ(n)', bestK: 'Vanlig innsetting', avgK: 'Amortisert', worstK: 'Innsetting som utvider', mem: 'Θ(n)',
+      idea: 'En tabell som vokser etter behov. Når den er full, allokeres en ny tabell med dobbelt så mange luker, og alle elementene kopieres over. Enkelte innsettinger blir dyre, men de er så sjeldne at gjennomsnittet per operasjon blir konstant.',
+      invariant: 'Lastfaktoren α = T.num / T.size holder seg mellom 1/2 og 1 etter første utvidelse — tabellen er aldri mer enn halvtom.',
+      proof: 'Aggregert analyse: innsetting nr. i koster i hvis i − 1 er en toerpotens (utvidelse + kopiering), ellers 1. Summen over n innsettinger er høyst n + Σ₍ⱼ₌₀₎^⌊lg n⌋ 2ʲ < n + 2n = 3n. Den amortiserte kostnaden er altså 3n/n = O(1) per innsetting. Amortisert analyse involverer ingen sannsynlighet: det er en garanti for gjennomsnittet over enhver sekvens av operasjoner.',
+      when: 'Lister og arrays som vokser uten kjent maksimal størrelse (ArrayList, Python-lister, std::vector), og hashtabeller som må omformes når α blir for stor.',
+      pitfalls: [
+        'Amortisert O(1) er IKKE det samme som forventet O(1): det er ingen sannsynlighet involvert, og garantien gjelder for enhver sekvens.',
+        'Én enkelt innsetting kan fortsatt koste Θ(n) — amortisert analyse sier noe om summen, ikke om hver operasjon.',
+        'Utvidelse med en fast konstant (f.eks. +10 luker) i stedet for dobling gir Θ(n) amortisert, fordi kopieringene skjer for ofte.',
+        'Ved krymping må grensen være lavere enn 1/2 (f.eks. krymp ved α < 1/4) — ellers kan vekslende innsetting og sletting gi Θ(n) per operasjon.'
+      ]
+    },
+    {
+      id: 'pq', name: 'MAX-HEAP-OPERASJONER', no: 'Prioritetskø med max-heap', tag: 'Haug', lec: 'F5', family: 'Haug · prioritetskø', gen: true, design: 'Haug (heap)',
+      best: 'Θ(1)', avg: 'O(lg n)', worst: 'O(lg n)', bestK: 'HEAP-MAXIMUM', avgK: 'INSERT / INCREASE-KEY', worstK: 'EXTRACT-MAX', mem: 'Θ(1)',
+      idea: 'En max-heap er et komplett binærtre lagret i et array, der hver forelder er minst like stor som barna sine. Da ligger maksimum alltid i rota. EXTRACT-MAX flytter det siste løvet opp og lar det synke (MAX-HEAPIFY); INCREASE-KEY og INSERT lar en nøkkel boble oppover.',
+      invariant: 'Max-heap-egenskapen: A[PARENT(i)] ≥ A[i] for alle i > 1, der PARENT(i) = ⌊i/2⌋, LEFT(i) = 2i og RIGHT(i) = 2i + 1. Under INCREASE-KEY gjelder egenskapen overalt unntatt muligens mellom A[i] og forelderen.',
+      proof: 'Et komplett binærtre med n noder har høyde ⌊lg n⌋. EXTRACT-MAX gjør konstant arbeid pluss én MAX-HEAPIFY langs en sti ned: O(lg n). INCREASE-KEY bytter bare langs stien fra i opp mot rota: O(lg n). INSERT er én INCREASE-KEY. BUILD-MAX-HEAP tar O(n), ikke O(n lg n), fordi de fleste nodene ligger nær bunnen.',
+      when: 'Planlegging og simuleringer (hent jobben med høyest prioritet), og min-heap-varianten i Prim og Dijkstra (EXTRACT-MIN og DECREASE-KEY) samt Huffman.',
+      pitfalls: [
+        'En heap er IKKE sortert: bare stien fra rota til hvert løv er sortert. Å finne minimum i en max-heap tar Θ(n).',
+        'Indeksene er 1-baserte: barna til i er 2i og 2i + 1. Med 0-baserte arrays blir det 2i + 1 og 2i + 2.',
+        'INCREASE-KEY bobler OPPOVER; MAX-HEAPIFY synker NEDOVER. Ikke bland dem — reduseres en nøkkel i en max-heap, må du bruke MAX-HEAPIFY.',
+        'For min-heaps er alt speilvendt: MIN-HEAPIFY, BUILD-MIN-HEAP, HEAP-EXTRACT-MIN og DECREASE-KEY.'
+      ]
+    },
+    {
+      id: 'bst', name: 'BINÆRT SØKETRE', no: 'TREE-INSERT, TREE-SEARCH, TREE-SUCCESSOR, INORDER', tag: 'Søketre', lec: 'F5', family: 'Rotfast tre · binær-søketre-egenskapen', gen: true, design: 'Rotfast tre',
+      best: 'Θ(1)', avg: 'Θ(lg n)', worst: 'Θ(n)', bestK: 'Best case', avgK: 'Forventet (tilfeldig tre)', worstK: 'Worst case (skjevt tre)', mem: 'Θ(n)',
+      hint: 'Tallet i noden er nøkkelen. Nodene står sortert fra venstre mot høyre.',
+      glegend: [['white', 'node i treet'], ['gray', 'på stien fra rota'], ['cur', 'x — noden vi står på'], ['done', 'satt inn / funnet']],
+      idea: 'Hver node har en nøkkel og pekere til venstre barn, høyre barn og forelder. Alt i venstre deltre er ≤ nøkkelen, alt i høyre er ≥. Søk og innsetting går derfor langs én sti fra rota, og in-order-gjennomgang gir nøklene sortert.',
+      invariant: 'Binær-søketre-egenskapen: for hver node x gjelder y.key ≤ x.key for alle y i venstre deltre og y.key ≥ x.key for alle y i høyre deltre. TREE-INSERT bevarer den fordi den nye noden henges på akkurat der et søk etter nøkkelen ville endt.',
+      proof: 'TREE-SEARCH, TREE-INSERT, TREE-MINIMUM, TREE-MAXIMUM, TREE-SUCCESSOR og TREE-PREDECESSOR følger alle én sti opp eller ned, så de koster O(h), der h er høyden. INORDER-TREE-WALK besøker hver node én gang: Θ(n). Forventet høyde for et tilfeldig bygd tre er Θ(lg n), men setter du inn sortert input blir treet en lenket liste med h = n − 1. Balanserte søketrær (f.eks. rød-svarte trær) garanterer h = Θ(lg n).',
+      when: 'Dynamiske mengder der du trenger ordning: min/maks, forgjenger/etterfølger, sortert utskrift og intervallspørringer — ting en hashtabell ikke kan gi.',
+      pitfalls: [
+        'Kjøretiden er O(h), ikke O(lg n). Uten balansering er worst case Θ(n) — sortert input gir et helt skjevt tre.',
+        'TREE-SUCCESSOR har to tilfeller: har x et høyre deltre, er svaret minimum der; ellers er det den laveste forfaren der x ligger i VENSTRE deltre.',
+        'In-order (venstre, node, høyre) gir sortert rekkefølge. Pre-order og post-order gjør det ikke.',
+        'TREE-DELETE har tre tilfeller (ingen barn, ett barn, to barn) og bruker TRANSPLANT; det kreves ikke grundig forståelse av dem.'
+      ]
+    },
+    {
+      id: 'dset', name: 'DISJOINT-SET-FOREST', no: 'Disjunkte mengder (union-find)', tag: 'Disjunkte mengder', lec: 'F9', family: 'Skog · union by rank · stikomprimering', gen: true, design: 'Skog + rank + stikomprimering',
+      best: 'Θ(1)', avg: 'O(α(n)) amortisert', worst: 'O(lg n)', bestK: 'MAKE-SET / LINK', avgK: 'FIND-SET / UNION', worstK: 'Én enkelt FIND-SET', mem: 'Θ(n)',
+      hint: 'Pilene peker mot forelderen x.p. Svarte noder er representanter.',
+      glegend: [['black', 'representant (rot)'], ['white', 'element'], ['gray', 'på stien til rota'], ['cur', 'elementet vi ser på'], ['done', 'rota som blir forelder']],
+      idea: 'Hver mengde er et tre der nodene bare peker på forelderen, og rota er representanten. FIND-SET går opp til rota og komprimerer stien underveis; UNION henger rota med lavest rank under den andre.',
+      invariant: 'x.rank er en øvre grense på høyden til x. En rot med rank r har minst 2ʳ noder i treet sitt (union by rank), så ingen rank blir større enn ⌊lg n⌋.',
+      proof: 'Med bare union by rank er høyden O(lg n), så FIND-SET koster O(lg n). Med stikomprimering i tillegg tar en sekvens av m operasjoner, hvorav n er MAKE-SET, O(m · α(n)) tid, der α er den inverse Ackermann-funksjonen (α(n) ≤ 4 for alle realistiske n). CONNECTED-COMPONENTS gjør MAKE-SET på hver node og UNION for hver kant; SAME-COMPONENT sammenligner FIND-SET(u) og FIND-SET(v).',
+      when: 'Kruskals algoritme (sjekke om en kant lager sykel), sammenhengskomponenter i en graf som vokser, og ekvivalensklasser generelt.',
+      pitfalls: [
+        'UNION tar vilkårlige elementer; LINK krever røtter. UNION(x, y) = LINK(FIND-SET(x), FIND-SET(y)).',
+        'Ved lik rank blir den ene roten forelder, og BARE da øker rangen (med 1).',
+        'Stikomprimering endrer ikke rank — derfor er rank bare en øvre grense på høyden.',
+        'α(n) er ikke en konstant i teorien, men vokser så sakte at den er ≤ 4 for alle praktiske n.'
+      ]
+    }
+  ];
+
+  DP_ALGOS = [
+    {
+      id: 'cutrod', name: 'CUT-ROD', no: 'Stavkapping (bottom-up med rekonstruksjon)', tag: 'DP', lec: 'F6', family: 'Dynamisk programmering · bottom-up', gen: true, design: 'DP · bottom-up',
+      best: 'Θ(n²)', avg: 'Θ(n²)', worst: 'Θ(n²)', mem: 'Θ(n)',
+      idea: 'Maksimal inntekt r[j] for en stang av lengde j er det beste valget av første bit i: p[i] + r[j − i]. Delinstansene løses i rekkefølge j = 0, 1, …, n og lagres, så hver løses bare én gang. s[j] husker hvilket valg som var best, slik at selve kuttene kan rekonstrueres.',
+      invariant: 'Når j behandles, er r[0..j−1] allerede de optimale verdiene. Rekursjonen er rₙ = max₁≤ᵢ≤ₙ (pᵢ + rₙ₋ᵢ), med r₀ = 0.',
+      proof: 'Optimal delstruktur: en optimal oppdeling består av en første bit i og en OPTIMAL oppdeling av resten n − i (ellers kunne vi byttet ut resten og fått mer). Overlappende delinstanser: den naive rekursjonen løser r₀ om og om igjen og bruker Θ(2ⁿ). Delinstansgrafen har n + 1 noder og Θ(n²) kanter, og bottom-up bruker Θ(1) per kant: Θ(n²). Memoisering (top-down) gir samme asymptotiske tid, men med rekursjonsoverhead.',
+      when: 'Skolebokeksempelet på DP. Samme mønster — velg første del og løs resten optimalt — brukes i mange oppdelingsproblemer.',
+      pitfalls: [
+        'Bottom-up krever at delinstansene løses i en rekkefølge som respekterer avhengighetene (topologisk rekkefølge i delinstansgrafen).',
+        'r gir bare VERDIEN. For å rekonstruere løsningen må beslutningene lagres (s[j]) — det er EXTENDED-BOTTOM-UP-CUT-ROD.',
+        'Memoisering og bottom-up har samme Θ(n²); forskjellen er konstanter og at memoisering bare løser delinstansene som faktisk trengs.',
+        'Grådig valg (høyest pris per lengde) gir IKKE alltid optimal løsning — derfor trengs DP her.'
+      ]
+    },
+    {
+      id: 'lcs', name: 'LCS-LENGTH', no: 'Lengste felles delsekvens', tag: 'DP', lec: 'F6', family: 'Dynamisk programmering · 2D-tabell', gen: true, design: 'DP · tabell',
+      best: 'Θ(mn)', avg: 'Θ(mn)', worst: 'Θ(mn)', mem: 'Θ(mn)',
+      idea: 'c[i, j] er lengden av en LCS av prefiksene Xᵢ og Yⱼ. Er xᵢ = yⱼ, er tegnet med, og c[i, j] = c[i−1, j−1] + 1. Ellers dropper vi det siste tegnet fra enten X eller Y og tar det beste. Pilene i b lagrer valget, slik at LCS-en kan leses ut baklengs.',
+      invariant: 'c[i, j] = 0 hvis i = 0 eller j = 0; c[i−1, j−1] + 1 hvis xᵢ = yⱼ; ellers max(c[i, j−1], c[i−1, j]). Tabellen fylles rad for rad, så alle tre avhengighetene er ferdige når c[i, j] beregnes.',
+      proof: 'Optimal delstruktur (CLRS teorem 14.1): hvis xₘ = yₙ, må en LCS slutte med dette tegnet og resten være en LCS av Xₘ₋₁ og Yₙ₋₁; ellers er en LCS en LCS av enten Xₘ₋₁ og Y eller X og Yₙ₋₁. Det er (m + 1)(n + 1) delinstanser à O(1): Θ(mn). PRINT-LCS følger én sti fra hjørnet: O(m + n).',
+      when: 'diff-verktøy, versjonskontroll og DNA-sammenligning — overalt der to sekvenser skal sammenlignes.',
+      pitfalls: [
+        'En delsekvens trenger IKKE være sammenhengende (i motsetning til en delstreng) — bare i samme rekkefølge.',
+        'LCS er ikke nødvendigvis unik (her er både BCBA og BDAB gyldige). Hvilken du får avhenger av hvordan like verdier brytes.',
+        'Ved xᵢ = yⱼ skal du ALLTID gå diagonalt; det er aldri bedre å droppe et felles sluttegn.',
+        'Tabellen kan reduseres til to rader hvis du bare trenger lengden, men da kan du ikke rekonstruere sekvensen.'
+      ]
+    },
+    {
+      id: 'knapsack', name: 'KNAPSACK', no: 'Binær ryggsekk (0-1)', tag: 'DP', lec: 'F6', family: 'Dynamisk programmering · pseudopolynomisk', gen: true, design: 'DP · pseudopolynomisk',
+      best: 'Θ(nW)', avg: 'Θ(nW)', worst: 'Θ(nW)', mem: 'Θ(nW)',
+      idea: 'K[i, j] er den beste verdien vi kan få med de i første gjenstandene og kapasitet j. Gjenstand i er enten ikke med (K[i−1, j]) eller med (K[i−1, j − w[i]] + v[i], hvis den får plass). Tabellen fylles rad for rad, og valgene leses ut baklengs.',
+      invariant: 'K[0, j] = 0, og K[i, j] = max(K[i−1, j], K[i−1, j − wᵢ] + vᵢ) når wᵢ ≤ j, ellers K[i−1, j].',
+      proof: 'Optimal delstruktur: tar en optimal løsning med gjenstand i, er resten en optimal løsning for de i − 1 første med kapasitet j − wᵢ; ellers er den en optimal løsning for de i − 1 første med kapasitet j. Det er (n + 1)(W + 1) celler à O(1): Θ(nW). Siden W kan skrives med lg W bits, er dette eksponentielt i inputstørrelsen — pseudopolynomisk. Det binære ryggsekkproblemet er NP-hardt (subset-sum reduseres til det).',
+      when: 'Budsjett- og utvalgsproblemer med heltallsvekter og moderat kapasitet. Den kontinuerlige varianten (der man kan ta deler av gjenstander) løses grådig i stedet.',
+      pitfalls: [
+        'Θ(nW) er IKKE polynomisk i inputstørrelsen — W er en tallverdi, og inputen tar bare Θ(lg W) bits for den.',
+        'Grådig valg på verdi per vekt fungerer for den kontinuerlige ryggsekken, men ikke for 0-1-varianten.',
+        'Hver gjenstand kan bare brukes én gang: y bruker rad i − 1, ikke rad i. Bruker du rad i, får du den ubegrensede varianten.',
+        'Rekonstruksjonen sammenligner K[i, j] med K[i−1, j]: er de ulike, er gjenstand i med.'
+      ]
+    },
+    {
+      id: 'activity', name: 'GREEDY-ACTIVITY-SELECTOR', no: 'Aktivitetsutvelgelse', tag: 'Grådighet', lec: 'F7', family: 'Grådig algoritme · tidligst sluttid', gen: true, design: 'Grådighet',
+      best: 'Θ(n)', avg: 'Θ(n)', worst: 'Θ(n)', mem: 'Θ(n)',
+      idea: 'Gitt aktiviteter med start- og sluttider, velg flest mulig som ikke overlapper. Sorter etter sluttid og ta alltid den neste aktiviteten som starter etter at den forrige valgte er ferdig.',
+      invariant: 'Etter hver iterasjon er A en optimal løsning for aktivitetene a₁..aₘ, og aₖ er den sist valgte, med den tidligste sluttiden en slik løsning kan ha.',
+      proof: 'Grådighetsegenskapen: la aₘ være aktiviteten med tidligst sluttid, og A en optimal løsning. Bytt ut den første aktiviteten i A med aₘ — den slutter ikke senere, så ingenting overlapper, og vi har en like stor løsning som inneholder aₘ. Optimal delstruktur: det som gjenstår etter aₘ er aktivitetene som starter etter fₘ, og en optimal løsning for dem pluss aₘ er optimal totalt. Én gjennomgang: Θ(n), eller Θ(n lg n) med sortering.',
+      when: 'Booking av ett rom, planlegging av jobber på én maskin — og som standardeksempel på hvordan man beviser at en grådig algoritme er korrekt.',
+      pitfalls: [
+        'Det må sorteres etter SLUTTID. Tidligst start eller kortest varighet gir ikke optimal løsning.',
+        'Beviset har to deler: grådighetsegenskapen OG optimal delstruktur. Grådighetsegenskapen alene er ikke nok.',
+        'Θ(n) forutsetter at input allerede er sortert; ellers er totalen Θ(n lg n).',
+        'Sammenligningen er s[m] ≥ f[k] (halvåpne intervaller): en aktivitet kan starte akkurat når den forrige slutter.'
+      ]
+    },
+    {
+      id: 'huffman', name: 'HUFFMAN', no: 'Huffman-koding (optimal prefikskode)', tag: 'Grådighet', lec: 'F7', family: 'Grådig algoritme · min-prioritetskø', gen: true, design: 'Grådighet',
+      best: 'O(n lg n)', avg: 'O(n lg n)', worst: 'O(n lg n)', mem: 'Θ(n)',
+      hint: 'Tallet i noden er frekvensen; bokstaven under et løv er tegnet.',
+      glegend: [['gray', 'rot i et tre som ligger i Q'], ['white', 'indre node / løv'], ['cur', 'tas ut av Q (de to minste)'], ['done', 'ny node z']],
+      idea: 'Bygger et binært kodetre nedenfra: slå gjentatte ganger sammen de to trærne med lavest frekvens til ett nytt tre med summen som frekvens. Kodeordet til et tegn er stien fra rota til løvet (0 = venstre, 1 = høyre).',
+      invariant: 'Q inneholder til enhver tid røttene i en skog, og skogen kan alltid fullføres til et optimalt kodetre.',
+      proof: 'Grådighetsegenskapen (CLRS lemma 15.2): de to tegnene med lavest frekvens kan alltid være søsken på dypeste nivå i et optimalt tre — bytter vi dem ned dit, øker ikke kostnaden Σ c.freq · dybde(c). Optimal delstruktur (lemma 15.3): erstatter vi de to med ett nytt tegn med summen som frekvens, gir et optimalt tre for det mindre alfabetet et optimalt tre for det opprinnelige. n − 1 iterasjoner med O(lg n) heap-operasjoner: O(n lg n).',
+      when: 'Tapsfri komprimering (del av DEFLATE/zip, JPEG, MP3) når tegnfrekvensene er kjent.',
+      pitfalls: [
+        'Prefikskode: ingen kodeord er prefiks av et annet. Derfor kan en bitstreng dekodes entydig uten skilletegn.',
+        'Et optimalt kodetre er alltid FULLT: hver indre node har to barn. Med |C| tegn er det |C| løv og |C| − 1 indre noder.',
+        'Huffman-koden er ikke unik — ved like frekvenser eller bytte av 0/1 får du andre, like gode koder.',
+        'Kostnaden er Σ c.freq · dybde(c), ikke summen av kodelengdene.'
+      ]
+    },
+    {
+      id: 'galeshapley', name: 'GALE-SHAPLEY', no: 'Stabil matching', tag: 'Stabil matching', lec: 'F7', family: 'Frieri-algoritme · stabil matching', gen: true, design: 'Grådighet',
+      best: 'Θ(n)', avg: 'O(n²)', worst: 'Θ(n²)', mem: 'Θ(n²)',
+      hint: 'Grønn kant = forlovet, mørk kant = frieriet som vurderes, grå kant = avvist eller brutt.',
+      glegend: [['white', 'ledig'], ['done', 'forlovet'], ['cur', 'kvinnen som frir'], ['gray', 'mannen hun frir til']],
+      idea: 'Hver ledig kvinne frir til den høyest rangerte mannen hun ikke har fridd til ennå. En ledig mann sier ja; en forlovet mann bytter bare hvis han foretrekker den nye. Når ingen kvinne er ledig, er matchingen stabil.',
+      invariant: 'En mann som først er forlovet, forblir forlovet, og partnerne hans blir bare bedre (etter hans rangering). En kvinne frir i synkende rekkefølge på lista si.',
+      proof: 'Terminering: hver kvinne frir til hver mann høyst én gang, så det blir høyst n² frierier: O(n²). Perfekt matching: en ledig kvinne har alltid en mann igjen å fri til. Stabilitet: anta at w og m foretrekker hverandre, men ikke er sammen. Da har w fridd til m før sin nåværende partner, og m har avvist henne for en han likte bedre — og partnerne hans blir bare bedre, en motsigelse. Den som frir, får den beste partneren hun kan ha i noen stabil matching; den som blir fridd til, får den dårligste.',
+      when: 'Opptak (studenter–studieplasser), turnusfordeling for leger og andre tosidige markeder der ingen par skal ha grunn til å bryte ut.',
+      pitfalls: [
+        'Et blokkerende par er to som IKKE er matchet med hverandre, men som begge foretrekker hverandre framfor partnerne de har.',
+        'Resultatet er alltid det samme uansett rekkefølge på de ledige — det er optimalt for siden som frir.',
+        'Siden som frir, får sin beste stabile partner; siden som blir fridd til, får sin DÅRLIGSTE.',
+        'O(n²) forutsetter at en mann kan sammenligne to kvinner i O(1) — lag en rangeringstabell først.'
+      ]
+    }
+  ];
+
   renderVals() {
     const C = this.C;
     this.heroRef = this.heroRef || React.createRef();
     const hero = this.hero || { nodes: [], edges: [] };
     const view = this.state.view;
     const cat = this.state.cat || 'sort';
-    const LIST = cat === 'graph' ? this.GRAPH_ALGOS : this.ALGOS;
-    const legend = this.LEGEND.map((g) => ({ label: g[1], bg: C[g[0]].bg, bd: C[g[0]].bd }));
+    const cm = this.CATS[cat] || this.CATS.sort;
+    const LIST = this[cm.list];
+    const legend = (this.LEGENDS[this.state.algo] || this.LEGEND).map((g) => ({ label: g[1], bg: C[g[0]].bg, bd: C[g[0]].bd }));
+    const open = (c) => () => this.setState({ view: 'list', cat: c });
     const out = {
       isHome: view === 'home', isList: view === 'list', isDetail: view === 'detail', notHome: view !== 'home',
-      crumb: view === 'home' ? 'Startside' : (cat === 'graph' ? 'Grafalgoritmer' : 'Sortering'),
-      catTitle: cat === 'graph' ? 'Grafalgoritmer' : 'Sorteringsalgoritmer',
-      catIntro: cat === 'graph'
-        ? 'Elleve algoritmer på grafer: traversering (BFS, DFS), rekkefølge og komponenter (topologisk sortering, sterke komponenter), minimale spenntrær (Kruskal, Prim), korteste sti (Dijkstra, Bellman-Ford, DAG, Floyd-Warshall) og maksimal flyt. Fargene følger CLRS: hvit = uoppdaget, grå = oppdaget, svart = ferdig.'
-        : 'Ni algoritmer fra F1–F5: innsettingssortering, splitt-og-hersk, heapsort, sortering i lineær tid og rangering. Nedre grense for sammenligningsbasert sortering er Ω(n log n) — counting, radix og bucket sort bryter den ved å ikke sammenligne elementene direkte.',
-      backToListLabel: cat === 'graph' ? '← Tilbake til grafalgoritmer' : '← Tilbake til sortering',
+      crumb: view === 'home' ? 'Startside' : cm.crumb,
+      catTitle: cm.title,
+      catIntro: cm.intro,
+      backToListLabel: '← Tilbake til ' + cm.back,
       legend: legend,
       heroRef: this.heroRef,
       heroV: hero.nodes.length,
@@ -2118,14 +3311,12 @@ class Component extends DCLogic {
       next: () => this.step(1),
       prev: () => this.step(-1),
       reset: () => this.setState({ step: 0 }),
-      categories: [
-        { name: 'Sorteringsalgoritmer', tag: 'F1–F5', count: '9 algoritmer', ready: true, soon: false, bg: 'var(--color-neutral-100)', tagClass: 'tag-accent', blurb: 'Innsettingssortering, splitt-og-hersk, heapsort og sortering i lineær tid — med pseudokode, invarianter og steg-for-steg.', open: () => this.setState({ view: 'list', cat: 'sort' }) },
-        { name: 'Grafalgoritmer', tag: 'F5–F11', count: '11 algoritmer', ready: true, soon: false, bg: 'var(--color-neutral-100)', tagClass: 'tag-accent', blurb: 'Traversering, topologisk sortering, sterke komponenter, spenntrær, korteste sti og maksimal flyt — tegnet som graf.', open: () => this.setState({ view: 'list', cat: 'graph' }) },
-        { name: 'Dynamisk programmering', tag: 'DP', count: '—', ready: false, soon: true, bg: 'var(--color-surface)', tagClass: 'tag-neutral', blurb: 'Optimal delstruktur og memoisering.', open: () => {} },
-        { name: 'Datastrukturer', tag: 'Hashing · trær · heap', count: '—', ready: false, soon: true, bg: 'var(--color-surface)', tagClass: 'tag-neutral', blurb: 'Operasjoner og amortisert analyse.', open: () => {} }
-      ],
+      categories: Object.keys(this.CATS).map((k) => {
+        const c = this.CATS[k];
+        return { name: c.title, tag: c.lec, count: this[c.list].length + ' algoritmer', ready: true, soon: false, bg: 'var(--color-neutral-100)', tagClass: 'tag-accent', blurb: c.blurb, open: open(k) };
+      }),
       algos: LIST.map((a) => ({
-        name: a.name, no: a.no, best: a.best, avg: a.avg, worst: a.worst, tag: a.tag,
+        name: a.name, no: a.no, best: a.best, avg: a.avg, worst: a.worst, tag: a.lec || a.tag,
         open: () => this.setState({ view: 'detail', algo: a.id, step: 0 })
       }))
     };
@@ -2137,7 +3328,7 @@ class Component extends DCLogic {
     const ai = LIST.indexOf(a);
     const nx = LIST[(ai + 1) % LIST.length];
 
-    out.d = a;
+    out.d = Object.assign({}, a, { tag: a.lec && a.lec !== a.tag ? a.lec + ' · ' + a.tag : a.tag });
     out.hasSteps = steps.length > 0;
     out.noSteps = steps.length === 0;
     out.nextAlgoLabel = 'Neste: ' + nx.name + ' →';
@@ -2146,6 +3337,13 @@ class Component extends DCLogic {
       { k: 'Kjøretid', v: a.worst, fg: 'var(--color-text)' },
       { k: 'Ekstra minne', v: a.mem, fg: 'var(--color-text)' },
       { k: 'Kategori', v: a.tag, fg: 'var(--color-accent-700)' }
+    ] : a.gen ? [
+      { k: a.bestK || 'Best case', v: a.best, fg: 'var(--color-text)' },
+      { k: a.avgK || 'Average case', v: a.avg, fg: 'var(--color-text)' },
+      { k: a.worstK || 'Worst case', v: a.worst, fg: 'var(--color-accent-700)' },
+      { k: 'Ekstra minne', v: a.mem, fg: 'var(--color-text)' },
+      { k: 'Designmetode', v: a.design, fg: 'var(--color-text)' },
+      { k: 'Forelesning', v: a.lec, fg: 'var(--color-text)' }
     ] : [
       { k: 'Best case', v: a.best, fg: 'var(--color-text)' },
       { k: 'Average case', v: a.avg, fg: 'var(--color-text)' },
@@ -2155,10 +3353,12 @@ class Component extends DCLogic {
       { k: 'In-place', v: a.inplace, fg: 'var(--color-text)' }
     ];
     out.props = a.graph ? [
-      { k: 'Kjøretid', v: a.worst }, { k: 'Ekstra minne', v: a.mem }, { k: 'Type', v: a.family }
+      { k: 'Kjøretid', v: a.worst }, { k: 'Ekstra minne', v: a.mem }, { k: 'Type', v: a.family }, { k: 'Forelesning', v: a.lec }
+    ] : a.gen ? [
+      { k: 'Designmetode', v: a.design }, { k: 'Ekstra minne', v: a.mem }, { k: 'Forelesning', v: a.lec }
     ] : [
       { k: 'Stabil', v: a.stable }, { k: 'In-place', v: a.inplace },
-      { k: 'Sammenligningsbasert', v: a.cmp }, { k: 'Ekstra minne', v: a.mem }, { k: 'Forelesning', v: a.tag }
+      { k: 'Sammenligningsbasert', v: a.cmp }, { k: 'Ekstra minne', v: a.mem }, { k: 'Forelesning', v: a.lec || a.tag }
     ];
     out.pitfalls = (a.pitfalls || []).map((t, i) => ({ n: String(i + 1).padStart(2, '0'), t: t }));
 
@@ -2182,14 +3382,14 @@ class Component extends DCLogic {
       const sz = this.SIZES[a.id] || { aux: 0, stack: 0, card: 0 };
       out.auxH = sz.aux; out.stackH = sz.stack;
       out.isGraph = !!s.g; out.isArray = !s.g;
-      out.hintText = s.g
+      out.hintText = a.hint ? 'Piltastene ← → fungerer også. ' + a.hint : s.g
         ? 'Piltastene ← → fungerer også. Tallet inni noden er nodens nøkkelverdi (d, key, f eller d/f).'
         : 'Piltastene ← → fungerer også. Indekser vises 1-basert, som i CLRS.';
       if (s.g) {
-        const G = this.GRAPHS[s.g];
+        const G = typeof s.g === 'string' ? this.GRAPHS[s.g] : s.g;
         const pos = {}; G.nodes.forEach((n) => { pos[n.id] = n; });
         out.gh = G.h; out.gvb = '0 0 ' + G.w + ' ' + G.h; out.gAspect = G.w + ' / ' + G.h;
-        out.legend = this.GLEGEND.map((g) => ({ label: g[1], bg: this.NC[g[0]].fill, bd: '2px solid ' + this.NC[g[0]].stroke }))
+        out.legend = (a.glegend || this.GLEGEND).map((g) => ({ label: g[1], bg: this.NC[g[0]].fill, bd: '2px solid ' + this.NC[g[0]].stroke }))
           .concat([{ label: 'valgt/tre-kant', bg: 'var(--color-accent)', bd: '2px solid var(--color-accent)' }, { label: 'kanten som vurderes', bg: 'var(--color-accent-700)', bd: '2px solid var(--color-accent-700)' }]);
         out.gnodes = G.nodes.map((n) => {
           const st = this.NC[(s.ns || {})[n.id] || 'white'] || this.NC.white;
@@ -2198,7 +3398,7 @@ class Component extends DCLogic {
             lp: (n.x / G.w * 100).toFixed(2), tp: (n.y / G.h * 100).toFixed(2),
             np: ((n.y + (n.lb ? 40 : -38)) / G.h * 100).toFixed(2),
             fill: st.fill, stroke: st.stroke, sw: st.w, txt: st.text,
-            label: (s.labels || {})[n.id] === undefined ? '' : String((s.labels || {})[n.id]), name: n.id
+            label: (s.labels || {})[n.id] === undefined ? '' : String((s.labels || {})[n.id]), name: n.name === undefined ? n.id : n.name
           };
         });
         const trim = (from, to, r) => {
@@ -2279,13 +3479,15 @@ class Component extends DCLogic {
           })
         };
       });
-      out.mainLabel = s.g ? (s.transpose ? 'Gᵀ — grafen med alle kanter snudd' : 'G — grafen underveis') : (a.id === 'counting' ? 'A — input-array (leses, endres ikke)' : 'A — arrayet underveis');
+      out.arrName = { hash: 'K', dyntable: 'T', cutrod: 'p', lcs: 'X', knapsack: 'w/v', activity: 'a' }[a.id] || 'A';
+      out.mainLabel = s.mainLabel ? s.mainLabel : s.g ? (s.transpose ? 'Gᵀ — grafen med alle kanter snudd' : 'G — grafen underveis') : (a.id === 'counting' ? 'A — input-array (leses, endres ikke)' : 'A — arrayet underveis');
       out.stepNo = idx + 1;
       out.stepTotal = steps.length;
       out.pct = Math.round(((idx + 1) / steps.length) * 100);
     } else {
       out.cells = []; out.note = ''; out.vars = []; out.hasVars = false; out.stack = []; out.hasStack = false; out.aux = []; out.auxH = 0; out.stackH = 0;
       out.isGraph = false; out.isArray = true; out.gnodes = []; out.gedges = []; out.gh = 0; out.gvb = '0 0 10 10'; out.gAspect = '2 / 1'; out.hintText = ''; out.showStack = false;
+      out.arrName = 'A';
       out.mainLabel = ''; out.stepNo = 0; out.stepTotal = 0; out.pct = 0;
     }
     return out;
