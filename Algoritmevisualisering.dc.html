@@ -400,6 +400,7 @@ class Component extends DCLogic {
     insertion: { aux: 0, stack: 0, card: 0 },
     merge: { aux: 256, stack: 124, card: 0 },
     quick: { aux: 0, stack: 152, card: 0 },
+    heap: { aux: 200, stack: 172, card: 0 },
     counting: { aux: 256, stack: 0, card: 0 },
     radix: { aux: 300, stack: 0, card: 112 },
     bucket: { aux: 300, stack: 0, card: 112 },
@@ -418,7 +419,7 @@ class Component extends DCLogic {
     maxflow: { aux: 140, stack: 0, card: 0 }
   };
 
-  PTRS = { insertion: ['i', 'j'], merge: ['k'], quick: ['i', 'j'], counting: ['j'], bucket: ['i'], rselect: ['q'], radix: [] };
+  PTRS = { insertion: ['i', 'j'], merge: ['k'], quick: ['i', 'j'], heap: ['i', 'l', 'r'], counting: ['j'], bucket: ['i'], rselect: ['q'], radix: [] };
 
   LEGEND = [
     ['plain', 'uberørt'], ['range', 'aktivt delproblem'], ['compare', 'sammenlignes'],
@@ -670,6 +671,30 @@ class Component extends DCLogic {
         L(1, 'exchange A[i+1] with A[r]'),
         L(1, 'return i + 1')
       ],
+      heap: [
+        H('HEAPSORT(A)'),
+        L(1, 'BUILD-MAX-HEAP(A)'),
+        L(1, 'for i = A.length downto 2'),
+        L(2, 'exchange A[1] with A[i]'),
+        L(2, 'A.heap-size = A.heap-size − 1'),
+        L(2, 'MAX-HEAPIFY(A, 1)'),
+        B(),
+        H('BUILD-MAX-HEAP(A)'),
+        L(1, 'A.heap-size = A.length'),
+        L(1, 'for i = ⌊A.length/2⌋ downto 1'),
+        L(2, 'MAX-HEAPIFY(A, i)'),
+        B(),
+        H('MAX-HEAPIFY(A, i)'),
+        L(1, 'l = LEFT(i)   r = RIGHT(i)      // 2i og 2i + 1'),
+        L(1, 'if l ≤ A.heap-size and A[l] > A[i]'),
+        L(2, 'largest = l'),
+        L(1, 'else largest = i'),
+        L(1, 'if r ≤ A.heap-size and A[r] > A[largest]'),
+        L(2, 'largest = r'),
+        L(1, 'if largest ≠ i'),
+        L(2, 'exchange A[i] with A[largest]'),
+        L(2, 'MAX-HEAPIFY(A, largest)')
+      ],
       counting: [
         H('COUNTING-SORT(A, B, k)'),
         L(1, 'la C[0..k] være et nytt array'),
@@ -859,7 +884,7 @@ class Component extends DCLogic {
   trace(id) {
     this._c = this._c || {};
     if (!this._c[id]) {
-      const f = { insertion: 'tInsertion', merge: 'tMerge', quick: 'tQuick', counting: 'tCounting', radix: 'tRadix', bucket: 'tBucket', rselect: 'tSelect' }[id];
+      const f = { insertion: 'tInsertion', merge: 'tMerge', quick: 'tQuick', heap: 'tHeap', counting: 'tCounting', radix: 'tRadix', bucket: 'tBucket', rselect: 'tSelect' }[id];
       this._c[id] = f ? this[f]() : this.gtrace(id);
     }
     return this._c[id];
@@ -993,6 +1018,78 @@ class Component extends DCLogic {
     qs(0, A.length - 1);
     const all = {}; for (let t = 0; t < A.length; t++) all[t] = 'done';
     P(0, all, 'Sortert — in-place, uten ekstra array. Forventet Θ(n log n), men worst case Θ(n²) hvis partisjonene er maksimalt ubalanserte.', []);
+    return S;
+  }
+
+  tHeap() {
+    const A = [4, 1, 3, 2, 16, 9, 10, 14, 8, 7], S = [], stack = [];
+    const n = A.length;
+    let hs = n;
+    const mk = (extra) => { const m = {}; for (let t = 0; t < n; t++) m[t] = t < hs ? 'range' : 'done'; return Object.assign(m, extra || {}); };
+    const tree = (extra) => {
+      const h = extra || {}, rows = [];
+      for (let d = 0, s0 = 0; s0 < n; d++, s0 = 2 * s0 + 1) {
+        const cells = [];
+        for (let k = s0; k < Math.min(n, 2 * s0 + 1); k++) cells.push({ v: String(A[k]), mark: h[k] || (k < hs ? 'plain' : 'done') });
+        rows.push({ head: 'nv ' + d, cells: cells });
+      }
+      return { label: 'Heapen som binærtre — én rad per nivå (nv)', isMatrix: true, head: [], rows: rows };
+    };
+    const P = (line, extra, note, vars) => S.push({ line: line, arr: A.slice(), marks: mk(extra), note: note, vars: vars || [], stack: stack.slice(), aux: [tree(extra)] });
+    const heapify = (i) => {
+      stack.push('MAX-HEAPIFY(A, ' + (i + 1) + ')');
+      const l = 2 * i + 1, r = 2 * i + 2;
+      const ch = { [i]: 'key' }; if (l < hs) ch[l] = 'compare'; if (r < hs) ch[r] = 'compare';
+      const cv = [{ k: 'i', v: i + 1 }].concat(l < hs ? [{ k: 'l', v: l + 1 }] : [], r < hs ? [{ k: 'r', v: r + 1 }] : [], [{ k: 'heap-size', v: hs }]);
+      const kid = (x, nm) => nm + ' = ' + (x + 1) + (x < hs ? ' (' + A[x] + ')' : ' — utenfor heapen');
+      P(13, ch, 'MAX-HEAPIFY på node ' + (i + 1) + ' med verdi ' + A[i] + '. Barn: ' + kid(l, 'l') + ', ' + kid(r, 'r') + '. Forutsetning: begge deltrærne under er allerede max-heaper.', cv);
+      let largest = l < hs && A[l] > A[i] ? l : i;
+      if (r < hs && A[r] > A[largest]) largest = r;
+      if (l >= hs) {
+        P(16, { [i]: 'key' }, 'Node ' + (i + 1) + ' har ingen barn i heapen — et blad er alltid en max-heap. largest = i.', [{ k: 'i', v: i + 1 }, { k: 'largest', v: i + 1 }]);
+      } else {
+        const line = largest === r ? 18 : (largest === l ? 15 : 16);
+        const txt = largest === i
+          ? 'A[' + (i + 1) + '] = ' + A[i] + ' er minst like stor som begge barna → largest = i.'
+          : 'Største av de tre er A[' + (largest + 1) + '] = ' + A[largest] + ' → largest = ' + (largest === l ? 'l' : 'r') + ' = ' + (largest + 1) + '.';
+        P(line, Object.assign({}, ch, { [largest]: 'pivot' }), txt, cv.concat([{ k: 'largest', v: largest + 1 }]));
+      }
+      if (largest !== i) {
+        const t0 = A[i]; A[i] = A[largest]; A[largest] = t0;
+        P(20, { [i]: 'compare', [largest]: 'key' }, 'A[' + (i + 1) + '] ↔ A[' + (largest + 1) + ']. Nå er ' + A[i] + ' større enn begge barna, men ' + A[largest] + ' kan ha brutt heap-egenskapen lenger ned.', [{ k: 'i', v: i + 1 }, { k: 'largest', v: largest + 1 }]);
+        P(21, { [largest]: 'key' }, 'Rekursér med MAX-HEAPIFY(A, ' + (largest + 1) + '). Elementet synker ett nivå per kall → O(h) = O(lg n).', [{ k: 'largest', v: largest + 1 }]);
+        heapify(largest);
+      } else {
+        P(19, { [i]: 'key' }, 'largest == i → heap-egenskapen holder i deltreet med rot ' + (i + 1) + '. MAX-HEAPIFY returnerer.', [{ k: 'i', v: i + 1 }]);
+      }
+      stack.pop();
+    };
+    stack.push('HEAPSORT(A)');
+    P(0, {}, 'Arrayet tolkes som et komplett binærtre: A[1] er rota, barna til A[i] er A[2i] og A[2i+1], forelderen er A[⌊i/2⌋]. Ingen pekere — bare indeksregning.', [{ k: 'n', v: n }]);
+    P(1, {}, 'Fase 1: BUILD-MAX-HEAP gjør det usorterte arrayet om til en max-heap, der hver forelder er ≥ barna sine.', []);
+    stack.push('BUILD-MAX-HEAP(A)');
+    P(8, {}, 'heap-size = n = ' + n + '. Hele arrayet er heapen.', [{ k: 'heap-size', v: hs }]);
+    for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
+      P(9, { [i]: 'key' }, i === Math.floor(n / 2) - 1
+        ? 'i = ⌊n/2⌋ = ' + (i + 1) + '. Nodene ' + (i + 2) + '..' + n + ' er blader, altså trivielle max-heaper. Vi starter på siste indre node og går BAKOVER mot rota.'
+        : 'i = ' + (i + 1) + '. Invariant: hver node i + 1..n er rot i en max-heap — derfor er forutsetningen for MAX-HEAPIFY oppfylt.', [{ k: 'i', v: i + 1 }]);
+      P(10, { [i]: 'key' }, 'Kaller MAX-HEAPIFY(A, ' + (i + 1) + ').', [{ k: 'i', v: i + 1 }]);
+      heapify(i);
+    }
+    stack.pop();
+    P(1, { 0: 'pivot' }, 'BUILD-MAX-HEAP er ferdig: A[1] = ' + A[0] + ' er maksimum. Kostnaden er O(n), ikke O(n lg n) — de fleste nodene ligger langt nede, der MAX-HEAPIFY er billig.', []);
+    for (let i = n - 1; i >= 1; i--) {
+      P(2, { 0: 'pivot', [i]: 'compare' }, 'i = ' + (i + 1) + '. Rota A[1] = ' + A[0] + ' er det største elementet som gjenstår i heapen.', [{ k: 'i', v: i + 1 }, { k: 'heap-size', v: hs }]);
+      const t0 = A[0]; A[0] = A[i]; A[i] = t0;
+      P(3, { 0: 'compare', [i]: 'key' }, 'A[1] ↔ A[' + (i + 1) + ']: maksimum ' + A[i] + ' flyttes til sin endelige plass. Lange bytter som dette er grunnen til at heapsort ikke er stabil.', [{ k: 'i', v: i + 1 }]);
+      hs--;
+      P(4, { 0: 'key' }, 'heap-size = ' + hs + '. A[' + (i + 1) + '..' + n + '] er ferdig sortert og ligger utenfor heapen. Den nye rota ' + A[0] + ' bryter trolig heap-egenskapen.', [{ k: 'i', v: i + 1 }, { k: 'heap-size', v: hs }]);
+      P(5, { 0: 'key' }, 'MAX-HEAPIFY(A, 1) lar rota synke ned til riktig plass. Maks lg n nivåer.', [{ k: 'heap-size', v: hs }]);
+      heapify(0);
+    }
+    stack.pop();
+    hs = 0;
+    P(0, {}, 'Sortert. n − 1 kall på MAX-HEAPIFY à O(lg n) gir O(n lg n) — også i worst case, og helt in-place med Θ(1) ekstra minne.', []);
     return S;
   }
 
@@ -1905,6 +2002,21 @@ class Component extends DCLogic {
       ]
     },
     {
+      id: 'heap', name: 'HEAPSORT', no: 'Haugsortering (med max-heap)', tag: 'F5', family: 'Sammenligningsbasert · in-place · max-heap',
+      best: 'Θ(n log n)', avg: 'Θ(n log n)', worst: 'Θ(n log n)', mem: 'Θ(1)', stable: 'Nei', inplace: 'Ja', cmp: 'Ja',
+      idea: 'Gjør først arrayet om til en max-heap med BUILD-MAX-HEAP. Deretter byttes rota (maksimum) gjentatte ganger med siste element i heapen, heapen krymper med én, og MAX-HEAPIFY gjenoppretter heap-egenskapen. Den sorterte delen vokser fra høyre.',
+      invariant: 'Løkkeinvariant i HEAPSORT: ved starten av hver iterasjon er A[1..i] en max-heap med de i minste elementene, og A[i+1..n] inneholder de n − i største elementene i sortert rekkefølge. Max-heap-egenskapen: A[PARENT(i)] ≥ A[i] for alle i > 1.',
+      proof: 'MAX-HEAPIFY flytter et element maks h = ⌊lg n⌋ nivåer ned: O(lg n). BUILD-MAX-HEAP ser ut som n/2 · O(lg n), men det finnes høyst ⌈n/2ʰ⁺¹⌉ noder med høyde h, så kostnaden er Σₕ ⌈n/2ʰ⁺¹⌉ · O(h) = O(n · Σ h/2ʰ) = O(n). Sorteringsfasen gjør n − 1 bytter og kall på MAX-HEAPIFY à O(lg n): O(n lg n) totalt. Som sammenligningsbasert sortering kan den ikke gjøre det bedre enn Ω(n lg n) i worst case.',
+      when: 'Når du trenger garantert O(n log n) i worst case OG konstant ekstra minne — noe verken merge sort (Θ(n) minne) eller quicksort (Θ(n²) worst case) gir. Brukes som reserve i introsort. Heapen i seg selv er grunnlaget for prioritetskøer (Prim, Dijkstra).',
+      pitfalls: [
+        'BUILD-MAX-HEAP er O(n), ikke O(n lg n) — den enkle analysen gir en øvre grense som ikke er tett.',
+        'Løkka i BUILD-MAX-HEAP går fra ⌊n/2⌋ NED til 1. Oppover er deltrærne ikke max-heaper ennå, og MAX-HEAPIFY gir feil resultat.',
+        'MAX-HEAPIFY forutsetter at begge deltrærne under i allerede er max-heaper — den reparerer bare ett brudd, i roten.',
+        'heap-size ≠ A.length: testen l ≤ A.heap-size hindrer at den sorterte halen trekkes tilbake inn i heapen.',
+        'Heapsort er ikke stabil: byttet A[1] ↔ A[i] flytter like elementer forbi hverandre.'
+      ]
+    },
+    {
       id: 'counting', name: 'COUNTING-SORT', no: 'Tellesortering', tag: 'F4', family: 'Lineær tid · ikke sammenligningsbasert',
       best: 'Θ(n + k)', avg: 'Θ(n + k)', worst: 'Θ(n + k)', mem: 'Θ(n + k)', stable: 'Ja', inplace: 'Nei', cmp: 'Nei',
       idea: 'Teller hvor mange det er av hver verdi i 0..k, gjør tellingene om til prefikssummer (antall elementer ≤ i), og leser input baklengs for å plassere hvert element direkte på sin endelige posisjon i utdataarrayet B.',
@@ -1990,7 +2102,7 @@ class Component extends DCLogic {
       catTitle: cat === 'graph' ? 'Grafalgoritmer' : 'Sorteringsalgoritmer',
       catIntro: cat === 'graph'
         ? 'Elleve algoritmer på grafer: traversering (BFS, DFS), rekkefølge og komponenter (topologisk sortering, sterke komponenter), minimale spenntrær (Kruskal, Prim), korteste sti (Dijkstra, Bellman-Ford, DAG, Floyd-Warshall) og maksimal flyt. Fargene følger CLRS: hvit = uoppdaget, grå = oppdaget, svart = ferdig.'
-        : 'Åtte algoritmer fra F1–F4: innsettingssortering, splitt-og-hersk, sortering i lineær tid og rangering. Nedre grense for sammenligningsbasert sortering er Ω(n log n) — de tre siste bryter den ved å ikke sammenligne elementene direkte.',
+        : 'Ni algoritmer fra F1–F5: innsettingssortering, splitt-og-hersk, heapsort, sortering i lineær tid og rangering. Nedre grense for sammenligningsbasert sortering er Ω(n log n) — counting, radix og bucket sort bryter den ved å ikke sammenligne elementene direkte.',
       backToListLabel: cat === 'graph' ? '← Tilbake til grafalgoritmer' : '← Tilbake til sortering',
       legend: legend,
       heroRef: this.heroRef,
@@ -2007,7 +2119,7 @@ class Component extends DCLogic {
       prev: () => this.step(-1),
       reset: () => this.setState({ step: 0 }),
       categories: [
-        { name: 'Sorteringsalgoritmer', tag: 'F1–F4', count: '8 algoritmer', ready: true, soon: false, bg: 'var(--color-neutral-100)', tagClass: 'tag-accent', blurb: 'Innsettingssortering, splitt-og-hersk og sortering i lineær tid — med pseudokode, invarianter og steg-for-steg.', open: () => this.setState({ view: 'list', cat: 'sort' }) },
+        { name: 'Sorteringsalgoritmer', tag: 'F1–F5', count: '9 algoritmer', ready: true, soon: false, bg: 'var(--color-neutral-100)', tagClass: 'tag-accent', blurb: 'Innsettingssortering, splitt-og-hersk, heapsort og sortering i lineær tid — med pseudokode, invarianter og steg-for-steg.', open: () => this.setState({ view: 'list', cat: 'sort' }) },
         { name: 'Grafalgoritmer', tag: 'F5–F11', count: '11 algoritmer', ready: true, soon: false, bg: 'var(--color-neutral-100)', tagClass: 'tag-accent', blurb: 'Traversering, topologisk sortering, sterke komponenter, spenntrær, korteste sti og maksimal flyt — tegnet som graf.', open: () => this.setState({ view: 'list', cat: 'graph' }) },
         { name: 'Dynamisk programmering', tag: 'DP', count: '—', ready: false, soon: true, bg: 'var(--color-surface)', tagClass: 'tag-neutral', blurb: 'Optimal delstruktur og memoisering.', open: () => {} },
         { name: 'Datastrukturer', tag: 'Hashing · trær · heap', count: '—', ready: false, soon: true, bg: 'var(--color-surface)', tagClass: 'tag-neutral', blurb: 'Operasjoner og amortisert analyse.', open: () => {} }

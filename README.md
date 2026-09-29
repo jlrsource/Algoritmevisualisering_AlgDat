@@ -9,7 +9,7 @@ innboforsikring-estimat.vercel.app
 
 **Innhold**
 
-- Sortering: INSERTION-SORT, MERGE-SORT, QUICKSORT, COUNTING-SORT, RADIX-SORT, BUCKET-SORT, RANDOMIZED-SELECT, SELECT
+- Sortering: INSERTION-SORT, MERGE-SORT, QUICKSORT, HEAPSORT, COUNTING-SORT, RADIX-SORT, BUCKET-SORT, RANDOMIZED-SELECT, SELECT
 - Graf: BFS, DFS, TOPOLOGICAL-SORT, SCC (Kosaraju), MST-KRUSKAL, MST-PRIM, BELLMAN-FORD, DAG-SHORTEST-PATHS, DIJKSTRA, FLOYD-WARSHALL, FORD-FULKERSON
 
 Hver algoritme har kjøretider (best/average/worst), invariant og bevisskisse, vanlige eksamensfeller, og steg-for-steg med piltast-navigasjon.

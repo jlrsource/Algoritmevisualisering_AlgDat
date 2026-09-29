@@ -18,6 +18,6 @@ note: Push skjer lokalt fra brukerens maskin — dette prosjektet kan lese fra G
 | Skjerm | Filer |
 | --- | --- |
 | Startside + interaktivt nettverk | Algoritmevisualisering.dc.html |
-| Sorteringsalgoritmer (8) | Algoritmevisualisering.dc.html |
+| Sorteringsalgoritmer (9) | Algoritmevisualisering.dc.html |
 | Grafalgoritmer (11) | Algoritmevisualisering.dc.html |
 | Deploy-bygg | index.html (generert fra Algoritmevisualisering.dc.html) |
